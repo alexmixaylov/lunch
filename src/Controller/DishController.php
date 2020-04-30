@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Dish;
+use App\Repository\DishRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,25 +15,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class DishController extends AbstractController
 {
     /**
-     * @Route("/", name="all_dishes", methods={"GET"})
+     * @Route("/", name="dishes#list", methods={"GET"})
      */
-    public function index()
+    public function list(DishRepository $repository)
     {
-        return new JsonResponse();
+        $dishes = $repository->findAll();
+
+        return new JsonResponse($dishes);
     }
 
     /**
-     * @Route("/{id}", name="single_dish", methods={"GET"}, options={})
+     * @Route("/{id}", name="dishes#read", methods={"GET"}, options={})
      */
-    public function dish(int $id)
+    public function read(int $id, DishRepository $repository)
     {
-        return new JsonResponse($id);
+        $dish = $repository->find($id);
+
+        if ( ! $dish) {
+            throw $this->createNotFoundException("Dish with ID:{$id} not Found");
+        }
+
+        return new JsonResponse($dish);
     }
 
     /**
-     * @Route("/", name="add_dish", methods={"POST"})
+     * @Route("/", name="dishes#create", methods={"POST"})
      */
-    public function add(Request $request)
+    public function create(Request $request)
     {
         $dish = new Dish();
         $dish->setPrice();
@@ -40,20 +49,25 @@ class DishController extends AbstractController
         $dish->setType();
         $dish->setTitle();
 
-
         return new JsonResponse();
     }
 
     /**
-     * @Route("/{id}", name="update_dish", methods={"PATCH, PUT"})
+     * @Route("/{id}", name="dishes#update", methods={"PATCH, PUT"})
      */
-    public function update(int $id)
+    public function update(int $id, DishRepository $repository)
     {
+        $dish = $repository->find($id);
+
+        if ( ! $dish) {
+            throw $this->createNotFoundException("Dish with ID:{$id} not Found");
+        }
+
         return new JsonResponse();
     }
 
     /**
-     * @Route("/{id}", name="del_dish", methods={"DELETE"})
+     * @Route("/{id}", name="dishes#delete", methods={"DELETE"})
      */
     public function delete(int $id)
     {
