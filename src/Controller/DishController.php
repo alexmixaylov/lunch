@@ -25,7 +25,7 @@ class DishController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="dishes#read", methods={"GET"}, options={})
+     * @Route("/{id}", name="dishes#read", methods={"GET"})
      */
     public function read(int $id, DishRepository $repository)
     {
