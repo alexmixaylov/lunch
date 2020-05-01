@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\LunchRepository")
+ * @ORM\Entity(repositoryClass="MenuRepository")
  */
-class Lunch
+class Menu
 {
     /**
      * @ORM\Id()
@@ -64,7 +64,7 @@ class Lunch
     {
         if (!$this->dishes->contains($dish)) {
             $this->dishes[] = $dish;
-            $dish->setLunch($this);
+            $dish->setMenu($this);
         }
 
         return $this;
@@ -75,8 +75,8 @@ class Lunch
         if ($this->dishes->contains($dish)) {
             $this->dishes->removeElement($dish);
             // set the owning side to null (unless already changed)
-            if ($dish->getLunch() === $this) {
-                $dish->setLunch(null);
+            if ($dish->getMenu() === $this) {
+                $dish->setMenu(null);
             }
         }
 

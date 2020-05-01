@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Lunch;
+use App\Entity\Menu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Lunch|null find($id, $lockMode = null, $lockVersion = null)
- * @method Lunch|null findOneBy(array $criteria, array $orderBy = null)
- * @method Lunch[]    findAll()
- * @method Lunch[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Menu|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Menu|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Menu[]    findAll()
+ * @method Menu[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class LunchRepository extends ServiceEntityRepository
+class MenuRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Lunch::class);
+        parent::__construct($registry, Menu::class);
     }
 
     // /**
-    //  * @return Lunch[] Returns an array of Lunch objects
+    //  * @return Menu[] Returns an array of Menu objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class LunchRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Lunch
+    public function findOneBySomeField($value): ?Menu
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.exampleField = :val')

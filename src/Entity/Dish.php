@@ -37,9 +37,9 @@ class Dish
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Lunch", inversedBy="dishes")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Menu", inversedBy="dishes")
      */
-    private $lunch;
+    private $menu;
 
     public function getId(): ?int
     {
@@ -94,14 +94,14 @@ class Dish
         return $this;
     }
 
-    public function getLunch(): ?Lunch
+    public function getMenu(): ?Menu
     {
-        return $this->lunch;
+        return $this->menu;
     }
 
-    public function setLunch(?Lunch $lunch): self
+    public function setMenu(?Menu $menu): self
     {
-        $this->lunch = $lunch;
+        $this->menu = $menu;
 
         return $this;
     }
