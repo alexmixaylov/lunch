@@ -3,7 +3,7 @@ import Vuetify from 'vuetify';
 
 import Routes from './routes.js';
 
-import App from './views/App';
+import App from './views/App.vue';
 
 Vue.use(Vuetify);
 
@@ -15,4 +15,4 @@ const app = new Vue({
 
 export default app;
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+console.log('Edit me in assets/js/app.js');
