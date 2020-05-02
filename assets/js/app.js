@@ -1,10 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-
 import Routes from './routes.js';
-
 import App from './views/App.vue';
-
 Vue.use(Vuetify);
 
 const app = new Vue({
@@ -13,6 +10,8 @@ const app = new Vue({
     render: h => h(App),
 });
 
+import '../css/app.scss';
+
 export default app;
 
-console.log('Edit me in assets/js/app.js');
+console.log('Application was loaded');

@@ -1,0 +1,48 @@
+$dark: rgba(0, 0, 0, 0.9);
+$light: #ffffff;
+$gold: #E8C300;
+
+
+.spinner-clock {
+    font-size: 10px;
+    width: 10em;
+    height: 10em;
+    position: relative;
+    border: .4em solid $gold;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.spinner-clock::before,
+.spinner-clock::after {
+    content: "";
+    width: .4em;
+    display: inline-block;
+    background-color: $gold;
+    position: absolute;
+    left: 4.4em;
+    border-radius: .4em;
+}
+
+.spinner-clock::before {
+    height: 4em;
+    transform-origin: .2em 3.8em;
+    top: .8em;
+    animation: spinner-clock 1s infinite linear;
+}
+
+.spinner-clock::after {
+    height: 3em;
+    transform-origin: .2em 2.8em;
+    top: 1.8em;
+    animation: spinner-clock 12s infinite linear;
+}
+
+@keyframes spinner-clock {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

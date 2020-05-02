@@ -3,10 +3,15 @@
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
 {% block body %}
-    Содержимое дива APP
+    <div id="app" class="accent-1">
+        <h1>
+            <img class="logo" src="{{ asset('build/logo.svg') }}" alt="">
+            <span>Lunch Cherry</span>
+        </h1>
 
-    <div id="app">
-        Содержимое дива APP
+        <div class="loading">
+            <div class="spinner spinner-clock"></div>
+        </div>
     </div>
 {% endblock %}
 {% block javascripts %}
