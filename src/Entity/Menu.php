@@ -24,14 +24,20 @@ class Menu
     private $date;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Dish", mappedBy="lunch")
+     * @ORM\OneToMany(targetEntity="App\Entity\Dish", mappedBy="menu")
      */
     private $dishes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="menu")
+     */
+    private $orders;
 
 
     public function __construct()
     {
         $this->dishes = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
 
@@ -77,6 +83,37 @@ class Menu
             // set the owning side to null (unless already changed)
             if ($dish->getMenu() === $this) {
                 $dish->setMenu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->contains($order)) {
+            $this->orders->removeElement($order);
+            // set the owning side to null (unless already changed)
+            if ($order->getMenu() === $this) {
+                $order->setMenu(null);
             }
         }
 
