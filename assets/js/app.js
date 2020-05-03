@@ -1,13 +1,18 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify';
 import Routes from './routes.js';
 import App from './views/App.vue';
-Vue.use(Vuetify);
+
+import vuetify from './plugins/vuetify';
+import store from './stores/index'
+
+
 
 const app = new Vue({
     el: '#app',
     router: Routes,
+    store,
     render: h => h(App),
+    vuetify
 });
 
 import '../css/app.scss';
