@@ -1,12 +1,15 @@
 <template>
-    <div>
+    <v-content>
         <router-view></router-view>
-    </div>
+    </v-content>
 </template>
 
 <script>
     export default {
-        name: "Content"
+        name: "Content",
+        data: () => ({
+            drawer: null,
+        }),
     }
 </script>
 

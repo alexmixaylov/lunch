@@ -4,17 +4,14 @@ import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify)
 
-const opts = {
+export default new Vuetify({
+    icons: {
+        iconfont: 'fa',
+    },
     theme: {
         dark: true,
         default: 'light',
         disable: false,
-        options: {
-            cspNonce: undefined,
-            customProperties: undefined,
-            minifyTheme: undefined,
-            themeCache: undefined
-        },
         themes: {
             light: {
                 primary: '#1976D2',
@@ -36,8 +33,6 @@ const opts = {
             }
         }
     }
-}
-
-export default new Vuetify(opts)
+})
 
 
