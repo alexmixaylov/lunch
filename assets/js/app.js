@@ -3,7 +3,7 @@ import Routes from './routes.js';
 import App from './views/App.vue';
 
 import vuetify from './plugins/vuetify';
-import store from './stores/index'
+import {store} from './store/index'
 
 
 

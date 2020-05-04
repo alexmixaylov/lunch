@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <header>
         <v-navigation-drawer v-model="drawer" app clipped>
             <v-list dense>
                 <v-list-item link>
@@ -76,7 +76,7 @@
             <user-component></user-component>
         </v-app-bar>
 
-    </v-row>
+    </header>
 </template>
 
 <script>

@@ -28,7 +28,7 @@
 
         created() {
             // можно здесь поменять тему а можно в самом плагине
-            // this.$vuetify.theme.dark = false
+            this.$vuetify.theme.dark = true
             // this.$vuetify.theme.themes.dark.primary = '#FB8C00';
         },
     }
