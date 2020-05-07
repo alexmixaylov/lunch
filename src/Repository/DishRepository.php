@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Dish;
+use App\Entity\Menu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,23 +20,24 @@ class DishRepository extends ServiceEntityRepository
         parent::__construct($registry, Dish::class);
     }
 
-    // /**
-    //  * @return Dish[] Returns an array of Dish objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findDishesByMenuId($menuId)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
+        return $this->createQueryBuilder('d')
+                    ->select('d.id as dish_id')
+                    ->addSelect('d.title')
+                    ->addSelect('d.price')
+                    ->addSelect('d.weight')
+                    ->addSelect('m.id as menu_id')
+//                    ->from(Dish::class, 'd')
+                    ->innerJoin('d.menu', 'm', 'WITH', 'm.id = :menu_id')
+//                    ->where('menu_id = :menu_id')
+                    ->setParameter('menu_id', $menuId)
+                    ->getQuery()
+                    ->getResult();
+
+    }
+//            ->innerJoin(CategoryLang::class, 'cl', 'WITH', 'c.id_category = cl.id_category')
     /*
     public function findOneBySomeField($value): ?Dish
     {

@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Dish;
 use App\Entity\Menu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +22,65 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
+    public function findOneByDate($date)
+    {
+
+        $result = $this->createQueryBuilder('m')
+//                       ->addSelect('d.id')
+                       ->andWhere('m.date = :date')
+                       ->setParameter('date', $date)
+                       ->getQuery()
+                       ->getOneOrNullResult();
+
+        return $result;
+    }
+
+    public function findMenusByDates($start, $end)
+    {
+
+        $qb1 = $this->createQueryBuilder('m')
+                    ->select('m.id as menu_id')
+                    ->addSelect('m.date')
+                    ->addSelect('d.id as dish_id')
+                    ->addSelect('d.title')
+                    ->addSelect('d.weight')
+                    ->addSelect('d.price')
+                    ->leftJoin(Dish::class, 'd', \Doctrine\ORM\Query\Expr\Join::WITH, 'm.id = d.menu')
+                    ->where('m.date >= :start')
+                    ->andWhere('m.date <= :end')
+                    ->setParameters(['start' => $start, 'end' => $end])
+                    ->orderBy('m.date')
+                    ->getQuery();
+
+
+        $qb2 = $this->createQueryBuilder('m')
+                    ->select('m.id as menu_id')
+                    ->addSelect('m.date')
+//                    ->addSelect('d.id as dish_id')
+//                    ->addSelect('d.title')
+                    ->addSelect('d.weight')
+                    ->addSelect('d.price')
+                    ->addSelect('d.id as dish_id')
+                    ->innerJoin('m.dishes', 'd', 'ANY')
+                    ->where('m.date >= :start')
+                    ->andWhere('m.date <= :end')
+                    ->setParameters(['start' => $start, 'end' => $end])
+                    ->orderBy('m.date')
+//                   ->groupBy('m.id')
+                    ->getQuery();
+
+        $qb = $this->createQueryBuilder('m')
+//                   ->select('m.id as menu_id')
+//                   ->addSelect('m.date')
+                   ->where('m.date >= :start')
+                   ->andWhere('m.date <= :end')
+                   ->setParameters(['start' => $start, 'end' => $end])
+                   ->orderBy('m.date')
+                   ->getQuery();
+
+        return $qb->getResult();
+    }
+
     // /**
     //  * @return Menu[] Returns an array of Menu objects
     //  */
@@ -32,18 +94,6 @@ class MenuRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Menu
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
         ;
     }
     */

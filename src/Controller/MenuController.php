@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Menu;
+use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +17,112 @@ class MenuController extends AbstractController
 {
 
     /**
-    * @Route("/", name="menus#list", methods={"GET"})
+     * @Route("/table/{userDate}", name="menus#table", methods={"GET"})
+     */
+    public function getMenuTableOrInitEmptyMenus(
+        string $userDate,
+        MenuRepository $repository,
+        DishRepository $dish_repository
+    ) {
+        define('HOW_MANY_DAYS_ADD', 4);
+        // 4 days must be added Then we can get all days per week
+        $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
+        $end   = date('Y-m-d', strtotime("+" . HOW_MANY_DAYS_ADD . "days", strtotime($start)));
+
+        $existingMenuItems = $repository->findMenusByDates($start, $end);
+
+        $menusWithAttachedDishes = array_map(function ($menu) use ($dish_repository) {
+            $menuId = $menu->getId();
+            $dishes = $dish_repository->findDishesByMenuId($menuId);
+
+            return [
+                'date'    => $menu->getDate()->format('Y-m-d'),
+                'menu_id' => $menuId,
+                'dishes'  => $dishes,
+            ];
+        }, $existingMenuItems);
+
+        // generate dates which should be in base. It is a Dictonary
+        $generatePeriod = function ($date, $acc) use (&$generatePeriod, $end) {
+            if ($date == $end) {
+                $acc[] = $end;
+
+                return $acc;
+            }
+            $newDate = date('Y-m-d', strtotime("+1days", strtotime($date)));
+            $acc[]   = $date;
+
+            return $generatePeriod($newDate, $acc);
+        };
+        $allWeekDates   = $generatePeriod($start, []);
+
+        $initEmptyMenuWithDate = function ($date) {
+            $menu = new Menu();
+            $menu->setDate(new \DateTime($date));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($menu);
+            $em->flush();
+
+            return [
+                'date'    => $menu->getDate()->format('Y-m-d'),
+                'menu_id' => $menu->getId(),
+                'dishes'  => [],
+            ];
+        };
+
+        $menus = array_map(function ($date) use ($initEmptyMenuWithDate, $menusWithAttachedDishes) {
+            // проверяем подтянулось ли меню из базы, то есть существует ли оно в принципе
+            $existMenu = array_filter($menusWithAttachedDishes, function ($menu) use ($date) {
+                return $menu['date'] == $date;
+            });
+
+            if ($existMenu) {
+                return $existMenu;
+            }
+
+            // добавляем меню с отсутствующей датой
+            return $initEmptyMenuWithDate($date);
+        }, $allWeekDates);
+
+        return new JsonResponse([
+            'menus' => $menus,
+        ]);
+    }
+
+    /**
+     * @Route("/date/{date}", name="menus#by_date", methods={"GET"})
+     */
+    public function getMenuByDate(string $date, MenuRepository $repository)
+    {
+        //print_r(date('Y-m-d', strtotime("monday this week", strtotime($date))));
+        $date = new \DateTime(date('Y-m-d', strtotime("monday this week", strtotime($date))));
+
+        $menu = $repository->findOneByDate($date);
+
+        if ( ! $menu) {
+            return new JsonResponse();
+        }
+
+        $dishes = $menu->getDishes()->toArray();
+
+        $normalize = array_map(function ($dish) {
+            return [
+                'id'    => $dish->getId(),
+                'title' => $dish->getTitle(),
+                'price' => $dish->getPrice(),
+                'type'  => $dish->getType()
+            ];
+        }, $dishes);
+
+        return new JsonResponse([
+            'menu_id' => $menu->getId(),
+            'dishes'  => $normalize,
+        ]);
+    }
+
+    /**
+     * @Route("/", name="menus#list", methods={"GET"})
      */
     public function list(MenuRepository $repository)
     {
@@ -25,7 +132,7 @@ class MenuController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="menus#read", methods={"GET"})
+     * @Route("/{id}", name="menus#read", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function read(int $id, MenuRepository $repository)
     {
@@ -34,13 +141,17 @@ class MenuController extends AbstractController
         if ( ! $menu) {
             throw $this->createNotFoundException("Menu with ID:{$id} not Found");
         }
-        $dishes = $menu->getDishes();
-        foreach ($dishes as $dish) {
-            print_r($dish->getTitle());
-            print_r($dish->getPrice());
-            print_r($dish->getWeight());
-        }
-        return new JsonResponse($dishes);
+        $dishes    = $menu->getDishes()->toArray();
+        $normalize = array_map(function ($dish) {
+            return [
+                'id'    => $dish->getId(),
+                'title' => $dish->getTitle(),
+                'price' => $dish->getPrice(),
+                'type'  => $dish->getType()
+            ];
+        }, $dishes);
+
+        return new JsonResponse($normalize);
     }
 
     /**
@@ -48,7 +159,17 @@ class MenuController extends AbstractController
      */
     public function create(Request $request)
     {
-        return new JsonResponse();
+        $post = json_decode($request->getContent(), true);
+        $date = new \DateTime($post['date']);
+
+        $menu = new Menu();
+        $menu->setDate($date);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($menu);
+        $em->flush();
+
+        return new JsonResponse($menu->getId());
     }
 
     /**

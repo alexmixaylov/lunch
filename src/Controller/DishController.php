@@ -15,6 +15,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class DishController extends AbstractController
 {
     /**
+     * @Route("/by-menu/{menuId}", name="dishes#by_menu", methods={"GET"})
+     */
+    public function getDishesByMenuId($menuId, DishRepository $repository)
+    {
+        $dishes = $repository->findDishesByMenuId($menuId);
+
+        return new JsonResponse($dishes);
+    }
+
+
+    /**
      * @Route("/", name="dishes#list", methods={"GET"})
      */
     public function list(DishRepository $repository)
