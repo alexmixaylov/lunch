@@ -1,7 +1,9 @@
+import axios from 'axios';
+
 export default {
     namespaced: true,
     state: {
-        dishes: [1, 2, 3],
+        dishes: [],
     },
     getters: {
         getDishes: state => {
@@ -14,8 +16,9 @@ export default {
         },
     },
     actions: {
-        async loadDishes({dispatch, commit}) {
-            commit('setDishes', [1, 2])
+        loadDishes({commit}) {
+            console.log('dish/loadDishes was called')
+            commit('setDishes', ['новые диши зашли', 'никуда теперь не дется'])
         }
     },
 }

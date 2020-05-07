@@ -1,46 +1,50 @@
 <template>
-    <v-row justify="center">
-        <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
-        <v-tabs centered center-active grow background-color="orange--text" active-class="darken-1">
-            <v-tab v-on:click="prevWeek()">< назад</v-tab>
-            <v-tab v-on:click="thisWeek()">Эта неделя</v-tab>
-            <v-tab v-on:click="nextWeek()">вперед ></v-tab>
-        </v-tabs>
-        <menu-list :listOfDays="timing"></menu-list>
-    </v-row>
+    <v-container>
+        <v-row justify="center">
+            <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
+            <v-tabs centered center-active grow background-color="orange--text" active-class="darken-1">
+                <v-tab v-on:click="generateDateWithShift(-1)">< назад</v-tab>
+                <v-tab v-on:click="generateDateWithShift(0)">Эта неделя</v-tab>
+                <v-tab v-on:click="generateDateWithShift(1)">вперед ></v-tab>
+            </v-tabs>
+            <!--        <menu-list :listOfDays="timing"></menu-list>-->
+        </v-row>
+        <v-row>
+            {{ menus }}
+        </v-row>
+    </v-container>
 </template>
 
 <script>
+    import {dateFormat}  from "../plugins/dateFormat";
+    import {mapGetters} from 'vuex';
     import MenuList from "./MenuList";
 
     export default {
         name: "Week",
         components: {
-
             'menu-list': MenuList
         },
         data() {
             return {
-                indexDate: 0,
-                activeWeek: 0
+                shift: 0,
+                selectedWeek: new Date()
             }
         },
         computed: {
-            timing() {
-                return this.createWeek(this.activeWeek);
+            ...mapGetters('menu', {menus: 'getMenus'}),
+            dateForAPI() {
+                return dateFormat(this.selectedWeek, 'yyyy-mm-dd');
+            },
+            dateForUser() {
+                return dateFormat(this.selectedWeek, 'd mmmm');
             }
         },
         methods: {
-            thisWeek() {
-                this.activeWeek = 0;
-            },
-            nextWeek() {
-                this.activeWeek += 7;
-            },
-            prevWeek() {
-                this.activeWeek -= 7;
-            },
-            createWeek(shift = 0) {
+            generateDateWithShift(shift) {
+
+                (shift === 0) ? this.shift = 0 : this.shift = this.shift + shift;
+                // additional function for adding days
                 const addDaysToDate = function (shift) {
                     Date.prototype.addDays = function (days) {
                         let date = new Date(this.valueOf());
@@ -50,47 +54,34 @@
                     let date = new Date();
                     return date.addDays(shift)
                 };
-                const getText = function (type, index) {
-                    const ru = {
-                        day: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-                        month: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
-                    };
-                    return ru[type][index];
-                };
 
-                let start = this.indexDate < 1 ? 0 : (this.indexDate - 1) * -1;
-                const indexOfDays = function (start, acc) {
-                    const weekLength = 6;
-                    if (acc.length > weekLength) {
-                        return acc;
-                    }
-                    acc.push(addDaysToDate(start));
-                    return indexOfDays(start + 1, acc)
-                };
+                const newDate = addDaysToDate(this.shift * 7);
 
-                let fullWeek = indexOfDays(start + shift, []).map((day) => {
-                    const indexWeekDay = day.getDay();
-                    return {
-                        stringDate: `${getText('day', indexWeekDay)},  ${day.getDate()}`,
-                        month: `${getText('month', day.getMonth())}`,
-                        indexWeekDay: indexWeekDay,
-                        rawDate: day
-                    }
-                });
+                this.selectedWeek = newDate;
 
-                return fullWeek.filter(day => {
-                    // remove Saturday and Sunday from result
-                    return (day.indexWeekDay > 0 && day.indexWeekDay < 6)
-                });
+                // update store with new dates
+                this.loadMenuTable();
             },
+            loadMenuTable() {
+                this.$store.dispatch("menu/loadMenuTable", this.dateForAPI)
+            },
+
+
         },
         created() {
         },
         mounted() {
-        }
+        },
+        beforeRouteEnter(to, from, next) {
+            // вызывается до подтверждения пути, соответствующего этому компоненту.
+            // НЕ ИМЕЕТ доступа к контексту экземпляра компонента `this`,
+            // так как к моменту вызова экземпляр ещё не создан!
+            // console.log(to)
+            // console.log(from)
+            next(vm => {
+                vm.loadMenuTable();
+            })
+
+        },
     }
 </script>
-
-<style scoped>
-
-</style>
