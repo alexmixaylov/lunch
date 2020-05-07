@@ -85,9 +85,7 @@ class MenuController extends AbstractController
             return $initEmptyMenuWithDate($date);
         }, $allWeekDates);
 
-        return new JsonResponse([
-            'menus' => $menus,
-        ]);
+        return new JsonResponse($menus);
     }
 
     /**
