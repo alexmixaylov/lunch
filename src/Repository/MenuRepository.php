@@ -37,38 +37,6 @@ class MenuRepository extends ServiceEntityRepository
 
     public function findMenusByDates($start, $end)
     {
-
-        $qb1 = $this->createQueryBuilder('m')
-                    ->select('m.id as menu_id')
-                    ->addSelect('m.date')
-                    ->addSelect('d.id as dish_id')
-                    ->addSelect('d.title')
-                    ->addSelect('d.weight')
-                    ->addSelect('d.price')
-                    ->leftJoin(Dish::class, 'd', \Doctrine\ORM\Query\Expr\Join::WITH, 'm.id = d.menu')
-                    ->where('m.date >= :start')
-                    ->andWhere('m.date <= :end')
-                    ->setParameters(['start' => $start, 'end' => $end])
-                    ->orderBy('m.date')
-                    ->getQuery();
-
-
-        $qb2 = $this->createQueryBuilder('m')
-                    ->select('m.id as menu_id')
-                    ->addSelect('m.date')
-//                    ->addSelect('d.id as dish_id')
-//                    ->addSelect('d.title')
-                    ->addSelect('d.weight')
-                    ->addSelect('d.price')
-                    ->addSelect('d.id as dish_id')
-                    ->innerJoin('m.dishes', 'd', 'ANY')
-                    ->where('m.date >= :start')
-                    ->andWhere('m.date <= :end')
-                    ->setParameters(['start' => $start, 'end' => $end])
-                    ->orderBy('m.date')
-//                   ->groupBy('m.id')
-                    ->getQuery();
-
         $qb = $this->createQueryBuilder('m')
 //                   ->select('m.id as menu_id')
 //                   ->addSelect('m.date')
