@@ -2,21 +2,27 @@
     <v-container>
         <v-row justify="center">
             <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
-            <v-tabs centered center-active grow background-color="orange--text" active-class="darken-1">
+            <v-tabs centered grow center-active>
                 <v-tab v-on:click="generateDateWithShift(-1)">< назад</v-tab>
                 <v-tab v-on:click="generateDateWithShift(0)">Эта неделя</v-tab>
                 <v-tab v-on:click="generateDateWithShift(1)">вперед ></v-tab>
             </v-tabs>
-            <!--        <menu-list :listOfDays="timing"></menu-list>-->
         </v-row>
-        <v-row>
-            {{ menus }}
-        </v-row>
+
+        <menu-list
+                v-if="menu"
+                v-for="menu in menusFromAPI"
+                v-bind:key="menu.menu_id"
+                :date="menu.date"
+                :menu-id="menu.menu_id"
+                :dishes="menu.dishes"
+        >
+        </menu-list>
     </v-container>
 </template>
 
 <script>
-    import {dateFormat}  from "../plugins/dateFormat";
+    import {dateFormat} from "../plugins/dateFormat";
     import {mapGetters} from 'vuex';
     import MenuList from "./MenuList";
 
@@ -28,16 +34,19 @@
         data() {
             return {
                 shift: 0,
-                selectedWeek: new Date()
+                //TODO this variable needs rename
             }
         },
         computed: {
-            ...mapGetters('menu', {menus: 'getMenus'}),
+            ...mapGetters('menu', {
+                menusFromAPI: 'getMenus',
+                selectedDate: 'getSelectedDate'
+            }),
             dateForAPI() {
-                return dateFormat(this.selectedWeek, 'yyyy-mm-dd');
+                return dateFormat(this.selectedDate, 'yyyy-mm-dd');
             },
             dateForUser() {
-                return dateFormat(this.selectedWeek, 'd mmmm');
+                return dateFormat(this.selectedDate, 'd mmmm');
             }
         },
         methods: {
@@ -57,7 +66,7 @@
 
                 const newDate = addDaysToDate(this.shift * 7);
 
-                this.selectedWeek = newDate;
+                this.$store.commit('menu/setSelectedDate', newDate)
 
                 // update store with new dates
                 this.loadMenuTable();
@@ -65,8 +74,6 @@
             loadMenuTable() {
                 this.$store.dispatch("menu/loadMenuTable", this.dateForAPI)
             },
-
-
         },
         created() {
         },

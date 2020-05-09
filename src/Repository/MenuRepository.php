@@ -35,6 +35,25 @@ class MenuRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function findMenuById($id)
+    {
+
+        $result = $this->createQueryBuilder('m')
+                       ->select('m.id menu_id')
+                       ->addSelect('d.id as dish_id')
+                       ->addSelect('m.date')
+                       ->addSelect('d.title')
+                       ->addSelect('d.price')
+                       ->addSelect('d.weight')
+                       ->leftJoin('m.dishes', 'd')
+                       ->andWhere('m.id = :id')
+                       ->setParameter('id', $id)
+                       ->getQuery()
+                       ->getResult();
+
+        return $result;
+    }
+
     public function findMenusByDates($start, $end)
     {
         $qb = $this->createQueryBuilder('m')

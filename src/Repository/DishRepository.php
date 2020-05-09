@@ -28,16 +28,33 @@ class DishRepository extends ServiceEntityRepository
                     ->addSelect('d.title')
                     ->addSelect('d.price')
                     ->addSelect('d.weight')
-                    ->addSelect('m.id as menu_id')
-//                    ->from(Dish::class, 'd')
-                    ->innerJoin('d.menu', 'm', 'WITH', 'm.id = :menu_id')
-//                    ->where('menu_id = :menu_id')
+                    ->addSelect('d.type')
+                    ->leftJoin('d.menu', 'm')
+                    ->where('m.id = :menu_id')
                     ->setParameter('menu_id', $menuId)
                     ->getQuery()
                     ->getResult();
 
     }
-//            ->innerJoin(CategoryLang::class, 'cl', 'WITH', 'c.id_category = cl.id_category')
+
+    public function findDishesByDate($date)
+    {
+
+        return $this->createQueryBuilder('d')
+                    ->select('d.id as dish_id')
+                    ->addSelect('d.title')
+                    ->addSelect('d.price')
+                    ->addSelect('d.weight')
+                    ->addSelect('d.type')
+//                    ->addSelect('m.id as menu_id')
+                    ->leftJoin('d.menu', 'm')
+                    ->where('m.date = :date')
+                    ->setParameter('date', $date)
+                    ->getQuery()
+                    ->getResult();
+
+    }
+
     /*
     public function findOneBySomeField($value): ?Dish
     {

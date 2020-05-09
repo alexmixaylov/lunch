@@ -19,17 +19,16 @@ class MenuController extends AbstractController
     /**
      * @Route("/table/{userDate}", name="menus#table", methods={"GET"})
      */
-    public function getMenuTableOrInitEmptyMenus(
-        string $userDate,
-        MenuRepository $repository,
-        DishRepository $dish_repository
-    ) {
+    public function getMenuTableOrInitEmptyMenus(string $userDate, MenuRepository $repository, DishRepository $dish_repository) {
         define('HOW_MANY_DAYS_ADD', 4);
         // 4 days must be added Then we can get all days per week
         $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
         $end   = date('Y-m-d', strtotime("+" . HOW_MANY_DAYS_ADD . "days", strtotime($start)));
 
         $existingMenuItems = $repository->findMenusByDates($start, $end);
+
+//        var_dump(json_encode($existingMenuItems, JSON_FORCE_OBJECT));
+//        die();
 
         $menusWithAttachedDishes = array_map(function ($menu) use ($dish_repository) {
             $menuId = $menu->getId();
@@ -41,6 +40,8 @@ class MenuController extends AbstractController
                 'dishes'  => $dishes,
             ];
         }, $existingMenuItems);
+
+//        print_r($menusWithAttachedDishes);
 
         // generate dates which should be in base. It is a Dictonary
         $generatePeriod = function ($date, $acc) use (&$generatePeriod, $end) {
@@ -82,10 +83,14 @@ class MenuController extends AbstractController
             }
 
             // добавляем меню с отсутствующей датой
-            return $initEmptyMenuWithDate($date);
+            return $menusWithAttachedDishes[] = $initEmptyMenuWithDate($date);
         }, $allWeekDates);
 
-        return new JsonResponse($menus);
+        //return $this->render('app.html.twig', ['data' => $menus]);
+        //without this Key JSON_FORCE_OBJECT getting bug when the first element is Array but others are Objects
+        return new JsonResponse(json_encode($menus, JSON_FORCE_OBJECT));
+//        return new JsonResponse($menus);
+
     }
 
     /**
@@ -102,20 +107,9 @@ class MenuController extends AbstractController
             return new JsonResponse();
         }
 
-        $dishes = $menu->getDishes()->toArray();
-
-        $normalize = array_map(function ($dish) {
-            return [
-                'id'    => $dish->getId(),
-                'title' => $dish->getTitle(),
-                'price' => $dish->getPrice(),
-                'type'  => $dish->getType()
-            ];
-        }, $dishes);
-
         return new JsonResponse([
             'menu_id' => $menu->getId(),
-            'dishes'  => $normalize,
+            'date'    => $menu->getDate()->format('Y-m-d'),
         ]);
     }
 
@@ -134,22 +128,12 @@ class MenuController extends AbstractController
      */
     public function read(int $id, MenuRepository $repository)
     {
-        $menu = $repository->find($id);
+        $menu = $repository->findMenuById($id);
 
         if ( ! $menu) {
             throw $this->createNotFoundException("Menu with ID:{$id} not Found");
         }
-        $dishes    = $menu->getDishes()->toArray();
-        $normalize = array_map(function ($dish) {
-            return [
-                'id'    => $dish->getId(),
-                'title' => $dish->getTitle(),
-                'price' => $dish->getPrice(),
-                'type'  => $dish->getType()
-            ];
-        }, $dishes);
-
-        return new JsonResponse($normalize);
+        return new JsonResponse($menu);
     }
 
     /**
@@ -191,6 +175,4 @@ class MenuController extends AbstractController
     {
         return new JsonResponse();
     }
-
-
 }

@@ -23,7 +23,7 @@ const router = new VueRouter({
         {path: '/order', name: 'order', component: Order},
         {path: '/dish', name: 'dish', component: Dish},
         {
-            path: '/menu/:id',
+            path: '/menus/:date',
             name: 'menu',
             component: Menu,
             children: [

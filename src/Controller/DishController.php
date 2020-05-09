@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Dish;
 use App\Repository\DishRepository;
+use App\Repository\MenuRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,13 +16,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class DishController extends AbstractController
 {
     /**
-     * @Route("/by-menu/{menuId}", name="dishes#by_menu", methods={"GET"})
+     * @Route("/menu/{menuId}", name="dishes#by_menu", methods={"GET"})
      */
     public function getDishesByMenuId($menuId, DishRepository $repository)
     {
         $dishes = $repository->findDishesByMenuId($menuId);
 
-        return new JsonResponse($dishes);
+
+        return new JsonResponse([
+            'menu_id' => $menuId,
+            'dishes'  => $dishes
+        ]);
+    }
+
+    /**
+     * @Route("/date/{date}", name="dishes#by_date", methods={"GET"})
+     */
+    public function getDishesByDate($date, DishRepository $repository)
+    {
+        $dishes = $repository->findDishesByDate($date);
+
+        //TODO если на такую дату нет элементов, нужно показать сообщение и редиректить на страницу с неделями WEEK
+        //TODO можно сделать дополнительный запрос в базу.... Короче я сам забыл в чем проблема
+
+        return new JsonResponse([
+            'date'   => $date,
+            'dishes' => $dishes
+        ]);
     }
 
 
@@ -52,37 +73,66 @@ class DishController extends AbstractController
     /**
      * @Route("/", name="dishes#create", methods={"POST"})
      */
-    public function create(Request $request)
+    public function create(Request $request, MenuRepository $menu_repository)
     {
-        $dish = new Dish();
-        $dish->setPrice();
-        $dish->setWeight();
-        $dish->setType();
-        $dish->setTitle();
+        $post = json_decode($request->getContent(), true);
 
-        return new JsonResponse();
+        $menu = $menu_repository->find($post['menu_id']);
+
+        $dish = new Dish();
+        $dish->setPrice($post['price']);
+        $dish->setWeight($post['weight']);
+        $dish->setType($post['type']);
+        $dish->setTitle($post['title']);
+        $dish->setMenu($menu);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($dish);
+        $em->flush();
+
+        return new JsonResponse($dish->getId());
     }
 
     /**
-     * @Route("/{id}", name="dishes#update", methods={"PATCH, PUT"})
+     * @Route("/{id}", name="dishes#update", methods={"PATCH"})
      */
-    public function update(int $id, DishRepository $repository)
+    public function update(int $id, Request $request, DishRepository $repository)
     {
-        $dish = $repository->find($id);
+        $post = json_decode($request->getContent(), true);
+
+        $dish = $repository->find($post['dish_id']);
 
         if ( ! $dish) {
             throw $this->createNotFoundException("Dish with ID:{$id} not Found");
         }
 
-        return new JsonResponse();
+        $dish->setPrice($post['price']);
+        $dish->setWeight($post['weight']);
+        $dish->setType($post['type']);
+        $dish->setTitle($post['title']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($dish);
+        $em->flush();
+
+        return new JsonResponse("Обновлено");
     }
 
     /**
      * @Route("/{id}", name="dishes#delete", methods={"DELETE"})
      */
-    public function delete(int $id)
+    public function delete(int $id, DishRepository $repository)
     {
-        return new JsonResponse();
-    }
+        $dish = $repository->find($id);
+        if ($dish) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($dish);
+            $entityManager->flush();
 
+            return new JsonResponse($id);
+        }
+
+        //TODO нужно сделать правильные заголовки и статус
+        return new JsonResponse('404');
+    }
 }

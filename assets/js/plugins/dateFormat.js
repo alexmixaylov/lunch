@@ -3,12 +3,12 @@ import dateFormat from 'dateformat';
 // Internationalization strings
 dateFormat.i18n = {
     dayNames: [
-        'Вс','Пон', 'Вт', 'Ср', 'Четв', 'Пят', 'Субб',
+        'Вс','Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб',
         'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'
     ],
     monthNames: [
-        'Jan', 'Feb', 'Mar', 'Apr', 'Мая', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-        'January', 'February', 'March', 'April', 'Мая', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+        'Янв', 'Февр', 'Март', 'Апр', 'Мая', 'Июн', 'Июл', 'Авг', 'Сент', 'Окт', 'Нояб', 'Дек',
+        'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'
     ],
     timeNames: [
         'a', 'p', 'am', 'pm', 'A', 'P', 'AM', 'PM'

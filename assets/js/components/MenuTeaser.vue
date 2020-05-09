@@ -36,7 +36,7 @@
 
     export default {
         name: "MenuTeaser",
-        props: ['dateObj'],
+        props: ['menuId', 'date', 'dishes'],
         data: function () {
             return {
                 menuId: false,
