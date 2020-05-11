@@ -4,7 +4,7 @@
             <v-row align="center">
                 <v-col class="grow headline">Список заказов:</v-col>
                 <v-col class="shrink">
-                    <v-btn color="teal" large @click="calendar = true">{{dateForUser}} &nbsp;
+                    <v-btn color="teal" large  @click="calendar = true">{{dateForUser}} &nbsp;
                         <v-icon>fa-edit</v-icon>
                     </v-btn>
                 </v-col>
@@ -27,14 +27,10 @@
                     :items="orders"
                     :items-per-page="10"
                     class="elevation-1"
+                    locale="ru"
             ></v-data-table>
 
-            <v-alert v-else type="warning" class="subtitle-1">
-                на сегодня заказов нет, можно выбрать другую дату
-                <!--                <v-row align="center">-->
-                <!--                    <v-col class="grow"></v-col>-->
-                <!--                </v-row>-->
-            </v-alert>
+            <v-alert v-else type="warning" class="subtitle-1"><b>{{dateForUser}}</b> - заказов нет, можно выбрать другую дату</v-alert>
         </v-container>
         <v-dialog v-model="calendar" max-width="290">
             <v-date-picker

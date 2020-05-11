@@ -25,7 +25,7 @@
 <script>
     import MenuTeaser from "./MenuTeaser";
     import {mapGetters} from 'vuex';
-    import {dateFormat} from "../plugins/dateFormat";
+    import {dateFormat} from "../../plugins/dateFormat";
 
     export default {
         name: "MenuList",

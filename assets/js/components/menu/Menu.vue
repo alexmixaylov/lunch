@@ -18,14 +18,14 @@
                 </v-app-bar>
 
                 <v-container>
-                        <dish-component
-                                v-for="(dishe, index) in dishes"
-                                v-bind:key="index"
-                                :dish="dishe"
-                                :date="menu.date"
-                                :menu_id="menu_id"
-                                @delete-dish="deleteDish(index)"
-                        ></dish-component>
+                    <dish-component
+                            v-for="(dishe, index) in dishes"
+                            v-bind:key="index"
+                            :dish="dishe"
+                            :date="menu.date"
+                            :menu_id="menu_id"
+                            @delete-dish="deleteDish(index)"
+                    ></dish-component>
                 </v-container>
                 <v-card-actions>
                     <v-btn text @click="goBack()" color="blue">
@@ -38,10 +38,10 @@
     </v-container>
 </template>
 <script>
-    import Dish from "./Dish";
+    import Dish from "../dish/Dish";
     import {mapGetters} from 'vuex';
-    import {dateFormat} from "../plugins/dateFormat";
-    import router from "../routes";
+    import {dateFormat} from "../../plugins/dateFormat";
+    import router from "../../routes";
 
     export default {
         name: "Menu",
@@ -69,9 +69,9 @@
         methods: {
             addDish() {
                 console.log('ADD DISHE')
-                this.$store.commit('menu/addEmptyDish', {price: null, title: null, weight: null})
+                this.$store.commit('menu/addEmptyDish', {price: null, title: null, weight: null, type: null})
             },
-            deleteDish(index){
+            deleteDish(index) {
                 console.log(index)
                 this.dishes.splice(index, 1)
             },
