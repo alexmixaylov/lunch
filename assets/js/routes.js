@@ -7,8 +7,9 @@ import Week from "./components/Week";
 import Kitchen from "./components/Kitchen";
 import Delivery from "./components/Delivery";
 import Money from "./components/Money";
-import Order from "./components/Order";
+import Order from "./components/order/Order";
 import Dish from "./components/Dish";
+import CreateOrder from "./components/order/Create";
 
 Vue.use(VueRouter);
 
@@ -20,7 +21,7 @@ const router = new VueRouter({
         {path: '/kitchen', name: 'kitchen', component: Kitchen},
         {path: '/delivery', name: 'delivery', component: Delivery},
         {path: '/money', name: 'money', component: Money},
-        {path: '/order', name: 'order', component: Order},
+
         {path: '/dish', name: 'dish', component: Dish},
         {
             path: '/menus/:date',
@@ -33,6 +34,18 @@ const router = new VueRouter({
                     component: Dish
                 }
 
+            ]
+        },
+        {
+            path: '/order',
+            name: 'order',
+            component: Order,
+            children: [
+                {
+                    path: 'create',
+                    name: 'order#create',
+                    component: CreateOrder
+                }
             ]
         },
     ]

@@ -1,7 +1,9 @@
 <template>
     <v-app id="inspire">
         <header-components></header-components>
-        <content-components></content-components>
+        <content-components>
+            <router-view></router-view>
+        </content-components>
         <v-footer app>
             <span>&copy; 2020</span>
         </v-footer>
@@ -29,7 +31,8 @@
         created() {
             // можно здесь поменять тему а можно в самом плагине
             this.$vuetify.theme.dark = true
-            // this.$vuetify.theme.themes.dark.primary = '#FB8C00';
+            // this.$vuetify.lang.current = 'ru'
+            // console.log(this.$vuetify)
         },
     }
 </script>

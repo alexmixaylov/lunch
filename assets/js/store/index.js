@@ -5,6 +5,7 @@ import mutationsGlobal from './mutations';
 import menu from "./modules/menu";
 import dish from "./modules/dish";
 import actions from "./actions";
+import order from "./modules/order";
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export const store = new Vuex.Store({
     actions,
     modules: {
         dish,
-        menu
+        menu,
+        order
     }
 });

@@ -19,22 +19,44 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    // /**
-    //  * @return Order[] Returns an array of Order objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
+
+    public function findOrdersByDate($date)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+                    ->select('o.id')
+                    ->addSelect('o.total')
+                    ->addSelect('o.status')
+//                    ->addSelect('m.id')
+                    ->innerJoin('o.menu', 'm')
+                    ->andWhere('m.date = :date')
+                    ->setParameter('date', $date)
+                    ->orderBy('o.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
     }
-    */
+
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
+
+    public function findOrdersByMenu($id)
+    {
+        return $this->createQueryBuilder('o')
+                    ->select('o.id')
+                    ->addSelect('o.status')
+                    ->addSelect('d.type')
+                    ->innerJoin('o.menu', 'm')
+                    ->innerJoin('o.dishes', 'd')
+                    ->andWhere('m.id = :id')
+                    ->setParameter('id', $id)
+                    ->orderBy('o.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Order
