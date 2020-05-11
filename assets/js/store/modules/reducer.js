@@ -38,10 +38,10 @@ export default {
         loadDishesByDate({commit}, payload){
             console.log(payload)
             axios
-                .get('/orders/date/'+ payload)
+                .get('/stats/dishes/'+ payload)
                 .then(response => {
                     console.log(response)
-                    commit('addOrders', response.data)
+                    commit('addDishes', response.data)
                 })
                 .catch(error => {console.log(error)})
         }

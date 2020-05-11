@@ -2,18 +2,24 @@
 
 namespace App\Controller;
 
+use App\Repository\ReducerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/stats")
+ */
 class ReducerController extends AbstractController
 {
+
     /**
-     * @Route("/reducer", name="reducer")
+     * @Route("/dishes/{date}", name="stats#dishes_by_date" , methods={"GET"})
      */
-    public function index()
+    public function findDishesByDate($date, ReducerRepository $repository)
     {
-        return $this->render('reducer/index.html.twig', [
-            'controller_name' => 'ReducerController',
-        ]);
+        $dishes = $repository->findDishesByDate($date);
+
+        return new JsonResponse($dishes);
     }
 }
