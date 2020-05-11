@@ -20,7 +20,8 @@ export default {
         },
         getSelectedDate: state => {
             return state.selectedDate
-        }
+        },
+
     },
     mutations: {
         addMenus(state, payload) {
@@ -29,13 +30,13 @@ export default {
         addMenu(state, payload) {
             state.menu = payload
         },
-        addIdToMenu: (state, payload)=> {
-            console.log('try update MENU_ID',payload)
+        addIdToMenu: (state, payload) => {
+            console.log('try update MENU_ID', payload)
             state.menu.menu_id = payload
         },
         addEmptyDish(state, payload) {
             console.log(state)
-            state.menu['dishes'].push(payload)
+            state.menu.dishes.push(payload)
         },
         setSelectedDate(state, payload) {
             state.selectedDate = payload
@@ -57,7 +58,7 @@ export default {
                 console.log(e)
             }
         },
-        async loadMenuByDate({commit}, payload) {
+        async loadDishesIntoMenuByDate({commit}, payload) {
             try {
                 let data = await axios.get('/dishes/date/' + payload.date)
                     .then(response => {
@@ -69,7 +70,6 @@ export default {
                 console.log(error)
             }
         },
-
         async loadMenuTable({commit}, payload) {
             console.log(payload)
             try {
@@ -91,6 +91,30 @@ export default {
                 console.log(e)
             }
 
+        },
+        async addEmptyDishToMenu({commit, getters}) {
+            const newDish = {price: null, title: null, weight: null, type: null};
+            return new Promise(((resolve, reject) => {
+                commit('addEmptyDish', newDish)
+                const lastDishIndex = getters.getMenu.dishes.length - 1;
+                resolve(lastDishIndex)
+            }))
+        },
+        getMenuIdByDate({}, payload) {
+            console.log(payload)
+            return new Promise(((resolve, reject) => {
+                axios.get('/menus/date/' + payload).then(
+//TODO сделать нормальную обработку ошибок, сейчас прилетает 500 а нужно 404
+                    response => {
+                        console.log(response)
+                        if (response.status === 200) {
+                            resolve(response.data)
+                        }
+                        reject(response)
+                    })
+                    .catch(error => {console.log(error)}
+                    )
+            }));
         }
     },
 }

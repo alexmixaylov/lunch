@@ -24,7 +24,7 @@
                     locale="ru"
             ></v-data-table>
 
-            <v-alert v-else type="warning" class="subtitle-1">на сегодня заказов нет, можно выбрать другую дату
+            <v-alert v-else type="warning" class="subtitle-1"><b>{{dateForUser}}</b> - заказов нет, можно выбрать другую дату
             </v-alert>
         </v-container>
         <v-dialog v-model="calendar" max-width="290">

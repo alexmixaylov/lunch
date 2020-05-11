@@ -2,14 +2,14 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from "./components/Home";
-import Menu from './components/Menu';
+import Menu from './components/menu/Menu';
 import Week from "./components/Week";
 import Kitchen from "./components/Kitchen";
 import Delivery from "./components/Delivery";
 import Money from "./components/Money";
 import Order from "./components/order/Order";
-import Dish from "./components/Dish";
-import CreateOrder from "./components/order/Create";
+import Dish from "./components/dish/DishTeaser";
+import OrderCreate from "./components/order/OrderCreate";
 
 Vue.use(VueRouter);
 
@@ -44,7 +44,7 @@ const router = new VueRouter({
                 {
                     path: 'create',
                     name: 'order#create',
-                    component: CreateOrder
+                    component: OrderCreate
                 }
             ]
         },

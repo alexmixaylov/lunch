@@ -24,7 +24,7 @@
 <script>
     import {dateFormat} from "../plugins/dateFormat";
     import {mapGetters} from 'vuex';
-    import MenuList from "./MenuList";
+    import MenuList from "./menu/MenuList";
 
     export default {
         name: "Week",

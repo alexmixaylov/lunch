@@ -18,14 +18,13 @@
                 </v-app-bar>
 
                 <v-container>
-                    <dish-component
+                    <dish-teaser
                             v-for="(dishe, index) in dishes"
                             v-bind:key="index"
                             :dish="dishe"
-                            :date="menu.date"
-                            :menu_id="menu_id"
-                            @delete-dish="deleteDish(index)"
-                    ></dish-component>
+                            :index="index"
+                            @edit-dish="editDish(index)"
+                    ></dish-teaser>
                 </v-container>
                 <v-card-actions>
                     <v-btn text @click="goBack()" color="blue">
@@ -35,29 +34,45 @@
                 </v-card-actions>
             </v-card>
         </v-row>
+        <template v-if="dishForEditing">
+            <dish-edit
+                    :menu_id="menu_id"
+                    :dish="dishForEditing"
+                    :index="dishIndex"
+                    @delete-dish="deleteDish(dishIndex)"
+                    @cancel-editing="cancelEditing(dishIndex)"
+                    @reset-dish-index="resetDishIndex"
+            ></dish-edit>
+        </template>
     </v-container>
 </template>
 <script>
-    import Dish from "../dish/Dish";
+    import DishTeaser from "../dish/DishTeaser";
     import {mapGetters} from 'vuex';
     import {dateFormat} from "../../plugins/dateFormat";
     import router from "../../routes";
+    import DishEdit from "../dish/DishEdit";
 
     export default {
         name: "Menu",
         components: {
-            'dish-component': Dish
+            DishTeaser,
+            DishEdit
         },
         data: function () {
             return {
                 status: false,
-                menu_id: false
+                menu_id: false,
+                dishIndex: null
             }
         },
         computed: {
             ...mapGetters('menu', {menu: 'getMenu'}),
             dishes() {
                 return this.menu.dishes ?? [];
+            },
+            dishForEditing() {
+                return this.dishIndex !== null ? this.dishes[this.dishIndex] : null
             },
             isDishes() {
                 return this.dishes.length
@@ -69,11 +84,30 @@
         methods: {
             addDish() {
                 console.log('ADD DISHE')
-                this.$store.commit('menu/addEmptyDish', {price: null, title: null, weight: null, type: null})
+                this.$store.dispatch('menu/addEmptyDishToMenu')
+                    .then(response => {
+                        this.dishIndex = response
+                    })
+
             },
             deleteDish(index) {
                 console.log(index)
                 this.dishes.splice(index, 1)
+                this.dishIndex = null
+            },
+            editDish(index) {
+                console.log(index)
+                console.log('edit work in MENU PARENT COMPONENT')
+                this.dishIndex = index
+            },
+            cancelEditing(response) {
+                this.dishIndex = null
+                if (response.remove) {
+                    this.dishes.splice(response.index, 1)
+                }
+            },
+            resetDishIndex() {
+                this.dishIndex = null
             },
             goBack() {
                 this.$router.go(-1)
@@ -85,17 +119,27 @@
             // }
         },
         beforeRouteEnter(to, from, next) {
-            console.log('BEFORE ROUTER ENTER HAS WORKED')
-            console.log(to.params.id)
-            if (!to.params.id) {
-                // TODO эта проверка нужна чтобы гарантировать наличие ID меню, если человек осуществляет навигацию, то у него будет это значение по умолчанию
-                // TODO возможно есть смысл сделать запрос в базу и получить ID меню по дате, которая всегда  точно известна
-                // TODO можно сделать короткий запрос и в случае неуспеха сделать редирект
-                router.push('/week/')
-            }
             next(vm => {
-                vm.$store.dispatch('menu/loadMenuByDate', {date: to.params.date, menu_id: to.params.id});
-                vm.menu_id = to.params.id
+                let params = to.params;
+                if (!params.id) {
+                    // TODO эта проверка нужна чтобы гарантировать наличие ID меню, если человек осуществляет навигацию, то у него будет это значение по умолчанию
+                    // TODO возможно есть смысл сделать запрос в базу и получить ID меню по дате, которая всегда  точно известна
+                    // TODO можно сделать короткий запрос и в случае неуспеха сделать редирект
+                    vm.$store.dispatch('menu/getMenuIdByDate', params.date)
+                        .then(response => {
+                            params.id = response.menu_id
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }
+                console.log(params)
+                if (!params.id) {
+                    router.push('/week/');
+                }
+
+                vm.$store.dispatch('menu/loadDishesIntoMenuByDate', {date: params.date, menu_id: params.id});
+                vm.menu_id = params.id
             })
         }
     }

@@ -26,7 +26,8 @@ class MenuRepository extends ServiceEntityRepository
     {
 
         $result = $this->createQueryBuilder('m')
-//                       ->addSelect('d.id')
+//                       ->select('m.date as date')
+//                       ->addSelect('m.id as menu_id')
                        ->andWhere('m.date = :date')
                        ->setParameter('date', $date)
                        ->getQuery()

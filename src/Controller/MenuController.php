@@ -98,13 +98,11 @@ class MenuController extends AbstractController
      */
     public function getMenuByDate(string $date, MenuRepository $repository)
     {
-        //print_r(date('Y-m-d', strtotime("monday this week", strtotime($date))));
-        $date = new \DateTime(date('Y-m-d', strtotime("monday this week", strtotime($date))));
 
         $menu = $repository->findOneByDate($date);
 
         if ( ! $menu) {
-            return new JsonResponse();
+            throw $this->createNotFoundException("Меню на эту дату ${$date} еще не создано");
         }
 
         return new JsonResponse([

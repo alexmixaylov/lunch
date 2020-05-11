@@ -57,8 +57,8 @@
             }
         },
         mounted() {
-            // this.$store.dispatch('menu/loadMenuByDate', this.dateObj.rawDate);
-            // this.$store.dispatch('menu/loadMenuByDate', this.dateObj.rawDate);
+            // this.$store.dispatch('menu/loadDishesIntoMenuByDate', this.dateObj.rawDate);
+            // this.$store.dispatch('menu/loadDishesIntoMenuByDate', this.dateObj.rawDate);
         },
         watch: {
             loader() {
