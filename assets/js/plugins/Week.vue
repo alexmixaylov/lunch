@@ -19,9 +19,9 @@
 </template>
 
 <script>
-    import {dateFormat} from "../plugins/dateFormat";
+    import {dateFormat} from "./dateFormat";
     import {mapGetters} from 'vuex';
-    import MenuList from "./menu/MenuList";
+    import MenuList from "../components/menu/MenuList";
 
     export default {
         name: "Week",

@@ -2,12 +2,12 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from "./components/Home";
-import Menu from './components/menu/Menu';
-import Week from "./components/Week";
-import Kitchen from "./components/Kitchen";
-import Delivery from "./components/Delivery";
-import Money from "./components/Money";
-import Order from "./components/order/Order";
+import Menu from './pages/Menu';
+import Week from "./plugins/Week";
+import Kitchen from "./pages/Kitchen";
+import Delivery from "./pages/Delivery";
+import Money from "./pages/Money";
+import Order from "./pages/Order";
 import Dish from "./components/dish/DishTeaser";
 
 Vue.use(VueRouter);

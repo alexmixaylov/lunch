@@ -47,11 +47,11 @@
     </v-container>
 </template>
 <script>
-    import DishTeaser from "../dish/DishTeaser";
+    import DishTeaser from "../components/dish/DishTeaser";
     import {mapGetters} from 'vuex';
-    import {dateFormat} from "../../plugins/dateFormat";
-    import router from "../../routes";
-    import DishEdit from "../dish/DishEdit";
+    import {dateFormat} from "../plugins/dateFormat";
+    import router from "../routes";
+    import DishEdit from "../components/dish/DishEdit";
 
     export default {
         name: "Menu",

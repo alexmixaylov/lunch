@@ -44,9 +44,9 @@
 </template>
 
 <script>
-    import {dateFormat} from "../../plugins/dateFormat";
+    import {dateFormat} from "../plugins/dateFormat";
     import {mapGetters} from 'vuex';
-    import OrderCreate from "./OrderCreate";
+    import OrderCreate from "../components/order/OrderCreate";
 
     export default {
         name: "Order",
