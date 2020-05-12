@@ -1,14 +1,11 @@
 <template>
-    <v-container>
-        <v-row justify="center">
-            <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
-            <v-tabs centered grow center-active>
-                <v-tab v-on:click="generateDateWithShift(-1)">< назад</v-tab>
-                <v-tab v-on:click="generateDateWithShift(0)">Текущая неделя</v-tab>
-                <v-tab v-on:click="generateDateWithShift(1)">вперед ></v-tab>
-            </v-tabs>
-        </v-row>
-
+    <v-row justify="center">
+        <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
+        <v-tabs centered grow>
+            <v-tab v-on:click="generateDateWithShift(-1)">< назад</v-tab>
+            <v-tab v-on:click="generateDateWithShift(0)">Текущая неделя</v-tab>
+            <v-tab v-on:click="generateDateWithShift(1)">вперед ></v-tab>
+        </v-tabs>
         <menu-list
                 v-if="menu"
                 v-for="menu in menusFromAPI"
@@ -18,7 +15,7 @@
                 :dishes="menu.dishes"
         >
         </menu-list>
-    </v-container>
+    </v-row>
 </template>
 
 <script>
