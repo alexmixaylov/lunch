@@ -3,12 +3,13 @@ import VueRouter from 'vue-router';
 
 import Home from "./components/Home";
 import Menu from './pages/Menu';
-import Week from "./plugins/Week";
+import Week from "./pages/Week";
 import Kitchen from "./pages/Kitchen";
 import Delivery from "./pages/Delivery";
 import Money from "./pages/Money";
 import Order from "./pages/Order";
 import Dish from "./components/dish/DishTeaser";
+import OrderCreate from "./components/order/OrderCreate";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const router = new VueRouter({
             path: '/order',
             name: 'order',
             component: Order,
+        },
+        {
+            path: '/order/create',
+            name: 'order-create',
+            component: OrderCreate,
         },
     ]
 });

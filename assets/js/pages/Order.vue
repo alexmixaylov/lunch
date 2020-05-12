@@ -38,7 +38,7 @@
         </v-dialog>
 
         <v-dialog v-model="createOrder">
-            <order-create :date-default="dateForAPI"></order-create>
+            <order-create></order-create>
         </v-dialog>
     </v-row>
 </template>

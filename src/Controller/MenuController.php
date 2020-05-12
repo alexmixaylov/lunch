@@ -19,7 +19,11 @@ class MenuController extends AbstractController
     /**
      * @Route("/table/{userDate}", name="menus#table", methods={"GET"})
      */
-    public function getMenusTableOrInitEmptyMenus(string $userDate, MenuRepository $repository, DishRepository $dish_repository) {
+    public function getMenusTableOrInitEmptyMenus(
+        string $userDate,
+        MenuRepository $repository,
+        DishRepository $dish_repository
+    ) {
         define('HOW_MANY_DAYS_ADD', 4);
         // 4 days must be added Then we can get all days per week
         $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
@@ -105,9 +109,22 @@ class MenuController extends AbstractController
             throw $this->createNotFoundException("Меню на эту дату ${$date} еще не создано");
         }
 
+        $dishes = array_map(function ($dish) {
+            return [
+                'dish_id' => $dish->getId(),
+                'title'   => $dish->getTitle(),
+                'price'   => $dish->getPrice(),
+                'weight'  => $dish->getWeight(),
+                'type'    => $dish->getType()
+            ];
+        },
+            $menu->getDishes()->getValues()
+        );
+
         return new JsonResponse([
             'menu_id' => $menu->getId(),
             'date'    => $menu->getDate()->format('Y-m-d'),
+            'dishes'  => $dishes
         ]);
     }
 
@@ -118,9 +135,10 @@ class MenuController extends AbstractController
      * @return JsonResponse
      * @Route("/id/{date}", name="menus#get_id_by_date", methods={"GET"})
      */
-    public function getIdMenuByDate(string $date, MenuRepository $repository){
+    public function getIdMenuByDate(string $date, MenuRepository $repository)
+    {
         $menu = $repository->findOneByDate($date);
-        if (!$menu) {
+        if ( ! $menu) {
             throw $this->createNotFoundException("Меню на эту дату ${$date} не найдено");
         }
 
@@ -147,6 +165,7 @@ class MenuController extends AbstractController
         if ( ! $menu) {
             throw $this->createNotFoundException("Menu with ID:{$id} not Found");
         }
+
         return new JsonResponse($menu);
     }
 

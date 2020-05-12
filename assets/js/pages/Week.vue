@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import {dateFormat} from "./dateFormat";
+    import {dateFormat} from "../plugins/dateFormat";
     import {mapGetters} from 'vuex';
     import MenuList from "../components/menu/MenuList";
 

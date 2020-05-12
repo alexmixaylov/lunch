@@ -45,7 +45,8 @@ export default {
     },
     actions: {
         loadMenuByDate({commit}, payload) {
-            axios.get('/dishes/menu/' + payload)
+            console.log(payload)
+            axios.get('/menus/date/' + payload)
                 .then(response => {
                     if (response.status === 200) {
                         console.log(response.data)
