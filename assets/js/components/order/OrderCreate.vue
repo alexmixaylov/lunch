@@ -58,7 +58,7 @@
                 <v-col class="grow title">Итого: {{totalSumm}} грн.</v-col>
                 <v-col class="grow title">Со скидкой:</v-col>
                 <v-col class="shrink">
-                    <v-btn color="orange" large @click="loadMenu()">Заказать</v-btn>
+                    <v-btn color="orange" large @click="createOrder()">Заказать</v-btn>
                 </v-col>
             </v-row>
         </template>
@@ -152,6 +152,20 @@
                 console.log('changeDate  WORKING')
                 this.calendar = false
 
+            },
+            createOrder() {
+                let dishesId = Object.values(this.orderedDishes).map(dish => dish.dish_id);
+
+                const order = {
+                    total: this.totalSumm,
+                    status: 'new',
+                    dishes: dishesId,
+                    menu_id: this.menu.menu_id
+                }
+                console.log(order)
+                this.$store.dispatch('order/createOrder', order).then(response => {
+                    // console.log(response)
+                })
             },
         },
         watch: {

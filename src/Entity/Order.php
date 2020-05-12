@@ -110,7 +110,7 @@ class Order
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $status = 'new'): self
     {
         $this->status = $status;
 

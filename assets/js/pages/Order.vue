@@ -4,12 +4,16 @@
             <v-row align="center">
                 <v-col class="grow headline">Список заказов:</v-col>
                 <v-col class="shrink">
-                    <v-btn color="teal" large  @click="calendar = true">{{dateForUser}} &nbsp;
+                    <v-btn color="teal" large @click="calendar = true">{{dateForUser}} &nbsp;
                         <v-icon>fa-edit</v-icon>
                     </v-btn>
                 </v-col>
                 <v-col class="shrink">
-                    <v-btn color="orange" large @click="createOrder = true">Создать &nbsp;<v-icon>fa-plus</v-icon></v-btn>
+                    <v-btn color="orange" large>
+                        <router-link tag="span" :to="{name:'order-create'}">Создать &nbsp;<v-icon>fa-plus</v-icon>
+                        </router-link>
+                    </v-btn>
+
                 </v-col>
             </v-row>
 
@@ -24,7 +28,9 @@
                     locale="ru"
             ></v-data-table>
 
-            <v-alert v-else type="warning" class="subtitle-1"><b>{{dateForUser}}</b> - заказов нет, можно выбрать другую дату</v-alert>
+            <v-alert v-else type="warning" class="subtitle-1"><b>{{dateForUser}}</b> - заказов нет, можно выбрать другую
+                дату
+            </v-alert>
         </v-container>
         <v-dialog v-model="calendar" max-width="290">
             <v-date-picker
@@ -37,9 +43,6 @@
             ></v-date-picker>
         </v-dialog>
 
-        <v-dialog v-model="createOrder">
-            <order-create></order-create>
-        </v-dialog>
     </v-row>
 </template>
 
@@ -50,7 +53,7 @@
 
     export default {
         name: "Order",
-        components:{OrderCreate},
+        components: {OrderCreate},
         data() {
             return {
                 date: new Date().toISOString().substr(0, 10),
@@ -60,7 +63,6 @@
                     {text: 'Статус', value: 'status'},
                     {text: 'Сумма', value: 'total'}
                 ],
-                createOrder: false
             }
         },
         computed: {

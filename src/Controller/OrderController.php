@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Repository\DishRepository;
+use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +37,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/", name="orders#list")
+     * @Route("/", name="orders#list", methods={"GET"})
      */
     public function list(OrderRepository $repository)
     {
@@ -55,28 +57,41 @@ class OrderController extends AbstractController
         if ( ! $order) {
             throw $this->createNotFoundException(`Order with ID:${$id} not found`);
         }
-//        foreach ($order->getDishes()->getValues() as $value) {
-//            print_r($value->getId());
-//        }
+
         return new JsonResponse($order);
     }
 
     /**
      * @Route("/", name="orders#create", methods={"POST"})
      */
-    public function create(Request $request)
+    public function create(Request $request, MenuRepository $menu_repository, DishRepository $dish_repository)
     {
-        $post  = json_decode($request->getContent(), true);
-        $order = new Order();
+        $post = json_decode($request->getContent(), true);
 
+        $menu = $menu_repository->find($post['menu_id']);
+
+        $dishes = array_map(function ($dishId) use ($dish_repository) {
+            return $dish_repository->find($dishId);
+        }, $post['dishes']);
+
+
+        $order = new Order();
+        $order->setCreatedAt(new \DateTime('now'));
+        $order->setUpdatedAt(new \DateTime('now'));
+        $order->setMenu($menu);
+        $order->setTotal($post['total']);
+        $order->setStatus($post['status']);
+        $order->setDate($menu->getDate());
+
+        foreach ($dishes as $dish) {
+            $order->addDish($dish);
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($order);
-
-//        $em->flush();
+        $em->flush();
 
         return new JsonResponse($order->getId());
-
     }
 
     /**
