@@ -9,17 +9,11 @@
                     </v-btn>
                 </v-col>
                 <v-col class="shrink">
-                    <v-btn color="orange" large>
-                        <router-link tag="span" :to="{name: 'order#create'}">Создать &nbsp;
-                            <v-icon>fa-plus</v-icon>
-                        </router-link>
-                    </v-btn>
+                    <v-btn color="orange" large @click="createOrder = true">Создать &nbsp;<v-icon>fa-plus</v-icon></v-btn>
                 </v-col>
             </v-row>
 
             <v-divider class="pa-5"></v-divider>
-
-            <router-view></router-view>
 
             <v-data-table
                     v-if="isOrders"
@@ -42,15 +36,21 @@
                     @change="calendar = false"
             ></v-date-picker>
         </v-dialog>
+
+        <v-dialog v-model="createOrder">
+            <order-create :date-default="dateForAPI"></order-create>
+        </v-dialog>
     </v-row>
 </template>
 
 <script>
     import {dateFormat} from "../../plugins/dateFormat";
     import {mapGetters} from 'vuex';
+    import OrderCreate from "./OrderCreate";
 
     export default {
         name: "Order",
+        components:{OrderCreate},
         data() {
             return {
                 date: new Date().toISOString().substr(0, 10),
@@ -59,7 +59,8 @@
                     {text: 'ID', value: 'id'},
                     {text: 'Статус', value: 'status'},
                     {text: 'Сумма', value: 'total'}
-                ]
+                ],
+                createOrder: false
             }
         },
         computed: {

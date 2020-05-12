@@ -19,7 +19,7 @@ class MenuController extends AbstractController
     /**
      * @Route("/table/{userDate}", name="menus#table", methods={"GET"})
      */
-    public function getMenuTableOrInitEmptyMenus(string $userDate, MenuRepository $repository, DishRepository $dish_repository) {
+    public function getMenusTableOrInitEmptyMenus(string $userDate, MenuRepository $repository, DishRepository $dish_repository) {
         define('HOW_MANY_DAYS_ADD', 4);
         // 4 days must be added Then we can get all days per week
         $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
@@ -109,6 +109,22 @@ class MenuController extends AbstractController
             'menu_id' => $menu->getId(),
             'date'    => $menu->getDate()->format('Y-m-d'),
         ]);
+    }
+
+    /**
+     * @param string $date
+     * @param MenuRepository $repository
+     *
+     * @return JsonResponse
+     * @Route("/id/{date}", name="menus#get_id_by_date", methods={"GET"})
+     */
+    public function getIdMenuByDate(string $date, MenuRepository $repository){
+        $menu = $repository->findOneByDate($date);
+        if (!$menu) {
+            throw $this->createNotFoundException("Меню на эту дату ${$date} не найдено");
+        }
+
+        return new JsonResponse($menu->getId());
     }
 
     /**

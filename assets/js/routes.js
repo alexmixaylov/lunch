@@ -9,7 +9,6 @@ import Delivery from "./components/Delivery";
 import Money from "./components/Money";
 import Order from "./components/order/Order";
 import Dish from "./components/dish/DishTeaser";
-import OrderCreate from "./components/order/OrderCreate";
 
 Vue.use(VueRouter);
 
@@ -40,13 +39,6 @@ const router = new VueRouter({
             path: '/order',
             name: 'order',
             component: Order,
-            children: [
-                {
-                    path: 'create',
-                    name: 'order#create',
-                    component: OrderCreate
-                }
-            ]
         },
     ]
 });

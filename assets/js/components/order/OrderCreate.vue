@@ -7,8 +7,14 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex';
+
     export default {
-        name: "Create"
+        name: "Create",
+        props: ['date-default'],
+        computed: {
+            ...mapGetters('menu', {menu: 'dfdfdf'})
+        }
     }
 </script>
 

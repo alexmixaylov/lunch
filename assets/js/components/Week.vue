@@ -4,7 +4,7 @@
             <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
             <v-tabs centered grow center-active>
                 <v-tab v-on:click="generateDateWithShift(-1)">< назад</v-tab>
-                <v-tab v-on:click="generateDateWithShift(0)">Эта неделя</v-tab>
+                <v-tab v-on:click="generateDateWithShift(0)">Текущая неделя</v-tab>
                 <v-tab v-on:click="generateDateWithShift(1)">вперед ></v-tab>
             </v-tabs>
         </v-row>

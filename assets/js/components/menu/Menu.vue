@@ -27,10 +27,10 @@
                     ></dish-teaser>
                 </v-container>
                 <v-card-actions>
-                    <v-btn text @click="goBack()" color="blue">
-                        <v-icon>fa-angle-left</v-icon>
+                    <v-btn @click="goBack()" color="teal darken-2">
+                        <v-icon>fa-angle-left</v-icon> &nbsp;
                         <span> Назад</span></v-btn>
-                    <v-btn text @click="addDish()" color="light-green">Новое Блюдо</v-btn>
+                    <v-btn @click="addDish()" color="green accent-4">Новое Блюдо &nbsp; <v-icon>fa-plus</v-icon> </v-btn>
                 </v-card-actions>
             </v-card>
         </v-row>
@@ -125,17 +125,16 @@
                     // TODO эта проверка нужна чтобы гарантировать наличие ID меню, если человек осуществляет навигацию, то у него будет это значение по умолчанию
                     // TODO возможно есть смысл сделать запрос в базу и получить ID меню по дате, которая всегда  точно известна
                     // TODO можно сделать короткий запрос и в случае неуспеха сделать редирект
-                    vm.$store.dispatch('menu/getMenuIdByDate', params.date)
-                        .then(response => {
-                            params.id = response.menu_id
-                        })
+                    vm.$store.dispatch('menu/getMenuIdByDate', params.date).then(response => {
+                        params.id = response
+                    })
                         .catch(error => {
                             console.log(error)
                         })
                 }
                 console.log(params)
-                if (!params.id) {
-                    router.push('/week/');
+                if (!params.hasOwnProperty('id')) {
+                    // router.push('/week/');
                 }
 
                 vm.$store.dispatch('menu/loadDishesIntoMenuByDate', {date: params.date, menu_id: params.id});

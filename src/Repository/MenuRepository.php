@@ -24,16 +24,11 @@ class MenuRepository extends ServiceEntityRepository
 
     public function findOneByDate($date)
     {
-
-        $result = $this->createQueryBuilder('m')
-//                       ->select('m.date as date')
-//                       ->addSelect('m.id as menu_id')
-                       ->andWhere('m.date = :date')
-                       ->setParameter('date', $date)
-                       ->getQuery()
-                       ->getOneOrNullResult();
-
-        return $result;
+        return $this->createQueryBuilder('m')
+                    ->andWhere('m.date = :date')
+                    ->setParameter('date', $date)
+                    ->getQuery()
+                    ->getOneOrNullResult();
     }
 
     public function findMenuById($id)
