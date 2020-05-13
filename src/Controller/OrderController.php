@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Repository\ClientRepository;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
@@ -64,11 +65,16 @@ class OrderController extends AbstractController
     /**
      * @Route("/", name="orders#create", methods={"POST"})
      */
-    public function create(Request $request, MenuRepository $menu_repository, DishRepository $dish_repository)
-    {
+    public function create(
+        Request $request,
+        MenuRepository $menu_repository,
+        DishRepository $dish_repository,
+        ClientRepository $client_repository
+    ) {
         $post = json_decode($request->getContent(), true);
 
         $menu = $menu_repository->find($post['menu_id']);
+        $client = $client_repository->find($post['client']);
 
         $dishes = array_map(function ($dishId) use ($dish_repository) {
             return $dish_repository->find($dishId);
@@ -82,6 +88,7 @@ class OrderController extends AbstractController
         $order->setTotal($post['total']);
         $order->setStatus($post['status']);
         $order->setDate($menu->getDate());
+        $order->setClient($client);
 
         foreach ($dishes as $dish) {
             $order->addDish($dish);

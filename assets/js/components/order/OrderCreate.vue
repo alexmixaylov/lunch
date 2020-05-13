@@ -160,7 +160,8 @@
                     total: this.totalSumm,
                     status: 'new',
                     dishes: dishesId,
-                    menu_id: this.menu.menu_id
+                    menu_id: this.menu.menu_id,
+                    client: 2
                 }
                 console.log(order)
                 this.$store.dispatch('order/createOrder', order).then(response => {
