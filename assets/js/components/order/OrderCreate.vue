@@ -164,7 +164,8 @@
                 }
                 console.log(order)
                 this.$store.dispatch('order/createOrder', order).then(response => {
-                    // console.log(response)
+                    console.log(response)
+                    this.orderedDishes = {}
                 })
             },
         },

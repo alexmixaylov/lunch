@@ -29,12 +29,13 @@ export default {
                 })
         },
         createOrder({commit}, payload) {
-            console.log( JSON.stringify(payload))
-            axios.post(' /orders/', payload)
-                .then(response => {
-                    console.log('RESPONSE AFTER CREATING',response.data)
-                })
-
+            return new Promise(((resolve, reject) => {
+                axios.post(' /orders/', payload)
+                    .then(response => {
+                        resolve(response.data)
+                        reject(response)
+                    })
+            }));
         }
     }
 }
