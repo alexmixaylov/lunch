@@ -7,9 +7,10 @@ import Week from "./pages/Week";
 import Kitchen from "./pages/Kitchen";
 import Delivery from "./pages/Delivery";
 import Money from "./pages/Money";
-import Order from "./pages/Order";
+import Orders from "./pages/Orders";
 import Dish from "./components/dish/DishTeaser";
 import OrderCreate from "./components/order/OrderCreate";
+import OrderRead from "./components/order/OrderRead";
 
 Vue.use(VueRouter);
 
@@ -37,14 +38,19 @@ const router = new VueRouter({
             ]
         },
         {
-            path: '/order',
-            name: 'order',
-            component: Order,
+            path: '/orders',
+            name: 'orders',
+            component: Orders,
         },
         {
-            path: '/order/create',
-            name: 'order-create',
+            path: '/orders/create',
+            name: 'orders#create',
             component: OrderCreate,
+        },
+        {
+            path: '/orders/:id',
+            name: 'orders#read',
+            component: OrderRead,
         },
     ]
 });

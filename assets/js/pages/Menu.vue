@@ -9,9 +9,9 @@
                     <v-toolbar-title>{{ dateForUser }}</v-toolbar-title>
 
                     <v-spacer></v-spacer>
-                    <router-link :to="{name: 'order'}" tag="button">
+                    <router-link :to="{name: 'orders#create'}" tag="button">
                         <v-btn text>
-                            Добавить заказ &nbsp;<v-icon>fa-plus</v-icon>
+                            Заказать &nbsp;<v-icon>fa-plus</v-icon>
                         </v-btn>
                     </router-link>
 

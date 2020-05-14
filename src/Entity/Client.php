@@ -22,7 +22,7 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $login;
+    private $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="client")
@@ -39,14 +39,14 @@ class Client
         return $this->id;
     }
 
-    public function getLogin(): ?string
+    public function getSlug(): ?string
     {
-        return $this->login;
+        return $this->slug;
     }
 
-    public function setLogin(string $login): self
+    public function setSlug(string $slug): self
     {
-        $this->login = $login;
+        $this->slug = $slug;
 
         return $this;
     }

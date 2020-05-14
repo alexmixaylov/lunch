@@ -18,33 +18,17 @@ class ReducerRepository
         $this->em = $entityManager;
     }
 
-    public function findDishesByMenuId($menuId)
+    public function countDishesByDate($date)
     {
 
-        return $this->createQueryBuilder('d')
-                    ->select('d.id as dish_id')
-                    ->addSelect('d.title')
-                    ->addSelect('d.price')
-                    ->addSelect('d.weight')
-                    ->addSelect('d.type')
-                    ->leftJoin('d.menu', 'm')
-                    ->where('m.id = :menu_id')
-                    ->setParameter('menu_id', $menuId)
-                    ->getQuery()
-                    ->getResult();
-
-    }
-
-    public function findDishesByDate($date)
-    {
-
-        return $this->em->createQueryBuilder('d')
+        return $this->em->createQueryBuilder()
                         ->select('d.id as dish_id')
                         ->addSelect('d.title')
                         ->addSelect('COUNT(d) as cnt')
                         ->groupBy('d.id')
-                        ->from(Dish::class, 'd')
-                        ->leftJoin('d.menu', 'm')
+                        ->from(Order::class, 'o')
+                        ->innerJoin('o.dishes', 'd')
+                        ->innerJoin('o.menu', 'm')
                         ->where('m.date = :date')
                         ->setParameter('date', $date)
                         ->orderBy('d.type')

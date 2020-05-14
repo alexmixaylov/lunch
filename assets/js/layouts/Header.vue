@@ -48,7 +48,7 @@
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <router-link :to="{name:'order'}">Заказы</router-link>
+                            <router-link :to="{name:'orders'}">Заказы</router-link>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Client;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,8 +30,9 @@ class OrderRepository extends ServiceEntityRepository
                     ->select('o.id')
                     ->addSelect('o.total')
                     ->addSelect('o.status')
-//                    ->addSelect('m.id')
+                    ->addSelect('c.slug as client')
                     ->innerJoin('o.menu', 'm')
+                    ->innerJoin('o.client', 'c')
                     ->andWhere('m.date = :date')
                     ->setParameter('date', $date)
                     ->orderBy('o.id', 'ASC')

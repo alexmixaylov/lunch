@@ -48,7 +48,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="orders#read", methods={"GET"})
+     * @Route("/{id}", name="orders#read", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function read(int $id, OrderRepository $repository)
     {
@@ -59,7 +59,46 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(`Order with ID:${$id} not found`);
         }
 
-        return new JsonResponse($order);
+        // клонируем dish в согласии со счетчиками 118 - 121 строки
+        $counters = $order->getCounters();
+        $dishes   = array_map(function ($dish) use ($counters) {
+            $dishId    = $dish->getId();
+            $dish      = [
+                'dish_id' => $dishId,
+                'title'   => $dish->getTitle(),
+                'price'   => $dish->getPrice()
+            ];
+            $cloneDish = function ($cnt, $acc) use ($dish, &$cloneDish) {
+                if ($cnt === 0) {
+                    return $acc;
+                }
+                $acc[] = $dish;
+
+                return $cloneDish($cnt - 1, $acc);
+            };
+
+            return array_values($cloneDish($counters[$dishId], []));
+        }, $order->getDishes()->getValues());
+
+        $normalizeDishes = [];
+
+        foreach ($dishes as $dishChildren) {
+            foreach ($dishChildren as $dish) {
+                $normalizeDishes[] = $dish;
+            }
+        }
+
+        $result = [
+            'order_id' => $order->getId(),
+            'status'   => $order->getStatus(),
+            'total'    => $order->getTotal(),
+            'date'     => $order->getDate()->format('Y-m-d'),
+            'dishes'   => $normalizeDishes,
+            'created'  => $order->getCreatedAt()->format('Y-m-d\TH:i:sP'),
+            'updated'  => $order->getUpdatedAt()->format('Y-m-d\TH:i:sP'),
+        ];
+
+        return new JsonResponse($result);
     }
 
     /**
@@ -73,12 +112,28 @@ class OrderController extends AbstractController
     ) {
         $post = json_decode($request->getContent(), true);
 
-        $menu = $menu_repository->find($post['menu_id']);
+        $menu   = $menu_repository->find($post['menu_id']);
         $client = $client_repository->find($post['client']);
+
+        // так как невозможно несколько идентичных связея для manyToMany
+        // мы прогоняем массив с дублями и записываем счетчик каждой повторяющейся позиции dish
+        // нужно сформировать массив с парами dish_id => cnt
+        // на операции чтения нужно получить сущности и прогнать их через счетчик, продублировав позиции 62 строка
+
+        $rawDishes    = $post['dishes'];
+        $dishCounters = [];
+        foreach ($rawDishes as $dishId) {
+            if (array_key_exists($dishId, $dishCounters)) {
+                $dishCounters[$dishId]++;
+
+            } else {
+                $dishCounters[$dishId] = 1;
+            }
+        }
 
         $dishes = array_map(function ($dishId) use ($dish_repository) {
             return $dish_repository->find($dishId);
-        }, $post['dishes']);
+        }, array_unique($rawDishes));
 
 
         $order = new Order();
@@ -89,6 +144,7 @@ class OrderController extends AbstractController
         $order->setStatus($post['status']);
         $order->setDate($menu->getDate());
         $order->setClient($client);
+        $order->setCounters($dishCounters);
 
         foreach ($dishes as $dish) {
             $order->addDish($dish);

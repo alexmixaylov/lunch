@@ -16,9 +16,9 @@ class ReducerController extends AbstractController
     /**
      * @Route("/dishes/{date}", name="stats#dishes_by_date" , methods={"GET"})
      */
-    public function findDishesByDate($date, ReducerRepository $repository)
+    public function countDishesByDate($date, ReducerRepository $repository)
     {
-        $dishes = $repository->findDishesByDate($date);
+        $dishes = $repository->countDishesByDate($date);
 
         return new JsonResponse($dishes);
     }

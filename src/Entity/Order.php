@@ -67,6 +67,11 @@ class Order
      */
     private $client;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $counters = [];
+
     public function __construct()
     {
         $this->dishes = new ArrayCollection();
@@ -179,6 +184,18 @@ class Order
     public function setClient(?Client $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getCounters(): ?array
+    {
+        return $this->counters;
+    }
+
+    public function setCounters(array $counters): self
+    {
+        $this->counters = $counters;
 
         return $this;
     }

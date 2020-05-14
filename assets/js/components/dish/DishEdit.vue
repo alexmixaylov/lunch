@@ -64,26 +64,26 @@
                 types: [
                     {
                         text: 'Первое',
-                        value: 'first'
+                        value: '1first'
 
                     }, {
                         text: 'Гарнир',
-                        value: 'garnir'
+                        value: '2garnir'
                     }, {
                         text: 'Мясо',
-                        value: 'meat'
+                        value: '3meat'
                     },
                     {
                         text: 'Комплексное',
-                        value: 'complex'
+                        value: '4complex'
                     },
                     {
                         text: 'Салат',
-                        value: 'salad'
+                        value: '5salad'
                     },
                     {
                         text: 'Дессерт',
-                        value: 'desert'
+                        value: '6desert'
                     },
                 ],
                 titleRule: [

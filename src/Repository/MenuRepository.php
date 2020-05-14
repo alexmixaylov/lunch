@@ -26,7 +26,9 @@ class MenuRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
                     ->andWhere('m.date = :date')
+                    ->leftJoin('m.dishes', 'd')
                     ->setParameter('date', $date)
+                    ->orderBy('d.type')
                     ->getQuery()
                     ->getOneOrNullResult();
     }
