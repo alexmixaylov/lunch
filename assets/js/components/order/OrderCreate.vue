@@ -12,49 +12,43 @@
             </v-col>
         </v-row>
 
+        <v-divider></v-divider>
+
         <v-row>
             <v-col cols="12" lg="6">
                 <v-card class="mxauto mt-5 mb-5" width="100%">
-                    <v-list-item>
-                        <v-list-item-content>
-                            <v-list-item-title class="subtitle-1">Меню на <span class="title">{{dateForUser}}</span>
-                            </v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+                    <v-app-bar dark color="teal darken-1">
+                        <span>В Меню на </span>
+                        <v-spacer></v-spacer>
+                        <span class="title">{{dateForUser}}</span>
+                    </v-app-bar>
 
+                    <div class="alex-row" v-for="(dish, index) in menu.dishes" :key="index">
 
-                    <v-list-item v-for="(dish, index) in menu.dishes" :key="index">
-                        <v-list-item-content>
-                            <v-col class="grow">{{ dish.title }} {{dish.price}}грн. {{ dish.dish_id }}</v-col>
-                            <v-col class="shrink">
-                                <v-icon color="orange" @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
-                            </v-col>
-                            <v-col class="shrink">
-                                <v-icon color="orange" @click="addToOrdered(index)">fa-plus</v-icon>
-                            </v-col>
-
-                            <!--                        <v-spacer></v-spacer>-->
-
-                        </v-list-item-content>
-                    </v-list-item>
-
-
+                        <div>{{ dish.title }} {{dish.price}}грн. {{ dish.dish_id }}</div>
+                        <div class="alex-row-end">
+                            <v-icon color="green " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
+                            &nbsp; &nbsp;
+                            <v-icon color="red darken-2" @click="addToOrdered(index)">fa-plus</v-icon>
+                        </div>
+                    </div>
                 </v-card>
             </v-col>
 
-            <v-col cols="12" lg="6" v-if="orderTable">
-                <header class="title">Ваш заказ</header>
-                <v-data-table
-                        v-if="orderTable"
-                        disable-pagination
-                        disable-sort
-                        disable-filtering
-                        hide-default-footer
-                        :headers="headers"
-                        :items="normalizeOrders"
-                        class="elevation-1"
-                        locale="ru"
-                ></v-data-table>
+            <v-col  cols="12" lg="6" v-if="orderTable">
+                <div class="mxauto mt-5 mb-5">
+                    <v-data-table
+                            v-if="orderTable"
+                            disable-pagination
+                            disable-sort
+                            disable-filtering
+                            hide-default-footer
+                            :headers="headers"
+                            :items="normalizeOrders"
+                            class="elevation-1"
+                            locale="ru"
+                    ></v-data-table>
+                </div>
 
                 <v-row justify="space-between">
                     <v-col class="grow title text-right">Полная стоимость: {{totalSumm}} грн.</v-col>
@@ -83,10 +77,10 @@
             ></v-date-picker>
         </v-dialog>
 
-        <v-dialog v-model="orderSuccess">
+        <v-dialog v-model="orderSuccess" max-width="500">
             <v-card>
-                <v-app-bar dark color="teal darken-1">
-                    <v-toolbar-title>Приятного апетита!</v-toolbar-title>
+                <v-app-bar dark color="teal">
+                    <v-toolbar-title>Приятного апетита !!!</v-toolbar-title>
                 </v-app-bar>
 
 
@@ -97,12 +91,12 @@
                 </v-container>
 
                 <v-card-actions>
-                        <v-btn color="orange darken-2" @click="orderSuccess = false">Закрыть</v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-2">
-                            <router-link tag="span" :to="{name: 'orders#read', params:{id: orderID}}">Посмотреть
-                            </router-link>
-                        </v-btn>
+                    <v-btn color="orange darken-2" @click="orderSuccess = false">Закрыть</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-2">
+                        <router-link tag="span" :to="{name: 'orders#read', params:{id: orderID}}">Посмотреть
+                        </router-link>
+                    </v-btn>
                 </v-card-actions>
             </v-card>
 
@@ -141,15 +135,26 @@
             dateForUser() {
                 return dateFormat(this.date, 'dddd, dd mmm')
             },
+
             normalizeOrders() {
-                const orderItems = Object.values(this.orderedDishes);
-                return orderItems.map(value => {
-                    let item = value;
-                    item.summ = item.cnt * item.price
-                    // console.log(item)
-                    return item
-                })
+                let orderObj = {};
+                this.orderedDishes.forEach(item => {
+                    const dishId = item.dish_id;
+                    if (orderObj.hasOwnProperty(dishId)) {
+                        orderObj[dishId].cnt++
+                        orderObj[dishId].summ = orderObj[dishId].summ + orderObj[dishId].price
+                    } else {
+                        orderObj[dishId] = {
+                            title: item.title,
+                            price: item.price,
+                            summ: item.price,
+                            cnt: 1
+                        }
+                    }
+                });
+                return Object.values(orderObj)
             },
+
             orderTable() {
                 return this.normalizeOrders.length > 0
             },
@@ -159,6 +164,8 @@
                 }, 0);
             }
         },
+
+
         methods: {
             addToOrdered(index) {
                 this.orderedDishes.push(this.menu.dishes[index])
@@ -214,14 +221,22 @@
 </script>
 
 <style scoped>
-    .text-between {
+    .alex-row {
         display: flex;
         justify-content: space-between;
-        border-bottom: 1px solid gray;
-
+        padding: 10px 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .text-between:last-child {
-        border-bottom: none;
+    .alex-row:last-of-type {
+        border: none;
+    }
+
+    .alex-row-end {
+        text-align: end;
+    }
+
+    .alex-row:hover {
+        background-color: rgba(255, 255, 255, 0.2);
     }
 </style>

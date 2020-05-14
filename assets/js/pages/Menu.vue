@@ -17,20 +17,21 @@
 
                 </v-app-bar>
 
-                <v-container>
-                    <dish-teaser
-                            v-for="(dishe, index) in dishes"
-                            v-bind:key="index"
-                            :dish="dishe"
-                            :index="index"
-                            @edit-dish="editDish(index)"
-                    ></dish-teaser>
-                </v-container>
+                <dish-teaser
+                        v-for="(dishe, index) in dishes"
+                        v-bind:key="index"
+                        :dish="dishe"
+                        :index="index"
+                        @edit-dish="editDish(index)"
+                ></dish-teaser>
+
                 <v-card-actions>
                     <v-btn @click="goBack()" color="teal darken-2">
                         <v-icon>fa-angle-left</v-icon> &nbsp;
                         <span> Назад</span></v-btn>
-                    <v-btn @click="addDish()" color="green accent-4">Новое Блюдо &nbsp; <v-icon>fa-plus</v-icon> </v-btn>
+                    <v-btn @click="addDish()" color="green accent-4">Новое Блюдо &nbsp;
+                        <v-icon>fa-plus</v-icon>
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-row>
