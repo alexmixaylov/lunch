@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CompanyRepository")
  */
-class Client
+class Company
 {
     /**
      * @ORM\Id()
@@ -25,7 +25,7 @@ class Client
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="client")
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="company")
      */
     private $orders;
 
@@ -63,7 +63,7 @@ class Client
     {
         if ( ! $this->orders->contains($order)) {
             $this->orders[] = $order;
-            $order->setClient($this);
+            $order->setCompany($this);
         }
 
         return $this;
@@ -74,8 +74,8 @@ class Client
         if ($this->orders->contains($order)) {
             $this->orders->removeElement($order);
             // set the owning side to null (unless already changed)
-            if ($order->getClient() === $this) {
-                $order->setClient(null);
+            if ($order->getCompany() === $this) {
+                $order->setCompany(null);
             }
         }
 

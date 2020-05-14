@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Repository\ClientRepository;
+use App\Repository\CompanyRepository;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
@@ -108,12 +108,12 @@ class OrderController extends AbstractController
         Request $request,
         MenuRepository $menu_repository,
         DishRepository $dish_repository,
-        ClientRepository $client_repository
+        CompanyRepository $company_repository
     ) {
         $post = json_decode($request->getContent(), true);
 
         $menu   = $menu_repository->find($post['menu_id']);
-        $client = $client_repository->find($post['client']);
+        $company = $company_repository->find($post['company']);
 
         // так как невозможно несколько идентичных связея для manyToMany
         // мы прогоняем массив с дублями и записываем счетчик каждой повторяющейся позиции dish
@@ -143,7 +143,7 @@ class OrderController extends AbstractController
         $order->setTotal($post['total']);
         $order->setStatus($post['status']);
         $order->setDate($menu->getDate());
-        $order->setClient($client);
+        $order->setCompany($company);
         $order->setCounters($dishCounters);
 
         foreach ($dishes as $dish) {

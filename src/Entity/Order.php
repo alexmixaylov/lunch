@@ -62,10 +62,10 @@ class Order
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $client;
+    private $company;
 
     /**
      * @ORM\Column(type="json")
@@ -176,14 +176,14 @@ class Order
         return $this;
     }
 
-    public function getClient(): ?Client
+    public function getCompany(): ?Company
     {
-        return $this->client;
+        return $this->company;
     }
 
-    public function setClient(?Client $client): self
+    public function setCompany(?Company $company): self
     {
-        $this->client = $client;
+        $this->company = $company;
 
         return $this;
     }

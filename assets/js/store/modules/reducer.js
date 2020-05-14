@@ -5,7 +5,7 @@ export default {
     state: {
         orders: [],
         dishes:[],
-        clients:[]
+        companies:[]
     },
     getters: {
         getOrders: state =>{

@@ -62,7 +62,7 @@
                 compactMode: false,
                 headers: [
                     {text: 'ID', value: 'id'},
-                    {text: 'Client', value: 'client'},
+                    {text: 'Company', value: 'company'},
                     {text: 'Статус', value: 'status'},
                     {text: 'Сумма', value: 'total'}
                 ],
