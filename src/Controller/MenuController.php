@@ -31,9 +31,6 @@ class MenuController extends AbstractController
 
         $existingMenuItems = $repository->findMenusByDates($start, $end);
 
-//        var_dump(json_encode($existingMenuItems, JSON_FORCE_OBJECT));
-//        die();
-
         $menusWithAttachedDishes = array_map(function ($menu) use ($dish_repository) {
             $menuId = $menu->getId();
             $dishes = $dish_repository->findDishesByMenuId($menuId);

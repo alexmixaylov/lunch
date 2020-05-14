@@ -32,6 +32,7 @@ class DishRepository extends ServiceEntityRepository
                     ->leftJoin('d.menu', 'm')
                     ->where('m.id = :menu_id')
                     ->setParameter('menu_id', $menuId)
+                    ->orderBy('d.type')
                     ->getQuery()
                     ->getResult();
 
@@ -50,6 +51,7 @@ class DishRepository extends ServiceEntityRepository
                     ->leftJoin('d.menu', 'm')
                     ->where('m.date = :date')
                     ->setParameter('date', $date)
+                    ->orderBy('d.type')
                     ->getQuery()
                     ->getResult();
 
