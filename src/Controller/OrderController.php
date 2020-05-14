@@ -113,7 +113,7 @@ class OrderController extends AbstractController
         $post = json_decode($request->getContent(), true);
 
         $menu   = $menu_repository->find($post['menu_id']);
-        $company = $company_repository->find($post['company']);
+        $company = $company_repository->find($post['company_id']);
 
         // так как невозможно несколько идентичных связея для manyToMany
         // мы прогоняем массив с дублями и записываем счетчик каждой повторяющейся позиции dish

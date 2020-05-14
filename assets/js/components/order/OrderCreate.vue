@@ -2,7 +2,7 @@
     <v-container justify="center">
         <v-row class="space-between">
             <v-col class="grow headline">Новый заказ
-                <span v-if="totalSumm">{{totalSumm}}грн.</span>
+                <span v-if="totalSum">{{totalSum}}грн.</span>
                 <span v-else>Поехали? :)</span>
             </v-col>
             <v-col class="shrink">
@@ -35,7 +35,7 @@
                 </v-card>
             </v-col>
 
-            <v-col  cols="12" lg="6" v-if="orderTable">
+            <v-col cols="12" lg="6" v-if="orderTable">
                 <div class="mxauto mt-5 mb-5">
                     <v-data-table
                             v-if="orderTable"
@@ -51,7 +51,7 @@
                 </div>
 
                 <v-row justify="space-between">
-                    <v-col class="grow title text-right">Полная стоимость: {{totalSumm}} грн.</v-col>
+                    <v-col class="grow title text-right">Полная стоимость: {{totalSum}} грн.</v-col>
                 </v-row>
             </v-col>
 
@@ -59,7 +59,7 @@
 
         <v-divider></v-divider>
         <v-row justify="space-between">
-            <v-col class="grow title">Со скидой: {{totalSumm}} грн.</v-col>
+            <v-col class="grow title">Со скидой: {{totalSum}} грн.</v-col>
             <v-col class="shrink">
                 <v-btn color="orange" large @click="createOrder()">Заказать</v-btn>
             </v-col>
@@ -101,6 +101,16 @@
             </v-card>
 
         </v-dialog>
+
+        <v-dialog v-model="showChooseCompany" max-width="500">
+            <v-card>
+                <div class="alex-row" v-for="(company, index) in companies" :key="company.company_id">
+                    <v-btn text @click="chooseCompany(index)">{{ company.title }}</v-btn>
+                </div>
+            </v-card>
+        </v-dialog>
+        <v-btn color="red" @click="showChooseCompany = true">Выбрать компанию</v-btn>
+        <v-btn color="green darken-4" v-if="company"> {{company.title}}</v-btn>
     </v-container>
 </template>
 
@@ -119,6 +129,8 @@
                 orderID: false,
                 orderSuccess: false,
                 orderedDishes: [],
+                showChooseCompany: false,
+                companyIndex: false,
                 headers: [
                     {text: 'Название', value: 'title'},
                     {text: 'Цена', value: 'price'},
@@ -129,13 +141,13 @@
         },
         computed: {
             ...mapGetters('menu', {menu: 'getMenu'}),
+            ...mapGetters('company', {companies: 'getCompanies'}),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },
             dateForUser() {
                 return dateFormat(this.date, 'dddd, dd mmm')
             },
-
             normalizeOrders() {
                 let orderObj = {};
                 this.orderedDishes.forEach(item => {
@@ -154,17 +166,31 @@
                 });
                 return Object.values(orderObj)
             },
-
             orderTable() {
                 return this.normalizeOrders.length > 0
             },
-            totalSumm() {
+            totalSum() {
                 return this.normalizeOrders.reduce((acc, item) => {
                     return acc + item.summ
                 }, 0);
+            },
+            company() {
+                return this.companies[this.companyIndex]
+            },
+            order() {
+                const companyId = this.company ? this.company.company_id : false;
+                return {
+                    total: this.totalSum,
+                    status: 'new',
+                    dishes: this.dishes,
+                    menu_id: this.menu.menu_id,
+                    company_id: companyId
+                }
+            },
+            dishes(){
+                return this.orderedDishes.map(dish => dish.dish_id)
             }
         },
-
 
         methods: {
             addToOrdered(index) {
@@ -186,24 +212,18 @@
             },
             createOrder() {
                 let dishesId = this.orderedDishes.map(dish => dish.dish_id);
-
-                console.log(dishesId)
-
-                const order = {
-                    total: 1000000, //this.totalSumm,
-                    status: 'new',
-                    dishes: dishesId,
-                    menu_id: this.menu.menu_id,
-                    company: 1
-                }
-                console.log(order)
-                this.$store.dispatch('order/createOrder', order).then(response => {
+                console.log(this.order)
+                this.$store.dispatch('order/createOrder', this.order).then(response => {
                     console.log(response)
                     this.orderID = response
                     this.orderSuccess = true
                     this.orderedDishes = []
                 })
             },
+            chooseCompany(index) {
+                this.companyIndex = index
+                this.showChooseCompany = false
+            }
         },
         watch: {
             date() {
@@ -215,6 +235,7 @@
             // console.log('ORDER CREAYE ROUTING')
             next(vm => {
                 vm.loadMenu()
+                vm.$store.dispatch('company/loadCompanies')
             })
         }
     }

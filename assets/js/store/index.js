@@ -7,6 +7,7 @@ import dish from "./modules/dish";
 import actions from "./actions";
 import order from "./modules/order";
 import reducer from "./modules/reducer";
+import company from "./modules/company";
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ export const store = new Vuex.Store({
         dish,
         menu,
         order,
-        reducer
+        reducer,
+        company
     }
 });

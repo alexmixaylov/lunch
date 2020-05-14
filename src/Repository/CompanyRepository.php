@@ -36,15 +36,17 @@ class CompanyRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Company
+    public function findCompanyBySlug($slug)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+                    ->select('c.id')
+                    ->addSelect('c.slug')
+                    ->addSelect('c.title')
+                    ->andWhere('c.slug = :slug')
+                    ->setParameter('slug', $slug)
+                    ->orderBy('c.title')
+                    ->getQuery()
+                    ->getOneOrNullResult();
     }
-    */
+
 }

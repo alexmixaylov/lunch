@@ -68,7 +68,7 @@
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <router-link :to="{name:'money'}">Клиенты</router-link>
+                            <router-link :to="{name:'companies'}">Клиенты</router-link>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>

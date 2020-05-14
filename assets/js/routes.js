@@ -11,6 +11,7 @@ import Orders from "./pages/Orders";
 import Dish from "./components/dish/DishTeaser";
 import OrderCreate from "./components/order/OrderCreate";
 import OrderRead from "./components/order/OrderRead";
+import Company from "./pages/Company";
 
 Vue.use(VueRouter);
 
@@ -52,6 +53,12 @@ const router = new VueRouter({
             name: 'orders#read',
             component: OrderRead,
         },
+        {
+            path: '/companies',
+            name: 'companies',
+            component: Company
+        }
+
     ]
 });
 
