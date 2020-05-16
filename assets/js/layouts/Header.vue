@@ -18,7 +18,7 @@
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <router-link :to="{name: 'week'}">Неделя</router-link>
+                            <router-link :to="{name: 'week'}">Меню на неделю</router-link>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>

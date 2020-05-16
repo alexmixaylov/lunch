@@ -103,7 +103,9 @@ class MenuController extends AbstractController
         $menu = $repository->findOneByDate($date);
 
         if ( ! $menu) {
-            throw $this->createNotFoundException("Меню на эту дату ${$date} еще не создано");
+            return new JsonResponse([
+                'error' => `Меню на эту дату еще не создано`
+            ]);
         }
 
         $dishes = array_map(function ($dish) {

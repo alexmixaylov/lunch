@@ -1,36 +1,11 @@
 <template>
     <v-container justify="center">
-        <v-row class="space-between">
-            <v-col class="grow headline">Новый заказ
-                <span v-if="totalSum">{{totalSum}}грн.</span>
-                <span v-else>Поехали? :)</span>
-            </v-col>
-            <v-col class="shrink">
-                <v-btn large color="red" v-if="!company" @click="showChooseCompany = true">Выбрать компанию</v-btn>
-                <v-btn large color="green darken-4" v-if="company">{{company.title}}
-                    <v-icon @click="companyIndex = false">fa-edit</v-icon>
-                </v-btn>
-            </v-col>
-            <v-col class="shrink">
-                <v-btn color="teal" large @click="calendar = true">{{dateForUser}} &nbsp;
-                    <v-icon>fa-edit</v-icon>
-                </v-btn>
-            </v-col>
-        </v-row>
-
         <v-divider></v-divider>
-
         <v-row>
             <v-col cols="12" lg="6">
                 <v-card class="mxauto mt-5 mb-5" width="100%">
-                    <v-app-bar dark color="teal darken-1">
-                        <span>В Меню на </span>
-                        <v-spacer></v-spacer>
-                        <span class="title">{{dateForUser}}</span>
-                    </v-app-bar>
-
+                    <v-card-title>{{dateForUser}}</v-card-title>
                     <div class="alex-row" v-for="(dish, index) in menu.dishes" :key="index">
-
                         <div>{{ dish.title }} {{dish.price}}грн. {{ dish.dish_id }}</div>
                         <div class="alex-row-end">
                             <v-icon color="green " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
@@ -58,9 +33,9 @@
                             v-if="message"
                             light
                             class="mt-3"
-                    >{{ message }}</v-alert>
+                    >{{ message }}
+                    </v-alert>
                 </div>
-
                 <v-row justify="space-between">
                     <v-col class="grow title text-right">Полная стоимость: {{totalSum}} грн.</v-col>
                 </v-row>
@@ -70,12 +45,18 @@
 
         <v-divider></v-divider>
         <v-row justify="space-between">
+            <v-col class="shrink">
+                <v-btn large color="green darken-2">
+                    <router-link tag="span" :to="{name: 'orders#read', params:{id: this.order.order_id}}">< Назад</router-link>
+                </v-btn>
+            </v-col>
+
             <v-col class="grow title">Со скидой: {{totalSum}} грн.</v-col>
             <v-col class="shrink">
                 <v-btn color="blue" large @click="showMessage = true">Сообщение</v-btn>
             </v-col>
             <v-col class="shrink">
-                <v-btn color="orange" large @click="createOrder()">Заказать</v-btn>
+                <v-btn color="orange" large @click="updateOrder()">Сохранить</v-btn>
             </v-col>
         </v-row>
 
@@ -95,16 +76,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="calendar" max-width="290">
-            <v-date-picker
-                    locale="ru"
-                    first-day-of-week="1"
-                    width="290"
-                    color="teal"
-                    v-model="date"
-                    @change="changeDate()"
-            ></v-date-picker>
-        </v-dialog>
 
         <v-dialog v-model="orderSuccess" max-width="500">
             <v-card>
@@ -115,51 +86,36 @@
 
                 <v-container>
                     <v-card-text class="title">
-                        Ваш заказ №{{orderID}} успешно оформлен
+                        Заказ успешно обновлен
                     </v-card-text>
                 </v-container>
 
                 <v-card-actions>
-                    <v-btn color="orange darken-2" @click="orderSuccess = false">Закрыть</v-btn>
+                    <!--                    <v-btn color="orange darken-2" @click="orderSuccess = false">Закрыть</v-btn>-->
                     <v-spacer></v-spacer>
                     <v-btn color="green darken-2">
-                        <router-link tag="span" :to="{name: 'orders#read', params:{id: orderID}}">Посмотреть
+                        <router-link tag="span" :to="{name: 'orders#read', params:{id: this.order.order_id}}">OK
                         </router-link>
                     </v-btn>
                 </v-card-actions>
             </v-card>
 
         </v-dialog>
-
-        <v-dialog v-model="showChooseCompany" persistent max-width="500">
-            <v-card>
-                <div class="alex-row" v-for="(company, index) in companies" :key="company.company_id">
-                    <v-btn text @click="chooseCompany(index)">{{ company.title }}</v-btn>
-                </div>
-            </v-card>
-        </v-dialog>
     </v-container>
 </template>
 
 <script>
-    //TODO maybe we can use default date in Before Router hook  :date-default="dateForAPI"
     import {mapGetters} from 'vuex';
     import {dateFormat} from "../../plugins/dateFormat";
     import {encodeOrders} from "../../plugins/dishNormalizer";
 
     export default {
-        name: "OrderCreate",
-        props: [],
+        name: "OrderEdit",
         data() {
             return {
-                date: new Date().toISOString().substr(0, 10),
-                calendar: false,
-                orderID: false,
                 orderSuccess: false,
-                orderedDishes: [],
-                showChooseCompany: true,
-                companyIndex: false,
                 showMessage: false,
+                calendar: false,
                 message: '',
                 headers: [
                     {text: 'Название', value: 'title'},
@@ -171,12 +127,14 @@
         },
         computed: {
             ...mapGetters('menu', {menu: 'getMenu'}),
-            ...mapGetters('company', {companies: 'getCompanies'}),
-            dateForAPI() {
-                return dateFormat(this.date, 'yyyy-mm-dd');
+            ...mapGetters('order', {order: 'getOrder'}),
+            orderedDishes() {
+                if (this.order) {
+                    return this.order.dishes
+                }
             },
             dateForUser() {
-                return dateFormat(this.date, 'dddd, dd mmm')
+                return dateFormat(this.order.date, 'dddd, dd mmm')
             },
             normalizeOrders() {
                 return encodeOrders(this.orderedDishes)
@@ -188,19 +146,6 @@
                 return this.normalizeOrders.reduce((acc, item) => {
                     return acc + item.summ
                 }, 0);
-            },
-            company() {
-                return this.companies[this.companyIndex]
-            },
-            order() {
-                const companyId = this.company ? this.company.company_id : false;
-                return {
-                    total: this.totalSum,
-                    status: 'new',
-                    dishes: this.dishes,
-                    menu_id: this.menu.menu_id,
-                    company_id: companyId
-                }
             },
             dishes() {
                 return this.orderedDishes.map(dish => dish.dish_id)
@@ -219,46 +164,43 @@
                 }
             },
             loadMenu() {
-                this.$store.dispatch('menu/loadMenuByDate', this.dateForAPI)
+                this.$store.dispatch('menu/loadMenuByDate', this.order.date)
             },
             changeDate() {
                 console.log('changeDate  WORKING')
                 this.calendar = false
 
             },
-            createOrder() {
+            updateOrder() {
                 let dishesId = this.orderedDishes.map(dish => dish.dish_id);
                 if (dishesId.length < 1) {
                     alert('Вы не выбрали ни одного блюда!');
                     return false;
                 }
-                this.$store.dispatch('order/createOrder', this.order).then(response => {
+
+                const order = {
+                    order_id: this.order.order_id,
+                    total: this.totalSum,
+                    status: 'changed',
+                    dishes: this.dishes,
+                }
+
+                this.$store.dispatch('order/updateOrder', order).then(response => {
                     console.log(response)
                     this.orderID = response
                     this.orderSuccess = true
-                    this.orderedDishes = []
                 })
-            },
-            chooseCompany(index) {
-                this.companyIndex = index
-                this.showChooseCompany = false
             },
             clearMessage() {
                 this.message = '';
                 this.showMessage = false
             }
         },
-        watch: {
-            date() {
-                this.orderedDishes = []
-                this.loadMenu()
-            },
-        },
         beforeRouteEnter(from, to, next) {
-            // console.log('ORDER CREAYE ROUTING')
+            console.log('ORDER EDITING ROUTING')
+            console.log('ORDER TO', from)
             next(vm => {
-                vm.loadMenu()
-                vm.$store.dispatch('company/loadCompanies')
+                vm.$store.dispatch('order/editOrder', from.params.id)
             })
         }
     }

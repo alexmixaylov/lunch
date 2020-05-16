@@ -18,17 +18,18 @@
             </v-row>
 
             <v-divider class="pa-5"></v-divider>
-
             <v-data-table
+                    item-key="alexKey"
+                    @click:row="routeToOrder"
                     :dense="compactMode"
                     v-if="isOrders"
                     :headers="headers"
                     :items="orders"
-                    :items-per-page="10"
-                    class="elevation-1"
+                    class="elevation-1 orders"
                     locale="ru"
+                    disable-pagination
+                    hide-default-footer
             ></v-data-table>
-
             <v-alert v-else type="warning" class="subtitle-1"><b>{{dateForUser}}</b> - заказов нет, можно выбрать другую
                 дату
             </v-alert>
@@ -57,12 +58,12 @@
         components: {OrderCreate},
         data() {
             return {
-                date: new Date().toISOString().substr(0, 10),
+                localDate: new Date().toISOString().substr(0, 10),
                 calendar: false,
                 compactMode: false,
                 headers: [
                     {text: 'ID', value: 'id'},
-                    {text: 'Company', value: 'company'},
+                    {text: 'Company', value: 'title'},
                     {text: 'Статус', value: 'status'},
                     {text: 'Сумма', value: 'total'}
                 ],
@@ -70,6 +71,18 @@
         },
         computed: {
             ...mapGetters('order', {orders: 'getOrders'}),
+            date: {
+                get() {
+                    return this.globalDate ? this.globalDate : this.localDate
+                },
+                set(date) {
+                    console.log('GLOBAL DATE SET UP')
+                    this.$store.commit('setGlobalDate', date)
+                }
+            },
+            globalDate() {
+                return this.$store.getters.getGlobalDate
+            },
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },
@@ -84,11 +97,15 @@
             showCalendar() {
                 this.orders
             },
+            routeToOrder(dish) {
+                this.$router.push('/orders/' + dish.id)
+            }
         },
         watch: {
             date() {
                 console.log('date changed')
                 this.$store.dispatch('order/loadOrdersByDate', this.dateForAPI)
+
             }
         },
         beforeRouteEnter(from, to, next) {
@@ -100,4 +117,7 @@
 </script>
 
 <style scoped>
+    .orders tr:hover td {
+        cursor: pointer !important;
+    }
 </style>

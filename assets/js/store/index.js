@@ -1,10 +1,7 @@
 import Vue from "vue";
 import Vuex from 'vuex';
-import actionsGlobal from './actions';
-import mutationsGlobal from './mutations';
 import menu from "./modules/menu";
 import dish from "./modules/dish";
-import actions from "./actions";
 import order from "./modules/order";
 import reducer from "./modules/reducer";
 import company from "./modules/company";
@@ -13,10 +10,19 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
-        global: true,
+        globalDate: false,
     },
-    getters: {},
-    actions,
+    getters: {
+        getGlobalDate: state => {
+            return state.globalDate
+        }
+    },
+    mutations: {
+        setGlobalDate: (state, payload) => {
+            state.globalDate = payload
+        }
+    },
+    actions: {},
     modules: {
         dish,
         menu,

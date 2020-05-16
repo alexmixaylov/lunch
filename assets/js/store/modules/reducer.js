@@ -5,6 +5,7 @@ export default {
     state: {
         orders: [],
         dishes:[],
+        dishesWeek: [],
         companies:[]
     },
     getters: {
@@ -14,6 +15,9 @@ export default {
         getDishes: state =>{
             return state.dishes
         },
+        getDishesWeek: state => {
+            return state.dishesWeek
+        }
     },
     mutations: {
         addOrders(state, payload){
@@ -21,6 +25,9 @@ export default {
         },
         addDishes(state, payload){
             state.dishes = payload
+        },
+        addDishesWeek(state, payload){
+            state.dishesWeek = payload
         }
     },
     actions: {
@@ -42,6 +49,16 @@ export default {
                 .then(response => {
                     console.log(response)
                     commit('addDishes', response.data)
+                })
+                .catch(error => {console.log(error)})
+        },
+        loadDishesByWeek({commit}, payload){
+            console.log(payload)
+            axios
+                .get('/stats/dishes/week/'+ payload)
+                .then(response => {
+                    console.log(response)
+                    commit('addDishesWeek', response.data)
                 })
                 .catch(error => {console.log(error)})
         }

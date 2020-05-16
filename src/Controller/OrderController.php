@@ -38,6 +38,27 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/cancel", name="orders#cancel", methods={"PATCH"})
+     */
+    public function cancelOrder(int $id, OrderRepository $repository)
+    {
+        $order = $repository->find($id);
+
+        if ( ! $order) {
+            throw $this->createNotFoundException(`Order with ID:${$id} not found`);
+        }
+
+        $order->setStatus('canceled');
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($order);
+        $em->flush();
+
+        return new JsonResponse($order->getStatus());
+    }
+
+
+    /**
      * @Route("/", name="orders#list", methods={"GET"})
      */
     public function list(OrderRepository $repository)
@@ -112,7 +133,7 @@ class OrderController extends AbstractController
     ) {
         $post = json_decode($request->getContent(), true);
 
-        $menu   = $menu_repository->find($post['menu_id']);
+        $menu    = $menu_repository->find($post['menu_id']);
         $company = $company_repository->find($post['company_id']);
 
         // так как невозможно несколько идентичных связея для manyToMany
@@ -160,7 +181,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}", name="orders#update", methods={"PATCH"})
      */
-    public function update(int $id, Request $request, OrderRepository $repository)
+    public function update(int $id, Request $request, OrderRepository $repository, DishRepository $dish_repository)
     {
         $post = json_decode($request->getContent(), true);
 
@@ -170,12 +191,37 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(`Order with ID:${$id} not found`);
         }
 
-        $order->setStatus();
+        $rawDishes    = $post['dishes'];
+        $dishCounters = [];
+        foreach ($rawDishes as $dishId) {
+            if (array_key_exists($dishId, $dishCounters)) {
+                $dishCounters[$dishId]++;
+            } else {
+                $dishCounters[$dishId] = 1;
+            }
+        }
+
+        $dishes = array_map(function ($dishId) use ($dish_repository) {
+            return $dish_repository->find($dishId);
+        }, array_unique($rawDishes));
+
+        foreach ($order->getDishes()->getValues() as $dish) {
+            $order->removeDish($dish);
+        }
+
+        foreach ($dishes as $dish) {
+            $order->addDish($dish);
+        }
+
+        $order->setStatus($post['status']);
+        $order->setTotal($post['total']);
+        $order->setCounters($dishCounters);
+        $order->setUpdatedAt(new \DateTime('now'));
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($order);
+        $em->flush();
 
-//        $em->flush();
         return new JsonResponse("Обновлено");
     }
 

@@ -72,6 +72,11 @@ class Order
      */
     private $counters = [];
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $message;
+
     public function __construct()
     {
         $this->dishes = new ArrayCollection();
@@ -196,6 +201,18 @@ class Order
     public function setCounters(array $counters): self
     {
         $this->counters = $counters;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
 
         return $this;
     }

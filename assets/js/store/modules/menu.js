@@ -45,6 +45,7 @@ export default {
     },
     actions: {
         loadMenuByDate({commit}, payload) {
+
             console.log(payload)
             axios.get('/menus/date/' + payload)
                 .then(response => {

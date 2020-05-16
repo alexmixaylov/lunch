@@ -31,6 +31,7 @@ class OrderRepository extends ServiceEntityRepository
                     ->addSelect('o.total')
                     ->addSelect('o.status')
                     ->addSelect('c.slug')
+                    ->addSelect('c.title')
                     ->innerJoin('o.menu', 'm')
                     ->innerJoin('o.company', 'c')
                     ->andWhere('m.date = :date')
