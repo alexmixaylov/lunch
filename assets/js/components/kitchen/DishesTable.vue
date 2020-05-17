@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card-title class="headline" v-if="isDishes">{{date}}</v-card-title>
+        <v-card-title class="headline" v-if="isDishes">{{dateForUser}}</v-card-title>
         <v-data-table
                 v-if="isDishes"
                 disable-pagination
@@ -12,12 +12,14 @@
                 class="elevation-1"
                 locale="ru"
         ></v-data-table>
-        <v-alert v-else type="warning" class="subtitle-1">На <span class="title">{{date}}</span> заказов нет</v-alert>
+        <v-alert v-else type="warning" class="subtitle-1">На <span class="title">{{dateForUser}}</span> заказов нет</v-alert>
     </div>
 
 </template>
 
 <script>
+    import {dateFormat} from "../../plugins/dateFormat";
+
     export default {
         name: "DishesTable",
         props: ['dishes', 'date'],
@@ -32,6 +34,9 @@
         computed: {
             isDishes() {
                 return this.dishes.length > 0
+            },
+            dateForUser(){
+                return dateFormat(this.date, 'dddd, dd mmm');
             }
         }
     }
