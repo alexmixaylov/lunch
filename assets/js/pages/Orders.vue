@@ -1,76 +1,48 @@
 <template>
-    <v-row justify="center">
-        <v-container>
-            <v-row align="center">
-                <v-col class="grow headline">Список заказов:</v-col>
-                <v-col class="shrink">
-                    <v-btn color="teal" large @click="calendar = true">{{dateForUser}} &nbsp;
-                        <v-icon>fa-edit</v-icon>
-                    </v-btn>
-                </v-col>
-                <v-col class="shrink">
-                    <v-btn color="orange" large>
-                        <router-link tag="span" :to="{name:'orders#create'}">Создать &nbsp;<v-icon>fa-plus</v-icon>
-                        </router-link>
-                    </v-btn>
+    <v-container>
+        <dates-bar title="Список заказов на:" :isGlobalDate="true" @date-bar="dateChanged"></dates-bar>
 
-                </v-col>
-            </v-row>
+        <v-divider class="pa-5"></v-divider>
 
-            <v-divider class="pa-5"></v-divider>
-            <v-data-table
-                    item-key="alexKey"
-                    @click:row="routeToOrder"
-                    :dense="compactMode"
-                    v-if="isOrders"
-                    :headers="headers"
-                    :items="orders"
-                    class="elevation-1 orders"
-                    locale="ru"
-                    disable-pagination
-                    hide-default-footer
-            ></v-data-table>
-            <v-alert v-else type="warning" class="subtitle-1"><b>{{dateForUser}}</b> - заказов нет, можно выбрать другую
-                дату
-            </v-alert>
-            <v-switch v-model="compactMode" label="Компактный режим" class="mx-4"></v-switch>
-        </v-container>
-        <v-dialog v-model="calendar" max-width="290">
-            <v-date-picker
-                    locale="ru"
-                    first-day-of-week="1"
-                    width="290"
-                    color="teal"
-                    v-model="date"
-                    @change="calendar = false"
-            ></v-date-picker>
-        </v-dialog>
-    </v-row>
+
+        <template v-if="calendarMode === 'week'" v-for="day in ordersWeek">
+            <orders-table :date="day.date" :compact-mode="compactMode" :orders="day.orders"></orders-table>
+        </template>
+
+        <template v-if="calendarMode !== 'week'">
+            <orders-table :date="date" :compact-mode="compactMode" :orders="orders"></orders-table>
+        </template>
+
+        <v-switch v-model="compactMode" label="Компактный режим" class="mx-4"></v-switch>
+        <v-btn color="orange" large>
+            <router-link tag="span" :to="{name:'orders#create'}">Создать &nbsp;<v-icon>fa-plus</v-icon>
+            </router-link>
+        </v-btn>
+    </v-container>
 </template>
 
 <script>
-    import {dateFormat} from "../plugins/dateFormat";
     import {mapGetters} from 'vuex';
+    import {dateFormat} from "../plugins/dateFormat";
     import OrderCreate from "../components/order/OrderCreate";
+    import DatesBar from '../components/dates/DatesBar';
+    import OrdersTable from "../components/order/OrdersTable";
 
     export default {
         name: "Orders",
-        components: {OrderCreate},
+        components: {OrderCreate, DatesBar, OrdersTable},
         data() {
             return {
                 localDate: new Date().toISOString().substr(0, 10),
-                calendar: false,
+                calendarMode: 'day',
                 compactMode: false,
-                headers: [
-                    {text: 'ID', value: 'id'},
-                    {text: 'Company', value: 'title'},
-                    {text: 'Статус', value: 'status'},
-                    {text: 'Сумма', value: 'total'}
-                ],
             }
         },
         computed: {
-            ...mapGetters('order', {orders: 'getOrders'}),
+            ...mapGetters('order', {
+                orders: 'getOrders',
+                ordersWeek: 'getOrdersWeek'
+            }),
             date: {
                 get() {
                     return this.globalDate ? this.globalDate : this.localDate
@@ -97,14 +69,19 @@
             showCalendar() {
                 this.orders
             },
-            routeToOrder(dish) {
-                this.$router.push('/orders/' + dish.id)
-            }
-        },
-        watch: {
-            date() {
-                console.log('date changed')
-                this.$store.dispatch('order/loadOrdersByDate', this.dateForAPI)
+            dateChanged(dateAndModeObj) {
+                console.log('EMIT CATHED', dateAndModeObj)
+                const date = dateAndModeObj.date;
+                const mode = dateAndModeObj.mode;
+                this.calendarMode = mode;
+                this.date = date;
+
+                if (mode === 'week') {
+                    this.$store.dispatch('order/loadOrdersByWeek', this.dateForAPI);
+                } else {
+                    console.log('EMIT CATHED  DAY MODE NOW MUST BE ACTTION')
+                    this.$store.dispatch('order/loadOrdersByDate', date)
+                }
 
             }
         },

@@ -5,7 +5,8 @@ export default {
     namespaced: true,
     state: {
         order: {},
-        orders: []
+        orders: [],
+        ordersWeek: []
     },
     getters: {
         getOrder: state => {
@@ -13,11 +14,17 @@ export default {
         },
         getOrders: state => {
             return state.orders
+        },
+        getOrdersWeek: state => {
+            return state.ordersWeek
         }
     },
     mutations: {
         addOrders(state, payload) {
             state.orders = payload
+        },
+        addOrdersWeek(state, payload) {
+            state.ordersWeek = payload
         },
         addOrder(state, payload) {
             state.order = payload
@@ -41,6 +48,16 @@ export default {
                     .get('/orders/date/' + payload)
                     .then(response => {
                         commit('addOrders', response.data)
+                        resolve(response.data)
+                    })
+            }));
+        },
+        loadOrdersByWeek({commit}, payload) {
+            new Promise(((resolve, reject) => {
+                axios
+                    .get('/orders/week/' + payload)
+                    .then(response => {
+                        commit('addOrdersWeek', response.data)
                         resolve(response.data)
                     })
             }));

@@ -2,21 +2,21 @@
     <v-container justify="center">
         <v-divider></v-divider>
         <v-row>
-            <v-col cols="12" lg="6">
+            <v-col cols="12" sm="6">
                 <v-card class="mxauto mt-5 mb-5" width="100%">
                     <v-card-title>{{dateForUser}}</v-card-title>
                     <div class="alex-row" v-for="(dish, index) in menu.dishes" :key="index">
-                        <div>{{ dish.title }} {{dish.price}}грн. {{ dish.dish_id }}</div>
+                        <div>{{ dish.title }} {{dish.price}}грн.</div>
                         <div class="alex-row-end">
-                            <v-icon color="green " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
+                            <v-icon color="red " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
                             &nbsp; &nbsp;
-                            <v-icon color="red darken-2" @click="addToOrdered(index)">fa-plus</v-icon>
+                            <v-icon color="green" @click="addToOrdered(index)">fa-plus</v-icon>
                         </div>
                     </div>
                 </v-card>
             </v-col>
 
-            <v-col cols="12" lg="6" v-if="orderTable">
+            <v-col cols="12" sm="6" v-if="orderTable">
                 <div class="mxauto mt-5 mb-5">
                     <v-data-table
                             v-if="orderTable"

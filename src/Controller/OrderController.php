@@ -7,6 +7,7 @@ use App\Repository\CompanyRepository;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
+use App\Services\GenerateDates;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +26,23 @@ class OrderController extends AbstractController
         $orders = $repository->findOrdersByDate($date);
 
         return new JsonResponse($orders);
+    }
+
+    /**
+     * @Route("/week/{date}", name="orders#by_week")
+     */
+    public function getOrdersByWeek(string $date, OrderRepository $repository, GenerateDates $generate_dates)
+    {
+        $dates = $generate_dates->allDatesForWeek($date);
+
+        $ordersByWeek = array_map(function ($date) use ($repository){
+            return [
+                'orders'=>  $repository->findOrdersByDate($date),
+                'date' => $date
+            ];
+        }, $dates);
+
+        return new JsonResponse($ordersByWeek);
     }
 
     /**

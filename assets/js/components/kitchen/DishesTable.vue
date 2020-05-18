@@ -9,7 +9,7 @@
                 hide-default-footer
                 :headers="headers"
                 :items="dishes"
-                class="elevation-1"
+                class="elevation-1 mb-5"
                 locale="ru"
         ></v-data-table>
         <v-alert v-else type="warning" class="subtitle-1">На <span class="title">{{dateForUser}}</span> заказов нет</v-alert>

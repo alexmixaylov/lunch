@@ -66,7 +66,6 @@
             </v-card>
         </v-dialog>
         <loading :dialog="loading"></loading>
-        <router-view></router-view>
     </v-row>
 </template>
 

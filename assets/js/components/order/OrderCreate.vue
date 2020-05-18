@@ -21,7 +21,7 @@
         <v-divider></v-divider>
 
         <v-row>
-            <v-col cols="12" lg="6">
+            <v-col cols="12" md="6">
                 <v-card class="mxauto mt-5 mb-5" width="100%">
                     <v-app-bar dark color="teal darken-1">
                         <span>В Меню на </span>
@@ -41,7 +41,7 @@
                 </v-card>
             </v-col>
 
-            <v-col cols="12" lg="6" v-if="orderTable">
+            <v-col cols="12" md="6" v-if="orderTable">
                 <div class="mxauto mt-5 mb-5">
                     <v-data-table
                             v-if="orderTable"

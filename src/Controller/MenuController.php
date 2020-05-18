@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Menu;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
+use App\Services\GenerateDates;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,12 +23,13 @@ class MenuController extends AbstractController
     public function getMenusTableOrInitEmptyMenus(
         string $userDate,
         MenuRepository $repository,
-        DishRepository $dish_repository
+        DishRepository $dish_repository,
+        GenerateDates $generate_dates
     ) {
-        define('HOW_MANY_DAYS_ADD', 4);
-        // 4 days must be added Then we can get all days per week
-        $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
-        $end   = date('Y-m-d', strtotime("+" . HOW_MANY_DAYS_ADD . "days", strtotime($start)));
+        $start        = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
+        $end          = date('Y-m-d', strtotime("friday this week", strtotime($userDate)));
+
+        $allWeekDates = $generate_dates->allDatesForWeek($start);
 
         $existingMenuItems = $repository->findMenusByDates($start, $end);
 
@@ -42,22 +44,6 @@ class MenuController extends AbstractController
             ];
         }, $existingMenuItems);
 
-//        print_r($menusWithAttachedDishes);
-
-        // generate dates which should be in base. It is a Dictonary
-        $generatePeriod = function ($date, $acc) use (&$generatePeriod, $end) {
-            if ($date == $end) {
-                $acc[] = $end;
-
-                return $acc;
-            }
-            $newDate = date('Y-m-d', strtotime("+1days", strtotime($date)));
-            $acc[]   = $date;
-
-            return $generatePeriod($newDate, $acc);
-        };
-        $allWeekDates   = $generatePeriod($start, []);
-
         $initEmptyMenuWithDate = function ($date) {
             $menu = new Menu();
             $menu->setDate(new \DateTime($date));
@@ -65,7 +51,6 @@ class MenuController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($menu);
             $em->flush();
-
             return [
                 'date'    => $menu->getDate()->format('Y-m-d'),
                 'menu_id' => $menu->getId(),
