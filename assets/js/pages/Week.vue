@@ -1,21 +1,34 @@
 <template>
-    <v-row justify="center">
-        <!--        <v-date-picker v-model="picker" ></v-date-picker>-->
-        <v-tabs centered grow>
-            <v-tab v-on:click="generateDateWithShift(-1)">< назад</v-tab>
-            <v-tab v-on:click="generateDateWithShift(0)">Текущая неделя</v-tab>
-            <v-tab v-on:click="generateDateWithShift(1)">вперед ></v-tab>
-        </v-tabs>
-        <menu-list
-                v-if="menu"
-                v-for="menu in menusFromAPI"
-                v-bind:key="menu.menu_id"
-                :date="menu.date"
-                :menu-id="menu.menu_id"
-                :dishes="menu.dishes"
-        >
-        </menu-list>
-    </v-row>
+    <main class="text-center">
+        <v-row justify="center">
+            <v-col class="shrink">
+                <v-btn @click="generateDateWithShift(-1)">
+                    <v-icon>fa-caret-left</v-icon>
+                </v-btn>
+            </v-col>
+            <!--            <v-col class="grow text-center">{{ weekStartUser }} - {{ weekEndUser }}</v-col>-->
+            <v-col class="now-week">
+                <v-btn @click="generateDateWithShift(0)">ТЕКУЩАЯ НЕДЕЛЯ</v-btn>
+            </v-col>
+            <v-col class="shrink">
+                <v-btn @click="generateDateWithShift(1)">
+                    <v-icon>fa-caret-right</v-icon>
+                </v-btn>
+            </v-col>
+        </v-row>
+
+        <v-row justify="center">
+            <menu-list
+                    v-if="menu"
+                    v-for="menu in menusFromAPI"
+                    v-bind:key="menu.menu_id"
+                    :date="menu.date"
+                    :menu-id="menu.menu_id"
+                    :dishes="menu.dishes"
+            >
+            </menu-list>
+        </v-row>
+    </main>
 </template>
 
 <script>
@@ -89,3 +102,13 @@
         },
     }
 </script>
+<style scoped>
+.now-week{
+    padding-left: 0;
+    padding-right: 0;
+}
+.now-week .v-btn{
+    padding-left: 7px;
+    padding-right: 7px;
+}
+</style>

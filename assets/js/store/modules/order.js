@@ -32,11 +32,11 @@ export default {
         deleteOrder: state => {
             this.order = false
         },
-        changeOrderStatus: (state, payload) => {
+        setOrderStatus: (state, payload) => {
             if (state.order.hasOwnProperty('status')) {
                 state.order.status = payload
             } else {
-                console.log('проблема в сторе, нет такого order')
+                console.log('в сторе на данный момент, нет такого order, ORDER.JS 39 строка модуль стора')
             }
         }
     },
@@ -129,15 +129,19 @@ export default {
                 })
             }));
         },
-        cancelOrder({commit}, payload) {
-            new Promise(((resolve, reject) => {
+        changeOrderStatus({commit}, payload) {
+            const orderId = payload.order_id
+            const status = payload.status
+            return new Promise(((resolve, reject) => {
                 axios
-                    .patch('/orders/' + payload + '/cancel')
+                    .patch(`/orders/${orderId}/status`, status)
                     .then(response => {
                         if (response.status === 200) {
-                            commit('changeOrderStatus', response.data)
+                            // если комитить здесь - то возникает проблема когда этот же order используется в delivery
+                            // commit('setOrderStatus', response.data)
                             resolve(response.data)
                         }
+                        reject(response)
                     })
             }))
         }

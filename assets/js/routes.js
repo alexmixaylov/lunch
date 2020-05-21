@@ -13,6 +13,8 @@ import OrderCreate from "./components/order/OrderCreate";
 import OrderRead from "./components/order/OrderRead";
 import OrderEdit from "./components/order/OrderEdit";
 import Company from "./pages/Company";
+import DeliveryRead from "./components/delivery/DeliveryRead";
+import DeliveryDishes from "./components/delivery/DeliveryDishes";
 
 Vue.use(VueRouter);
 
@@ -22,9 +24,7 @@ const router = new VueRouter({
         {path: '/', name: 'home', component: Home},
         {path: '/week', name: 'week', component: Week},
         {path: '/kitchen', name: 'kitchen', component: Kitchen},
-        {path: '/delivery', name: 'delivery', component: Delivery},
         {path: '/money', name: 'money', component: Money},
-
         {path: '/dish', name: 'dish', component: Dish},
         {
             path: '/menus/:date',
@@ -63,6 +63,16 @@ const router = new VueRouter({
             path: '/companies',
             name: 'companies',
             component: Company
+        },
+        {
+            path: '/delivery',
+            name: 'delivery',
+            component: Delivery
+        },
+        {
+            path: '/delivery/:company',
+            name: 'delivery#by_company',
+            component: DeliveryRead,
         }
 
     ]

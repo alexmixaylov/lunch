@@ -130,7 +130,11 @@
                 this.$store.dispatch('order/deleteOrder', this.order.order_id).then(this.loading = false).then(this.$router.push({name: 'orders'}))
             },
             cancelOrder() {
-                this.$store.dispatch('order/cancelOrder', this.order.order_id)
+                const params = {
+                    order_id: this.order.order_id,
+                    status: 'canceled'
+                }
+                this.$store.dispatch('order/changeOrderStatus', params)
             }
         },
         beforeRouteEnter(from, to, next) {

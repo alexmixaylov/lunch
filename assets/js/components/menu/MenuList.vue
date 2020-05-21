@@ -60,7 +60,7 @@
                 return Object.keys(this.dishes)
             },
         },
-        beforeRouteLeave (to, from, next) {
+        beforeRouteLeave(to, from, next) {
             const answer = window.confirm('Вы хотите уйти? У вас есть несохранённые изменения!')
             if (answer) {
                 next()

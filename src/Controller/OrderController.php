@@ -35,10 +35,10 @@ class OrderController extends AbstractController
     {
         $dates = $generate_dates->allDatesForWeek($date);
 
-        $ordersByWeek = array_map(function ($date) use ($repository){
+        $ordersByWeek = array_map(function ($date) use ($repository) {
             return [
-                'orders'=>  $repository->findOrdersByDate($date),
-                'date' => $date
+                'orders' => $repository->findOrdersByDate($date),
+                'date'   => $date
             ];
         }, $dates);
 
@@ -56,9 +56,9 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/cancel", name="orders#cancel", methods={"PATCH"})
+     * @Route("/{id}/status", name="orders#update_status", methods={"PATCH"})
      */
-    public function cancelOrder(int $id, OrderRepository $repository)
+    public function changeOrderStatus(int $id, Request $request, OrderRepository $repository)
     {
         $order = $repository->find($id);
 
@@ -66,7 +66,7 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(`Order with ID:${$id} not found`);
         }
 
-        $order->setStatus('canceled');
+        $order->setStatus($request->getContent());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($order);

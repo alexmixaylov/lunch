@@ -54,17 +54,18 @@ class StatsRepository
                             ->getOneOrNullResult();
         };
 
-        $result  = [];
+        $result = [];
         foreach ($dishIdCntArr as $id => $cnt) {
             $dish     = $getDish($id);
             $result[] = [
                 'dish_id' => $dish['id'],
-                'title' => $dish['title'],
-                'type' => $dish['type'],
-                'cnt' => $cnt
+                'title'   => $dish['title'],
+                'type'    => $dish['type'],
+                'cnt'     => $cnt
             ];
         }
 
         return $result;
     }
+
 }
