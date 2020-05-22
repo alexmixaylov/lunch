@@ -34,7 +34,7 @@
 
 
 
-        <v-dialog v-model="modal">
+        <v-dialog v-model="modal" max-width="500">
             <delivery-dishes
                     :date="date"
                     :order="order"
