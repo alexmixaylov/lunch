@@ -1,0 +1,86 @@
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
+import Home from "./components/Home";
+import Menu from './pages/Menu';
+import Week from "./pages/Week";
+import Kitchen from "./pages/Kitchen";
+import Delivery from "./pages/Delivery";
+import Money from "./pages/Money";
+import Orders from "./pages/Orders";
+import Dish from "./components/dish/DishTeaser";
+import OrderCreate from "./components/order/OrderCreate";
+import OrderRead from "./components/order/OrderRead";
+import OrderEdit from "./components/order/OrderEdit";
+import Company from "./pages/Company";
+import DeliveryRead from "./components/delivery/DeliveryRead";
+import Login from "./components/auth/Login";
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    // mode: 'history',
+    routes: [
+        {path: '/', name: 'home', component: Home},
+        {path: '/week', name: 'week', component: Week},
+        {path: '/kitchen', name: 'kitchen', component: Kitchen},
+        {path: '/money', name: 'money', component: Money},
+        {path: '/dish', name: 'dish', component: Dish},
+        {
+            path: '/menus/:date',
+            name: 'menu',
+            component: Menu,
+            children: [
+                {
+                    path: 'dishes',
+                    name: 'dishes',
+                    component: Dish
+                }
+
+            ]
+        },
+        {
+            path: '/orders',
+            name: 'orders',
+            component: Orders,
+        },
+        {
+            path: '/orders/create',
+            name: 'orders#create',
+            component: OrderCreate,
+        },
+        {
+            path: '/orders/:id/edit',
+            name: 'orders#edit',
+            component: OrderEdit
+        },
+        {
+            path: '/orders/:id',
+            name: 'orders#read',
+            component: OrderRead,
+        },
+        {
+            path: '/companies',
+            name: 'companies',
+            component: Company
+        },
+        {
+            path: '/delivery',
+            name: 'delivery',
+            component: Delivery
+        },
+        {
+            path: '/delivery/:company',
+            name: 'delivery#by_company',
+            component: DeliveryRead,
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
+        }
+
+    ]
+});
+
+export default router;
