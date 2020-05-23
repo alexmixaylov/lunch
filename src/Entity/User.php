@@ -36,6 +36,16 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Company", mappedBy="owner", cascade={"persist", "remove"})
+     */
+    private $companyOwner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="persons")
+     */
+    private $companyPersons;
+
 
     public function getId(): ?int
     {
@@ -113,5 +123,35 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getCompanyOwner(): ?Company
+    {
+        return $this->companyOwner;
+    }
+
+    public function setCompanyOwner(?Company $companyOwner): self
+    {
+        $this->companyOwner = $companyOwner;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newOwner = null === $companyOwner ? null : $this;
+        if ($companyOwner->getOwner() !== $newOwner) {
+            $companyOwner->setOwner($newOwner);
+        }
+
+        return $this;
+    }
+
+    public function getCompanyPersons(): ?Company
+    {
+        return $this->companyPersons;
+    }
+
+    public function setCompanyPersons(?Company $companyPersons): self
+    {
+        $this->companyPersons = $companyPersons;
+
+        return $this;
     }
 }

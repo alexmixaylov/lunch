@@ -34,9 +34,20 @@ class Company
      */
     private $title;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="companyOwner", cascade={"persist", "remove"})
+     */
+    private $owner;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="companyPersons")
+     */
+    private $persons;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->persons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,6 +106,49 @@ class Company
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getPersons(): Collection
+    {
+        return $this->persons;
+    }
+
+    public function addPerson(User $person): self
+    {
+        if (!$this->persons->contains($person)) {
+            $this->persons[] = $person;
+            $person->setCompanyPersons($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerson(User $person): self
+    {
+        if ($this->persons->contains($person)) {
+            $this->persons->removeElement($person);
+            // set the owning side to null (unless already changed)
+            if ($person->getCompanyPersons() === $this) {
+                $person->setCompanyPersons(null);
+            }
+        }
 
         return $this;
     }
