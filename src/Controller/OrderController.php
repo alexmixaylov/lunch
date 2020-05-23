@@ -8,6 +8,7 @@ use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
 use App\Services\GenerateDates;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ class OrderController extends AbstractController
 {
     /**
      * @Route("/date/{date}", name="orders#by_date")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function getOrdersByDate(string $date, OrderRepository $repository)
     {
@@ -30,6 +32,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/week/{date}", name="orders#by_week")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function getOrdersByWeek(string $date, OrderRepository $repository, GenerateDates $generate_dates)
     {

@@ -14,7 +14,7 @@ import OrderRead from "./components/order/OrderRead";
 import OrderEdit from "./components/order/OrderEdit";
 import Company from "./pages/Company";
 import DeliveryRead from "./components/delivery/DeliveryRead";
-import DeliveryDishes from "./components/delivery/DeliveryDishes";
+import Login from "./components/auth/Login";
 
 Vue.use(VueRouter);
 
@@ -73,6 +73,11 @@ const router = new VueRouter({
             path: '/delivery/:company',
             name: 'delivery#by_company',
             component: DeliveryRead,
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
         }
 
     ]

@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Repository\DeliveryRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/delivery")
+ * @IsGranted("ROLE_ADMIN")
  */
 class DeliveryController extends AbstractController
 {
