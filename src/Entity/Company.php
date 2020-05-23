@@ -46,7 +46,7 @@ class Company
 
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+        $this->orders  = new ArrayCollection();
         $this->persons = new ArrayCollection();
     }
 
@@ -132,7 +132,7 @@ class Company
 
     public function addPerson(User $person): self
     {
-        if (!$this->persons->contains($person)) {
+        if ( ! $this->persons->contains($person)) {
             $this->persons[] = $person;
             $person->setCompanyPersons($this);
         }
