@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block title %}Cherry Garden {{ app.user ? app.user.companyOwner.title }}{% endblock %}
+
+{% block body %}
+    <div class="accent-1">
+
+        <div data-user-profile="{{ app.user ? app.user.roles|json_encode|e('html_attr') }}">
+            <!-- ... -->
+        </div>
+
+        {{ dump(data) }}
+
+        {#        {{ dump(app.user.roles) }}#}
+        {#        <div id="app"></div>#}
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}

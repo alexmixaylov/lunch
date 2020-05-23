@@ -32,12 +32,6 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            self::init($form->getData()->getType());
-
-            $data = $form->getData();
-
-
-
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
 //            $entityManager->flush();
@@ -50,26 +44,5 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
-    }
-
-    private function init($type)
-    {
-
-        switch ($type) {
-            case 'manager':
-                echo 'MANAGER';
-                break;
-
-            case 'employee':
-                echo 'employee';
-                break;
-
-            default:
-                echo 'PRIVATE';
-                break;
-        }
-
-        die();
-
     }
 }
