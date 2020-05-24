@@ -35,18 +35,17 @@ class Company
     private $title;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="companyOwner", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="company", cascade={"persist", "remove"})
      */
     private $owner;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="companyPersons")
+     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="company")
      */
     private $persons;
 
     public function __construct()
     {
-        $this->orders  = new ArrayCollection();
         $this->persons = new ArrayCollection();
     }
 
@@ -123,30 +122,30 @@ class Company
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|Person[]
      */
     public function getPersons(): Collection
     {
         return $this->persons;
     }
 
-    public function addPerson(User $person): self
+    public function addPerson(Person $person): self
     {
-        if ( ! $this->persons->contains($person)) {
+        if (!$this->persons->contains($person)) {
             $this->persons[] = $person;
-            $person->setCompanyPersons($this);
+            $person->setCompany($this);
         }
 
         return $this;
     }
 
-    public function removePerson(User $person): self
+    public function removePerson(Person $person): self
     {
         if ($this->persons->contains($person)) {
             $this->persons->removeElement($person);
             // set the owning side to null (unless already changed)
-            if ($person->getCompanyPersons() === $this) {
-                $person->setCompanyPersons(null);
+            if ($person->getCompany() === $this) {
+                $person->setCompany(null);
             }
         }
 

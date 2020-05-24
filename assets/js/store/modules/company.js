@@ -5,6 +5,7 @@ export default {
     state: {
         company: false,
         companies: [],
+        persons: []
     },
     getters: {
         getCompany: state => {
@@ -13,7 +14,9 @@ export default {
         getCompanies: state => {
             return state.companies
         },
-
+        getPersons: state => {
+            return state.persons
+        }
     },
     mutations: {
         setCompany(state, payload) {
@@ -22,10 +25,11 @@ export default {
         setCompanies(state, payload) {
             state.companies = payload
         },
-
+        setPersons: (state, payload) => {
+            state.persons = payload
+        }
     },
     actions: {
-        // this module ONLY FOR READING aggregated data. ONLY LOAD DATA FROM SERVER
         loadCompanies({commit}) {
             // console.log(payload)
             axios
@@ -33,6 +37,30 @@ export default {
                 .then(response => {
                     console.log(response)
                     commit('setCompanies', response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        loadCompanyById({commit}, payload) {
+            // console.log(payload)
+            axios
+                .get('/companies/'+ payload)
+                .then(response => {
+                    console.log(response)
+                    commit('setCompany', response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        loadPersonsByCompany({commit}, payload) {
+            // console.log(payload)
+            axios
+                .get('/persons/company/' + payload)
+                .then(response => {
+                    console.log(response)
+                    commit('setPersons', response.data)
                 })
                 .catch(error => {
                     console.log(error)

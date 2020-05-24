@@ -19,27 +19,43 @@ class CompanyRepository extends ServiceEntityRepository
         parent::__construct($registry, Company::class);
     }
 
-    // /**
-    //  * @return Company[] Returns an array of Company objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
+    public function findAllCompanies()
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+                    ->select('c.id as company_id')
+                    ->addSelect('c.title')
+                    ->addSelect('c.slug')
+                    ->orderBy('c.title', 'ASC')
+                    ->setMaxResults(10)
+                    ->getQuery()
+                    ->getResult();
     }
-    */
+
+
+    public function findCompanyById($id)
+    {
+        return $this->createQueryBuilder('c')
+                    ->select('c.id as company_id')
+                    ->addSelect('c.slug')
+                    ->addSelect('c.title')
+                    ->addSelect('owner.name as owner_name')
+                    ->addSelect('owner.id as owner_id')
+                    ->leftJoin('c.owner', 'owner')
+                    ->andWhere('c.id = :id')
+                    ->setParameter('id', $id)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
 
     public function findCompanyBySlug($slug)
     {
         return $this->createQueryBuilder('c')
-                    ->select('c.id')
+                    ->select('c.id as company_id')
                     ->addSelect('c.slug')
                     ->addSelect('c.title')
                     ->andWhere('c.slug = :slug')

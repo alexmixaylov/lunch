@@ -39,12 +39,8 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Company", mappedBy="owner", cascade={"persist", "remove"})
      */
-    private $companyOwner;
+    private $company;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="persons")
-     */
-    private $companyPersons;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -57,7 +53,7 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=15, nullable=true)
      */
     private $phone;
 
@@ -140,32 +136,20 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getCompanyOwner(): ?Company
+    public function getCompany(): ?Company
     {
-        return $this->companyOwner;
+        return $this->company;
     }
 
-    public function setCompanyOwner(?Company $companyOwner): self
+    public function setCompany(?Company $company): self
     {
-        $this->companyOwner = $companyOwner;
+        $this->company = $company;
 
         // set (or unset) the owning side of the relation if necessary
-        $newOwner = null === $companyOwner ? null : $this;
-        if ($companyOwner->getOwner() !== $newOwner) {
-            $companyOwner->setOwner($newOwner);
+        $newOwner = null === $company ? null : $this;
+        if ($company->getOwner() !== $newOwner) {
+            $company->setOwner($newOwner);
         }
-
-        return $this;
-    }
-
-    public function getCompanyPersons(): ?Company
-    {
-        return $this->companyPersons;
-    }
-
-    public function setCompanyPersons(?Company $companyPersons): self
-    {
-        $this->companyPersons = $companyPersons;
 
         return $this;
     }

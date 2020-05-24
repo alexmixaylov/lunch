@@ -13,6 +13,7 @@ import OrderCreate from "./components/order/OrderCreate";
 import OrderRead from "./components/order/OrderRead";
 import OrderEdit from "./components/order/OrderEdit";
 import Company from "./pages/Company";
+import CompanyRead from "./components/company/CompanyRead";
 import DeliveryRead from "./components/delivery/DeliveryRead";
 import Login from "./components/auth/Login";
 
@@ -63,6 +64,11 @@ const router = new VueRouter({
             path: '/companies',
             name: 'companies',
             component: Company
+        },
+        {
+            path: '/companies/:id',
+            name: 'companies#read',
+            component: CompanyRead
         },
         {
             path: '/delivery',
