@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Dish;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
+use App\Repository\OrderRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -121,9 +122,17 @@ class DishController extends AbstractController
     /**
      * @Route("/{id}", name="dishes#delete", methods={"DELETE"})
      */
-    public function delete(int $id, DishRepository $repository)
+    public function delete(int $id, DishRepository $repository, OrderRepository $order_repository)
     {
         $dish = $repository->find($id);
+
+        $orders = $order_repository->findOrdersByDish($id);
+
+        if($orders) {
+            return new JsonResponse(null, 403);
+        }
+
+
         if ($dish) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($dish);
@@ -132,7 +141,7 @@ class DishController extends AbstractController
             return new JsonResponse($id);
         }
 
-        //TODO нужно сделать правильные заголовки и статус
-        return new JsonResponse('404');
+        //TODO нужно придумать как передать сообщение
+        return new JsonResponse(null,404);
     }
 }

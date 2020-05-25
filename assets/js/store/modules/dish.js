@@ -47,10 +47,17 @@ export default {
         },
         deleteDish({commit}, payload) {
             console.log(payload, 'DELETE DISH')
-            return axios.delete('/dishes/' + payload).then(response => {
-                console.log(response)
-            }).catch(error => console.log(error))
+            return new Promise(((resolve, reject) => {
+                return axios.delete('/dishes/' + payload).then(response => {
+                    console.log(response)
+                    resolve(response)
+                }).catch(error => {
+                    console.log(error)
+                    reject(error)
+                })
+            }));
+
         },
-        
+
     },
 }

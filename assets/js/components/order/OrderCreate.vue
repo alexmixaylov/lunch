@@ -12,6 +12,12 @@
                 </v-btn>
             </v-col>
             <v-col class="shrink">
+                <v-btn large color="red" v-if="!person" @click="showChoosePerson = true">Выбрать человека</v-btn>
+                <v-btn large color="green darken-4" v-if="person">{{person.name}}
+                    <v-icon @click="personIndex = false">fa-edit</v-icon>
+                </v-btn>
+            </v-col>
+            <v-col class="shrink">
                 <v-btn color="teal" large @click="calendar = true">{{dateForUser}} &nbsp;
                     <v-icon>fa-edit</v-icon>
                 </v-btn>
@@ -58,7 +64,8 @@
                             v-if="message"
                             light
                             class="mt-3"
-                    >{{ message }}</v-alert>
+                    >{{ message }}
+                    </v-alert>
                 </div>
 
                 <v-row justify="space-between">
@@ -138,6 +145,14 @@
                 </div>
             </v-card>
         </v-dialog>
+
+        <v-dialog v-model="showChoosePerson" persistent max-width="500">
+            <v-card>
+                <div class="alex-row" v-for="(person, index) in persons" :key="person.person_id">
+                    <v-btn text @click="choosePerson(index)">{{ person.name }}</v-btn>
+                </div>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -158,7 +173,9 @@
                 orderSuccess: false,
                 orderedDishes: [],
                 showChooseCompany: true,
+                showChoosePerson: false,
                 companyIndex: false,
+                personIndex: false,
                 showMessage: false,
                 message: '',
                 headers: [
@@ -171,7 +188,10 @@
         },
         computed: {
             ...mapGetters('menu', {menu: 'getMenu'}),
-            ...mapGetters('company', {companies: 'getCompanies'}),
+            ...mapGetters('company', {
+                companies: 'getCompanies',
+                persons: 'getPersons'
+            }),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },
@@ -192,14 +212,17 @@
             company() {
                 return this.companies[this.companyIndex]
             },
+            person(){
+                return this.persons[this.personIndex]
+            },
             order() {
-                const companyId = this.company ? this.company.company_id : false;
+                // const person = this.persons[] ? this.persons[this.personIndex] : false;
                 return {
                     total: this.totalSum,
                     status: 'new',
                     dishes: this.dishes,
                     menu_id: this.menu.menu_id,
-                    company_id: companyId
+                    person_id: this.person.person_id
                 }
             },
             dishes() {
@@ -242,6 +265,12 @@
             chooseCompany(index) {
                 this.companyIndex = index
                 this.showChooseCompany = false
+                this.$store.dispatch('company/loadPersonsByCompany', this.company.company_id).then(this.showChoosePerson = true)
+            },
+            choosePerson(index) {
+                // alert(index)
+                this.personIndex = index
+                this.showChoosePerson = false
             },
             clearMessage() {
                 this.message = '';

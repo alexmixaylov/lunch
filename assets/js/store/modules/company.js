@@ -63,15 +63,19 @@ export default {
         },
         loadPersonsByCompany({commit}, payload) {
             // console.log(payload)
-            axios
-                .get('/persons/company/' + payload)
-                .then(response => {
-                    console.log(response)
-                    commit('setPersons', response.data)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            return new Promise(((resolve, reject) => {
+                axios
+                    .get('/persons/company/' + payload)
+                    .then(response => {
+                        console.log(response)
+                        commit('setPersons', response.data)
+                        resolve(response.data)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        reject(error)
+                    })
+            }));
         },
         createPerson({commit}, payload) {
             return new Promise(((resolve, reject) => {

@@ -4,7 +4,6 @@
 
         <v-divider class="pa-5"></v-divider>
 
-
         <template v-if="calendarMode === 'week'" v-for="day in ordersWeek">
             <orders-table :date="day.date" :compact-mode="compactMode" :orders="day.orders"></orders-table>
         </template>

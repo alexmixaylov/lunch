@@ -30,10 +30,11 @@ class OrderRepository extends ServiceEntityRepository
                     ->select('o.id')
                     ->addSelect('o.total')
                     ->addSelect('o.status')
-                    ->addSelect('c.slug')
+                    ->addSelect('p.name')
                     ->addSelect('c.title')
                     ->innerJoin('o.menu', 'm')
-                    ->innerJoin('o.company', 'c')
+                    ->innerJoin('o.person', 'p')
+                    ->innerJoin('p.company', 'c')
                     ->andWhere('m.date = :date')
                     ->setParameter('date', $date)
                     ->orderBy('o.id', 'ASC')
@@ -60,7 +61,39 @@ class OrderRepository extends ServiceEntityRepository
                     ->getResult();
     }
 
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
 
+    public function findOrdersByPerson($id)
+    {
+        return $this->createQueryBuilder('o')
+                    ->select('o.id')
+                    ->addSelect('o.status')
+                    ->addSelect('d.type')
+                    ->innerJoin('o.person', 'p')
+                    ->innerJoin('o.dishes', 'd')
+                    ->andWhere('p.id = :person_id')
+                    ->setParameter('person_id', $id)
+                    ->orderBy('o.id', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
+
+    public function findOrdersByDish($id)
+    {
+        return $this->createQueryBuilder('o')
+                    ->select('o.id')
+                    ->innerJoin('o.dishes', 'd')
+                    ->andWhere('d.id = :dish_id')
+                    ->setParameter('dish_id', $id)
+                    ->getQuery()
+                    ->getResult();
+    }
     /*
     public function findOneBySomeField($value): ?Order
     {

@@ -135,9 +135,13 @@
                 })
             },
             deleteDish() {
-                this.$store.dispatch('dish/deleteDish', this.dish.dish_id).then(
+                this.$store.dispatch('dish/deleteDish', this.dish.dish_id).then(response => {
+                    console.log(response)
                     this.$emit('delete-dish')
-                )
+                }).catch(e => {
+                    console.log(e)
+                    alert('Нельзя удалить это блюдо. Вначале нужно отменить заказ')
+                })
             },
             submit() {
                 this.validate();

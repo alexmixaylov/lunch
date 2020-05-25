@@ -29,7 +29,8 @@
             return {
                 headers: [
                     {text: 'ID', value: 'id'},
-                    {text: 'Company', value: 'title'},
+                    {text: 'Компания', value: 'title'},
+                    {text: 'Человек', value: 'name'},
                     {text: 'Статус', value: 'status'},
                     {text: 'Сумма', value: 'total'}
                 ],

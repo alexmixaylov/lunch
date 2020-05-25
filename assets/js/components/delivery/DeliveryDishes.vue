@@ -18,7 +18,7 @@
             </tbody>
         </v-simple-table>
         <v-card-actions>
-            <v-btn color="orange" @click="closeModal()">Отменить</v-btn>
+            <v-btn color="orange" @click="closeModal()">Закрыть</v-btn>
             <v-spacer></v-spacer>
             <v-btn v-if="!isPacked" color="green" @click="packed()">
                 Спаковать

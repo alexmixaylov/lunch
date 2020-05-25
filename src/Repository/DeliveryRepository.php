@@ -34,10 +34,12 @@ class DeliveryRepository
     {
         $orders = $this->em->createQueryBuilder()
                            ->select('o.id as order_id')
-                           ->addSelect('c.id as company_id')
+                           ->addSelect('p.id as person_id')
+                           ->addSelect('p.name')
                            ->addSelect('o.status')
                            ->from(Order::class, 'o')
-                           ->innerJoin('o.company', 'c')
+                           ->innerJoin('o.person', 'p')
+                           ->innerJoin('p.company', 'c')
                            ->where('o.date = :date')
                            ->andWhere('c.id = :company')
                            ->andWhere('o.status != :status')
@@ -58,9 +60,10 @@ class DeliveryRepository
         $result = $this->em->createQueryBuilder()
                            ->select('c.title')
                            ->addSelect('c.id as company_id')
-                           ->addSelect('COUNT(d) as cnt')
+                           ->addSelect('COUNT(o.id) as cnt')
                            ->from(Company::class, 'c')
-                           ->innerJoin('c.orders', 'o')
+                           ->innerJoin('c.persons', 'p')
+                           ->innerJoin('p.orders', 'o')
                            ->innerJoin('o.dishes', 'd')
                            ->where('o.date = :date')
                            ->andWhere('o.status != :status')
@@ -68,11 +71,10 @@ class DeliveryRepository
                                'date'   => $date,
                                'status' => 'canceled'
                            ])
-                           ->groupBy('c.title')
+                           ->groupBy('c.id')
                            ->orderBy('c.title')
                            ->getQuery()
                            ->getResult();
-
         return $result;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Repository\CompanyRepository;
+use App\Repository\OrderRepository;
 use App\Repository\PersonRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,13 +89,20 @@ class PersonController extends AbstractController
     /**
      * @Route("/{id}", name="persons#delete", methods={"DELETE"})
      */
-    public function delete(int $id, PersonRepository $repository)
+    public function delete(int $id, PersonRepository $repository, OrderRepository $order_repository)
     {
         $person = $repository->find($id);
 
         if ( ! $person) {
             throw $this->createNotFoundException('Нет такого человека');
         }
+
+        // if Person has Orders deny delete
+        $orders = $order_repository->findOrdersByPerson($id);
+        if ($orders) {
+            return new JsonResponse(null,403);
+        }
+
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($person);

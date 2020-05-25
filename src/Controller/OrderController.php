@@ -7,6 +7,7 @@ use App\Repository\CompanyRepository;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
+use App\Repository\PersonRepository;
 use App\Services\GenerateDates;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -150,12 +151,12 @@ class OrderController extends AbstractController
         Request $request,
         MenuRepository $menu_repository,
         DishRepository $dish_repository,
-        CompanyRepository $company_repository
+        PersonRepository $person_repository
     ) {
         $post = json_decode($request->getContent(), true);
 
         $menu    = $menu_repository->find($post['menu_id']);
-        $company = $company_repository->find($post['company_id']);
+        $person = $person_repository->find($post['person_id']);
 
         // так как невозможно несколько идентичных связея для manyToMany
         // мы прогоняем массив с дублями и записываем счетчик каждой повторяющейся позиции dish
@@ -185,7 +186,7 @@ class OrderController extends AbstractController
         $order->setTotal($post['total']);
         $order->setStatus($post['status']);
         $order->setDate($menu->getDate());
-        $order->setCompany($company);
+        $order->setPerson($person);
         $order->setCounters($dishCounters);
 
         foreach ($dishes as $dish) {

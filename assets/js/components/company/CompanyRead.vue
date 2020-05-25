@@ -168,6 +168,9 @@
                 this.$store.dispatch('company/deletePerson', this.selectedPerson.person_id).then(response => {
                     this.$store.commit('company/deletePersonByIndex', this.personIndex)
                     this.confirmDialog = false
+                }).catch(e => {
+                    console.log(e)
+                    alert('На этого человека оформлены заказы. Нужно вначале перенести действующие заказы в архив. После этого вы сможете удалить')
                 })
             }
         },

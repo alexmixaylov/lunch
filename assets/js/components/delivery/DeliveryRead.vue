@@ -12,7 +12,7 @@
             <tbody>
             <tr v-for="(order, index) in orders" :key="order.order_id">
                 <td>{{ order.order_id }}</td>
-                <td>{{index}}</td>
+                <td>{{order.name}}</td>
                 <td>{{ order.status }}</td>
                 <td>
                     <v-btn text color="orange" @click="goToActiveOrder(index, order.order_id)">
@@ -31,7 +31,6 @@
                 </v-btn>
             </v-col>
         </v-row>
-
 
 
         <v-dialog v-model="modal" max-width="500">
