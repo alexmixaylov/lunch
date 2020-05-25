@@ -19,6 +19,8 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('name')
+            ->add('phone')
             ->add('type', ChoiceType::class, [
                 'choices' => [
                     'PrivatePerson'     => 'private',
@@ -50,8 +52,7 @@ class RegistrationFormType extends AbstractType
                         'max'        => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
