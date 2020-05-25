@@ -27,6 +27,13 @@ export default {
         },
         setPersons: (state, payload) => {
             state.persons = payload
+        },
+        setPerson: (state, payload) => {
+            state.persons.push(payload)
+        },
+        deletePersonByIndex: (state, payload) => {
+            console.log(payload)
+            state.persons.splice(payload, 1)
         }
     },
     actions: {
@@ -45,7 +52,7 @@ export default {
         loadCompanyById({commit}, payload) {
             // console.log(payload)
             axios
-                .get('/companies/'+ payload)
+                .get('/companies/' + payload)
                 .then(response => {
                     console.log(response)
                     commit('setCompany', response.data)
@@ -66,5 +73,39 @@ export default {
                     console.log(error)
                 })
         },
+        createPerson({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                    axios.post('/persons/create', payload).then(response => {
+                        console.log(response)
+                        commit('setPerson', response.data)
+                        resolve(response.status)
+                    }).catch(error => {
+                        console.log(error)
+                        reject(error)
+                    })
+                })
+            );
+        },
+        updatePerson({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                    const personId = payload.person_id
+                    axios.patch('/persons/' + personId, payload).then(response => {
+                        console.log(response)
+                        // commit('setPerson', response.data)
+                        resolve(response.status)
+                    })
+                        .catch(error => reject(error))
+                })
+            );
+        },
+        deletePerson({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                    axios.delete('/persons/' + payload).then(response => {
+                        console.log(response)
+                        resolve(response)
+                    }).catch(error => reject(error))
+                })
+            );
+        }
     }
 }
