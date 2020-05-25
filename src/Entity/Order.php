@@ -36,6 +36,7 @@ class Order
      */
     private $dishes;
 
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -70,6 +71,13 @@ class Order
      * @ORM\Column(type="text", nullable=true)
      */
     private $message;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $person;
+
 
     public function __construct()
     {
@@ -195,6 +203,18 @@ class Order
     public function setMessage(?string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function getPerson(): ?Person
+    {
+        return $this->person;
+    }
+
+    public function setPerson(?Person $person): self
+    {
+        $this->person = $person;
 
         return $this;
     }
