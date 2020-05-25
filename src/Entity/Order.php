@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
- * @ORM\Table(name="`order`")
+ * @ORM\Table(name="orders")
  */
 class Order
 {
@@ -60,12 +60,6 @@ class Order
      * @ORM\Column(type="date")
      */
     private $date;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $company;
 
     /**
      * @ORM\Column(type="json")
@@ -177,18 +171,6 @@ class Order
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(?Company $company): self
-    {
-        $this->company = $company;
 
         return $this;
     }

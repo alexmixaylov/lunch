@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CompanyRepository")
+ * @ORM\Table(name="companies")
  */
 class Company
 {
@@ -23,11 +24,6 @@ class Company
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="company")
-     */
-    private $orders;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -66,37 +62,6 @@ class Company
         return $this;
     }
 
-    /**
-     * @return Collection|Order[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if ( ! $this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->contains($order)) {
-            $this->orders->removeElement($order);
-            // set the owning side to null (unless already changed)
-            if ($order->getCompany() === $this) {
-                $order->setCompany(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getTitle(): ?string
     {
         return $this->title;
@@ -131,7 +96,7 @@ class Company
 
     public function addPerson(Person $person): self
     {
-        if (!$this->persons->contains($person)) {
+        if ( ! $this->persons->contains($person)) {
             $this->persons[] = $person;
             $person->setCompany($this);
         }

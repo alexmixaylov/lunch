@@ -7,7 +7,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="MenuRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\MenuRepository")
+ * @ORM\Table(name="menus")
  */
 class Menu
 {
