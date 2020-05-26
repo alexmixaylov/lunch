@@ -23,6 +23,13 @@
             </tr>
             </tbody>
         </v-simple-table>
+
+        <v-row>
+            <v-spacer></v-spacer>
+            <v-col class="text-right">
+                <v-btn color="orange">Добавить компанию &nbsp;<v-icon small>fa-plus</v-icon> </v-btn>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

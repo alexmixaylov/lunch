@@ -4,23 +4,25 @@
     {{ encore_entry_link_tags('app') }}
 {% endblock %}
 
-{% block title %}Cherry Garden {{ app.user ? app.user.companyOwner.title }}{% endblock %}
+{% block title %}Cherry Garden | {{ name ? name }}{% endblock %}
 
 {% block body %}
-    <div class="accent-1">
-
-        <div data-user-profile="{{ app.user ? app.user.roles|json_encode|e('html_attr') }}">
-            <!-- ... -->
-        </div>
-
-        {{ dump(data) }}
-
-        {#        {{ dump(app.user.roles) }}#}
-        {#        <div id="app"></div>#}
+  {#        {{ dump(app.user) }}#}
+    <div id="app"></div>
+    <div id="user"
+         data-user_id="{{ user_id }}"
+         data-name="{{ name }}"
+         data-email="{{ email }}"
+         data-phone="{{ phone }}"
+         data-type="{{ type }}"
+         data-person="{{ person }}"
+         data-company="{{ company }}"
+         data-roles="{{ roles | json_encode }}"
+    >
     </div>
 {% endblock %}
 
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('cabinet') }}
 {% endblock %}

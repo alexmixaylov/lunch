@@ -40,9 +40,15 @@ class Company
      */
     private $persons;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $uuid;
+
     public function __construct()
     {
         $this->persons = new ArrayCollection();
+        $this->uuid =uniqid('cg_');
     }
 
     public function getId(): ?int
@@ -115,5 +121,10 @@ class Company
         }
 
         return $this;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
     }
 }

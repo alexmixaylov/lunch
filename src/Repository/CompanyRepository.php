@@ -52,14 +52,13 @@ class CompanyRepository extends ServiceEntityRepository
     }
 
 
-    public function findCompanyBySlug($slug)
+    public function findCompanyByUUID($uuid)
     {
         return $this->createQueryBuilder('c')
                     ->select('c.id as company_id')
-                    ->addSelect('c.slug')
                     ->addSelect('c.title')
-                    ->andWhere('c.slug = :slug')
-                    ->setParameter('slug', $slug)
+                    ->andWhere('c.uuid = :uuid')
+                    ->setParameter('uuid', $uuid)
                     ->orderBy('c.title')
                     ->getQuery()
                     ->getOneOrNullResult();

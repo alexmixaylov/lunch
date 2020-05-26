@@ -58,6 +58,11 @@ class User implements UserInterface
      */
     private $phone;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Person", cascade={"persist", "remove"})
+     */
+    private $person;
+
 
     public function getId(): ?int
     {
@@ -188,6 +193,18 @@ class User implements UserInterface
     public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPerson(): ?Person
+    {
+        return $this->person;
+    }
+
+    public function setPerson(?Person $person): self
+    {
+        $this->person = $person;
 
         return $this;
     }
