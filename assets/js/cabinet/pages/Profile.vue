@@ -1,5 +1,7 @@
 <template>
     <v-container>
+        <owner v-if="isManager" :company_uuid="companyOwner.uuid"></owner>
+
         <v-card color="teal">
             <v-card-title>Ваши данные</v-card-title>
             <v-simple-table>
@@ -22,7 +24,7 @@
 
                 <tr>
                     <td>Компания</td>
-                    <td v-if="isCompany">{{ isCompany }}</td>
+                    <td v-if="isCompany">{{ user.company }}</td>
                     <td v-else>
                         <v-btn color="red" @click="companyLink = true">
                             Связать с компанией
@@ -72,11 +74,14 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import Owner from "../components/Owner";
 
     export default {
         name: "Profile",
+        components: {Owner},
         data: function () {
             return {
+                user: false,
                 companyLink: false,
                 uuid: '',
                 company: false,
@@ -85,9 +90,12 @@
             }
         },
         computed: {
-            ...mapGetters('user', {user: 'getUser'}),
+            ...mapGetters('user', {companyOwner: 'getCompany'}),
             isCompany() {
                 return this.user.company ? this.user.company : this.company
+            },
+            isManager() {
+                return this.user.type === 'manager'
             },
             person() {
                 return this.user.person
@@ -98,7 +106,7 @@
                 this.$store.dispatch('user/searchCompanyByUUID', this.uuid)
                     .then(response => {
                         console.log(response)
-                        if(response.persons.length < 1){
+                        if (response.persons.length < 1) {
                             alert('Компания найдена, но администратор еще не добавил сотрудников')
                             return false
                         }
@@ -118,9 +126,12 @@
                 })
             }
         },
+        beforeRouteEnter(from, to, next) {
+            next(vm => {
+                const user = vm.$store.getters["user/getUser"]
+                vm.user = user
+                vm.$store.dispatch('user/loadCompanyByOwner', user.user_id)
+            })
+        }
     }
 </script>
-
-<style scoped>
-
-</style>

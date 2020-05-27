@@ -12,11 +12,6 @@
             <h2>Регистрация</h2>
             {{ form_start(registrationForm) }}
             {{ form_row(registrationForm.type) }}
-            <div>
-                <label for="registration_form_phone">Название компании</label>
-                <input type="text" id="registration_form_company" name="registration_form[company]" required="required"
-                       maxlength="255">
-            </div>
             {{ form_row(registrationForm.name) }}
             {{ form_row(registrationForm.phone) }}
             {{ form_row(registrationForm.email) }}

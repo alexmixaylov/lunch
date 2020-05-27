@@ -3,17 +3,23 @@ import axios from 'axios';
 export default {
     namespaced: true,
     state: {
-        user: {}
+        user: {},
+        company: {}
     },
     getters: {
         getUser: state => {
             return state.user
+        },
+        getCompany(state) {
+            return state.company
         }
     },
     mutations: {
         setUser: (state, payload) => {
-            console.log('USER MUTATION', payload)
             state.user = payload
+        },
+        setCompany: (state, payload) => {
+            state.company = payload
         },
         setUserPerson: (state, payload) => {
             state.user['person'] = payload
@@ -35,7 +41,28 @@ export default {
         linkPersonToUser({commit}, payload) {
             return new Promise(((resolve, reject) => {
                 axios
-                    .patch('/cabinet/link', payload)
+                    .patch('/cabinet/person', payload)
+                    .then(response => {
+                        if (response.status === 200) {
+                            console.log(response.data)
+                            // commit('setUserPerson', response.data)
+                        }
+                        resolve(response.data)
+
+                    })
+                    .catch(e => reject(e))
+            }));
+        },
+        loadCompanyByOwner({commit}, payload) {
+            console.log(payload)
+            axios.get('/cabinet/company/' + payload).then(response => {
+                commit('setCompany', response.data)
+            }).catch(e => console.log(e))
+        },
+        createCompany({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                axios
+                    .patch('/cabinet/company', payload)
                     .then(response => {
                         if (response.status === 200) {
                             console.log(response.data)

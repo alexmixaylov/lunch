@@ -58,7 +58,9 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
                 'label'=>'Пароль'
-            ]);
+            ])
+            ->create('company', null, ['label'=>"Компания"])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

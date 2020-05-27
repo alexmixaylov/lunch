@@ -20,7 +20,7 @@ class Company
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", unique=true, length=255)
      */
     private $title;
 
@@ -42,7 +42,7 @@ class Company
     public function __construct()
     {
         $this->persons = new ArrayCollection();
-        $this->uuid =uniqid('cg_');
+        $this->uuid = mb_strtoupper(uniqid());
     }
 
     public function getId(): ?int
