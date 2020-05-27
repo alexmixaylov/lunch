@@ -9,11 +9,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/cabinet")
+ * @IsGranted("ROLE_USER")
+ */
 class CabinetController extends AbstractController
 {
     /**
-     * @Route("/cabinet", name="cabinet", methods={"GET"})
-     * @IsGranted("ROLE_USER")
+     * @Route("/", name="cabinet", methods={"GET"})
      */
     public function index()
     {
@@ -32,8 +35,7 @@ class CabinetController extends AbstractController
     }
 
     /**
-     * @Route("/cabinet/link", name="cabinet#link", methods={"PATCH"})
-     * @IsGranted("ROLE_USER")
+     * @Route("/link", name="cabinet#link", methods={"PATCH"})
      */
     public function linkPersonToUser(Request $request, PersonRepository $person_repository)
     {

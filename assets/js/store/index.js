@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from 'vuex';
-import auth from './modules/auth'
+import user from './modules/user'
 import menu from "./modules/menu";
 import dish from "./modules/dish";
 import order from "./modules/order";
@@ -26,7 +26,7 @@ export const store = new Vuex.Store({
     },
     actions: {},
     modules: {
-        auth,
+        user,
         dish,
         menu,
         order,

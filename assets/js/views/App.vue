@@ -26,6 +26,7 @@
 
         data: () => ({
             drawer: null,
+            user: false
         }),
 
         created() {
@@ -34,6 +35,16 @@
             // this.$vuetify.lang.current = 'ru'
             // console.log(this.$vuetify)
         },
+        beforeMount() {
+            const userData = window.document.getElementById('user').dataset
+            let user = {}
+            Object.entries(userData).map(param => {
+                const key = param[0];
+                user[key] = (key !== 'roles') ? param[1] : JSON.parse(param[1])
+            });
+            console.log('USER COMMIT', user)
+            this.$store.commit('user/setUser', user)
+        }
     }
 </script>
 

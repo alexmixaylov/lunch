@@ -13,13 +13,17 @@
             <div class="spinner spinner-clock"></div>
         </div>
     </div>
-{#    {{ dump(data) }}#}
-{#    {{ dump(mapped) }}#}
-
-{#    <form action="/menus/" method="post" style="background-color: red">#}
-{#        <label for="date">DATE</label>#}
-{#        <input type="text" name="date" id="date">#}
-{#    </form>#}
+    <div id="user"
+         data-user_id="{{ user_id }}"
+         data-name="{{ name }}"
+         data-email="{{ email }}"
+         data-phone="{{ phone }}"
+         data-type="{{ type }}"
+         data-person="{{ person }}"
+         data-company="{{ company }}"
+         data-roles="{{ roles | json_encode }}"
+    >
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
