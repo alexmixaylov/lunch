@@ -93,10 +93,6 @@ label {
             color: #4d4d4d;
             font-size: 12px;
 
-            a {
-                text-decoration: none;
-            }
-
             .fa {
                 color: #EF3B3A;
             }
@@ -109,10 +105,6 @@ label {
     background-color: rgba(239, 59, 58, 0.75);
     color: white;
     padding: 1em;
-
-    a {
-        color: white;
-    }
 }
 
 .checkbox {
@@ -145,4 +137,13 @@ main {
     display: flex;
     justify-content: center;
     padding-top: 10%;
+}
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.additional{
+    text-align: center;
+    padding-top: 1em;
 }
