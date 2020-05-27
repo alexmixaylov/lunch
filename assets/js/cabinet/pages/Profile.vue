@@ -42,7 +42,7 @@
                     <td>Nameplate</td>
                     <td v-if="person">{{person}}</td>
                     <td v-else>
-                        <v-btn color="red">Связать</v-btn>
+                        <v-btn color="red" :disabled="disableBtn">Связать</v-btn>
                     </td>
                     <td></td>
                 </tr>
@@ -80,7 +80,8 @@
                 companyLink: false,
                 uuid: '',
                 company: false,
-                persons: false
+                persons: false,
+                disableBtn: false
             }
         },
         computed: {
@@ -97,6 +98,10 @@
                 this.$store.dispatch('user/searchCompanyByUUID', this.uuid)
                     .then(response => {
                         console.log(response)
+                        if(response.persons.length < 1){
+                            alert('Компания найдена, но администратор еще не добавил сотрудников')
+                            return false
+                        }
                         if (response) {
                             this.company = response.company.title
                             this.companyLink = false
@@ -107,9 +112,9 @@
             },
             linkPerson(personId) {
                 this.$store.dispatch('user/linkPersonToUser', personId).then(response => {
-                    this.persons = []
-                    // this.$set(this.user, 'person', response)
-                    this.$store.commit('user/setUserPerson', response)
+                    //TODO не получается сделать реактивное добавление
+                    window.location.reload()
+
                 })
             }
         },

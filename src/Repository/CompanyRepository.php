@@ -28,7 +28,6 @@ class CompanyRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
                     ->select('c.id as company_id')
                     ->addSelect('c.title')
-                    ->addSelect('c.slug')
                     ->orderBy('c.title', 'ASC')
                     ->setMaxResults(10)
                     ->getQuery()
@@ -40,7 +39,6 @@ class CompanyRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
                     ->select('c.id as company_id')
-                    ->addSelect('c.slug')
                     ->addSelect('c.title')
                     ->addSelect('owner.name as owner_name')
                     ->addSelect('owner.id as owner_id')

@@ -27,9 +27,27 @@
         <v-row>
             <v-spacer></v-spacer>
             <v-col class="text-right">
-                <v-btn color="orange">Добавить компанию &nbsp;<v-icon small>fa-plus</v-icon> </v-btn>
+                <v-btn color="orange" @click="isNewCompany = true">Добавить компанию &nbsp;<v-icon small>fa-plus
+                </v-icon>
+                </v-btn>
             </v-col>
         </v-row>
+
+        <v-dialog v-model="isNewCompany" max-width="500">
+            <v-card>
+                <v-card-title>
+                    Новая компания
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field v-model="title" placeholder="Название Компании"></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="orange" @click="isNewCompany = false">Отменить</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green" @click="createCompany()">Создать</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -39,10 +57,29 @@
     export default {
         name: "Company",
         data: function () {
-            return {}
+            return {
+                isNewCompany: false,
+                title: '',
+                confirmDialog: false,
+            }
         },
         computed: {
             ...mapGetters('company', {companies: 'getCompanies'})
+        },
+        methods: {
+            createCompany() {
+                const params = {
+                    title: this.title,
+                    owner: null
+                }
+                this.$store.dispatch('company/createCompany', params).then(response => {
+                    this.isNewCompany = false
+                    this.title = ''
+                })
+            },
+            deleteCompany() {
+
+            }
         },
         beforeRouteEnter(from, to, next) {
             // console.log('ORDER CREAYE ROUTING')

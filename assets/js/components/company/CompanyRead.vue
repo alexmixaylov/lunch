@@ -42,6 +42,13 @@
                 </v-btn>
             </v-col>
         </v-row>
+        <v-row>
+            <v-col class="text-right">
+                <v-btn color="red" @click="confirmDeleteCompany = true">
+                    Удалить компанию &nbsp;<v-icon x-small>fa-minus</v-icon>
+                </v-btn>
+            </v-col>
+        </v-row>
         <v-dialog max-width="500" v-model="newPerson">
             <v-card>
                 <v-card-title>
@@ -99,6 +106,21 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog v-model="confirmDeleteCompany" persistent max-width="500">
+            <v-card>
+                <v-card-title class="headline">Уверены что хотите удалить компанию?</v-card-title>
+                <v-card-text>Это действие нельзя отменить</v-card-text>
+                <v-card-text>Если у когото из компании есть активные заказы, вы не сможет удалить пока не отмените или
+                    заархивируете заказы
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="green darken-1" @click="confirmDeleteCompany = false">Передумал</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="red darken-1" @click="deleteCompany()">Конечно</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -113,6 +135,7 @@
                 showPerson: false,
                 personIndex: false,
                 confirmDialog: false,
+                confirmDeleteCompany: false,
                 valid: true,
                 name: '',
                 nameRules: [
@@ -130,7 +153,7 @@
             isPersons() {
                 return this.persons.length > 0
             },
-            selectedPerson(){
+            selectedPerson() {
                 return this.persons[this.personIndex]
             }
         },
@@ -160,7 +183,7 @@
                         this.showPerson = false
                     })
             },
-            tryDelete(index){
+            tryDelete(index) {
                 this.personIndex = index
                 this.confirmDialog = true
             },
@@ -170,8 +193,13 @@
                     this.confirmDialog = false
                 }).catch(e => {
                     console.log(e)
-                    alert('На этого человека оформлены заказы. Нужно вначале перенести действующие заказы в архив. После этого вы сможете удалить')
+                    alert('У этого человека активные заказы. Или он привязал свой профиль к компании.')
                 })
+            },
+            deleteCompany() {
+                this.$store.dispatch('company/deleteCompany', this.company.company_id).then(status => {
+                    status === 200 ? this.$router.push({name: 'companies'}) : false
+                }).catch(e => alert('Вы не можете пока удалить эту компанию'))
             }
         },
         beforeRouteEnter(from, to, next) {

@@ -25,6 +25,9 @@ export default {
         setCompanies(state, payload) {
             state.companies = payload
         },
+        addCompany(state, payload) {
+            state.companies.push(payload)
+        },
         setPersons: (state, payload) => {
             state.persons = payload
         },
@@ -60,6 +63,26 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
+        },
+        createCompany({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                axios.post('/companies/', payload)
+                    .then(response => {
+                        console.log(response.data)
+                        commit('addCompany', response.data)
+                        resolve(response.data)
+                    })
+                    .catch(e => reject(e))
+            }));
+        },
+        deleteCompany({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                    axios.delete('/companies/' + payload).then(response => {
+                        console.log(response)
+                        resolve(response.status)
+                    }).catch(error => reject(error))
+                })
+            );
         },
         loadPersonsByCompany({commit}, payload) {
             // console.log(payload)

@@ -1,0 +1,148 @@
+.form {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.25);
+    max-width: 360px;
+    margin: 2em;
+    padding: 5%;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+
+    input, select {
+        font-family: "Roboto", sans-serif;
+        outline: 0;
+        background: #f2f2f2;
+        width: 100%;
+        border: 0;
+        margin: 0 0 15px;
+        padding: 15px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    button {
+        font-family: "Roboto", sans-serif;
+        text-transform: uppercase;
+        outline: 0;
+        background: rgba(0, 0, 0, 0.75);
+        width: 100%;
+        border: 0;
+        padding: 15px;
+        color: #FFFFFF;
+        font-size: 14px;
+        -webkit-transition: all 0.3 ease;
+        transition: all 0.3 ease;
+        cursor: pointer;
+
+        &:active, &:focus, &:hover {
+            background: rgba(211, 47, 47, 0.75);
+        }
+    }
+
+    .message {
+        margin: 15px 0 0;
+        color: #b3b3b3;
+        font-size: 12px;
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    }
+}
+
+
+label {
+    color: white;
+    display: inline-block;
+    margin-bottom: 5px;
+
+    &.required:before {
+        content: "*";
+        color: #e5395a;
+        margin-right: 5px;
+        font-size: 22px;
+        line-height: 1;
+        vertical-align: sub;
+    }
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 300px;
+    margin: 0 auto;
+
+    &:before, &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    .info {
+        margin: 50px auto;
+
+        h1 {
+            margin: 0 0 15px;
+            padding: 0;
+            font-size: 36px;
+            font-weight: 300;
+            color: #1a1a1a;
+        }
+
+        span {
+            color: #4d4d4d;
+            font-size: 12px;
+
+            a {
+                text-decoration: none;
+            }
+
+            .fa {
+                color: #EF3B3A;
+            }
+        }
+    }
+}
+
+.already {
+    margin-bottom: 1em;
+    background-color: rgba(239, 59, 58, 0.75);
+    color: white;
+    padding: 1em;
+
+    a {
+        color: white;
+    }
+}
+
+.checkbox {
+    margin: 1em 0;
+
+    input {
+        float: left;
+        margin: 0 1em 0 0;
+        height: 15px;
+        width: 15px;
+    }
+
+    label {
+        color: white;
+    }
+}
+
+body {
+    background: #4d4d4d;
+    background-image: url("../images/dishes-bg@wide.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    padding-top: 10%;
+}
