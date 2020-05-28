@@ -11,6 +11,12 @@
         <div class="form">
             <h2>Регистрация</h2>
             {{ form_start(registrationForm) }}
+{#            {{ form_row(registrationForm.company) }}#}
+
+{#            {% for field in registrationForm.company %}#}
+{#            {{ dump(field) }}#}
+{#            {% endfor %}#}
+
             {{ form_row(registrationForm.type) }}
             {{ form_row(registrationForm.name) }}
             {{ form_row(registrationForm.phone) }}
@@ -20,6 +26,7 @@
             <button class="btn">Регистрировать</button>
             {{ form_end(registrationForm) }}
 
+{#            {{ form(registrationForm) }}#}
             <div class="additional">
                 <a href="{{ path('app_login') }}">Уже есть аккаунт? Войти</a>
             </div>

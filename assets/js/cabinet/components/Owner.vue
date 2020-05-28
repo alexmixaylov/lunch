@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-alert v-if="uuid" type="warning">Ваш ID: {{ uuid }}</v-alert>
+        <v-alert v-if="uuid" type="warning">Company ID: {{ uuid }}</v-alert>
         <v-card class="mb-5" v-else>
         <v-card-title class="orange">
                 Добавьте вашу компанию
