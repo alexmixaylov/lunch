@@ -3,7 +3,7 @@
         <owner v-if="isManager" :company_uuid="companyOwner.uuid"></owner>
 
         <v-card color="teal">
-            <v-card-title>Ваши данные</v-card-title>
+            <v-card-title>Представитель компании</v-card-title>
             <v-simple-table>
                 <tbody>
                 <tr>

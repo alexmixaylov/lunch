@@ -40,7 +40,8 @@ class CabinetController extends AbstractController
             'phone'   => $user->getPhone(),
             'type'    => $user->getType(),
             'person'  => $user->getPerson() ? $user->getPerson()->getName() : null,
-            'company' => $user->getPerson() ? $user->getPerson()->getCompany()->getTitle() : null
+            'company' => $user->getPerson() ? $user->getPerson()->getCompany()->getTitle() : null,
+            'company_id' => $user->getPerson() ? $user->getPerson()->getCompany()->getId() : null
         ]);
     }
 

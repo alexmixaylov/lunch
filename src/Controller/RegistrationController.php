@@ -28,7 +28,6 @@ class RegistrationController extends AbstractController
         // нужно проверить чтобы был суперпользователь, если еще никто не создан, тогда первый пользователь становиться суперюзером
         $isSuperUser = empty($user_repository->findAll());
 
-
         $form->handleRequest($request);
 
 

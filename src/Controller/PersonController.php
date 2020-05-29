@@ -6,6 +6,7 @@ use App\Entity\Person;
 use App\Repository\CompanyRepository;
 use App\Repository\OrderRepository;
 use App\Repository\PersonRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class PersonController
  * @package App\Controller
  * @Route("/persons")
+ * @IsGranted("ROLE_USER")
  */
 class PersonController extends AbstractController
 {

@@ -1,5 +1,7 @@
 <template>
-
+<div>
+    dfedf
+</div>
 </template>
 
 <script>

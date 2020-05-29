@@ -22,14 +22,23 @@
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-
                 <v-list-item link>
                     <v-list-item-action>
-                        <v-icon>fa-user</v-icon>
+                        <v-icon>fa-users</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <router-link :to="{name: 'profile'}">Профиль</router-link>
+                            <router-link :to="{name: 'employees'}">Сотрудники</router-link>
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link>
+                    <v-list-item-action>
+                        <v-icon>fa-user-tie</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <router-link :to="{name: 'profile'}">Профиль компании</router-link>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
