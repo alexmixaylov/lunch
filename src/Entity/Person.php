@@ -34,6 +34,11 @@ class Person
      */
     private $orders;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="person")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -95,6 +100,18 @@ class Person
                 $order->setPerson(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
