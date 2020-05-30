@@ -24,7 +24,6 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
 
-        $data = $form->getData();
         // нужно проверить чтобы был суперпользователь, если еще никто не создан, тогда первый пользователь становиться суперюзером
         $isSuperUser = empty($user_repository->findAll());
 
@@ -42,6 +41,7 @@ class RegistrationController extends AbstractController
 
             if ($isSuperUser) {
                 $user->setRoles(["ROLE_ADMIN"]);
+                $user->setType('superuser');
             }
 
             $entityManager = $this->getDoctrine()->getManager();

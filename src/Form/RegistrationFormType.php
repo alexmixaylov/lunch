@@ -33,7 +33,7 @@ class RegistrationFormType extends AbstractType
                     'Выберите тип аккаунта'  => false,
                     'Частное лицо'           => 'private',
                     'Работник компании'      => 'employee',
-                    'Представитель компании' => 'manager'
+                    'Компания' => 'corporate'
                 ],
                 'required' => true,
                 'label'    => 'Тип аккаунта'

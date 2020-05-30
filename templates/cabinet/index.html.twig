@@ -7,7 +7,7 @@
 {% block title %}Cherry Garden | {{ name ? name }}{% endblock %}
 
 {% block body %}
-  {#        {{ dump(app.user) }}#}
+    {#        {{ dump(app.user) }}#}
     <div id="app"></div>
     <div id="user"
          data-user_id="{{ user_id }}"
@@ -15,9 +15,8 @@
          data-email="{{ email }}"
          data-phone="{{ phone }}"
          data-type="{{ type }}"
-         data-person="{{ person }}"
-         data-company="{{ company }}"
-         data-company_id="{{ company_id }}"
+         data-related_company_id="{{ related_company_id }}"
+         data-person_id="{{ person_id }}"
          data-roles="{{ roles | json_encode }}"
     >
     </div>

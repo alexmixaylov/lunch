@@ -4,6 +4,7 @@ import order from "./modules/order";
 import user from "./modules/user"
 import menu from "./modules/menu"
 import person from "./modules/person";
+import company from "./modules/company";
 
 Vue.use(Vuex);
 
@@ -12,6 +13,7 @@ export const store = new Vuex.Store({
         order,
         user,
         menu,
-        person
+        person,
+        company
     }
 });

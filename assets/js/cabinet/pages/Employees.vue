@@ -1,5 +1,12 @@
 <template>
-    <div>Employees</div>
+    <div v-if="user.type === 'corporate'">
+
+        <p>Не должнен увидеть частник</p>
+        <p>Вначале менеджер должен добавить всех сотрудников
+            После чего сотрудник может зарегистрировать себе личный аккаунт и связать его с раннее созданым профилем</p>
+        <p>Заказы создаются на Профиль а не на юзера</p>
+
+    </div>
 </template>
 
 <script>
@@ -11,9 +18,16 @@
             ...mapGetters('user', {user: 'getUser'}),
         },
         beforeRouteEnter(from, to, next) {
-            console.log()
+
+
             next(vm => {
-                vm.$store.dispatch('person/loadPersonsByCompany', vm.user.company_id)
+                const user = vm.user;
+                if (user.type === "corporate") {
+                    vm.$store.dispatch('person/loadPersonsByCompany', user.related_company_id)
+                } else {
+                    vm.$router.push({name:'profile'})
+                }
+
             })
         }
     }

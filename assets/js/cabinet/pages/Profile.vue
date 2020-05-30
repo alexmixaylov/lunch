@@ -1,12 +1,12 @@
 <template>
     <v-container>
-        <owner v-if="isManager" :company_uuid="companyOwner.uuid"></owner>
+        <!--        TODO нужно с этим что то сделать -->
+        <owner v-if="isСorporate" :company_uuid="company.uuid"></owner>
 
         <v-card color="teal">
-            <v-card-title>Представитель компании</v-card-title>
             <v-simple-table>
                 <tbody>
-                <tr>
+                <tr v-if="!isСorporate">
                     <td>Имя</td>
                     <td>{{ user.name }}</td>
                     <td></td>
@@ -22,31 +22,36 @@
                     <td></td>
                 </tr>
 
-                <tr>
-                    <td>Компания</td>
-                    <td v-if="isCompany">{{ user.company }}</td>
-                    <td v-else>
-                        <v-btn color="red" @click="companyLink = true">
-                            Связать с компанией
-                        </v-btn>
-                    </td>
-                    <td></td>
-                </tr>
+                <template v-if="user.type === 'employee'">
+                    <template v-if="person">
+                        <tr>
+                            <td>Компания</td>
+                            <td>{{person.title}}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Nameplate</td>
+                            <td>{{person.name}}</td>
+                            <td></td>
+                        </tr>
+                    </template>
+                    <tr v-else>
+                        <td>Компания</td>
+                        <td v-if="foundedCompany">{{ foundedCompany }}</td>
+                        <td v-else>
+                            <v-btn color="red" @click="companyLink = true">
+                                Связать личный аккаунт с профилем в компании
+                            </v-btn>
+                        </td>
+                        <td></td>
+                    </tr>
+                </template>
 
                 <tr v-if="persons" v-for="person in persons">
                     <td class="title">{{ person.name }}</td>
                     <td>
                         <v-btn color="red" @click="linkPerson(person.person_id)">Связать</v-btn>
                     </td>
-                </tr>
-
-                <tr v-if="user.company">
-                    <td>Nameplate</td>
-                    <td v-if="person">{{person}}</td>
-                    <td v-else>
-                        <v-btn color="red" :disabled="disableBtn">Связать</v-btn>
-                    </td>
-                    <td></td>
                 </tr>
                 </tbody>
             </v-simple-table>
@@ -83,27 +88,22 @@
             return {
                 user: false,
                 companyLink: false,
+                foundedCompany: false,
                 uuid: '',
-                company: false,
                 persons: false,
                 disableBtn: false
             }
         },
         computed: {
-            ...mapGetters('user', {companyOwner: 'getCompany'}),
-            isCompany() {
-                return this.user.company ? this.user.company : this.company
+            ...mapGetters('company', {company: 'getCompany'}),
+            ...mapGetters('person', {person: 'getPerson'}),
+            isСorporate() {
+                return this.user.type === 'corporate'
             },
-            isManager() {
-                return this.user.type === 'manager'
-            },
-            person() {
-                return this.user.person
-            }
         },
         methods: {
             searchCompany() {
-                this.$store.dispatch('user/searchCompanyByUUID', this.uuid)
+                this.$store.dispatch('company/searchCompanyByUUID', this.uuid)
                     .then(response => {
                         console.log(response)
                         if (response.persons.length < 1) {
@@ -111,7 +111,7 @@
                             return false
                         }
                         if (response) {
-                            this.company = response.company.title
+                            this.foundedCompany = response.company.title
                             this.companyLink = false
                             this.persons = response.persons
                         }
@@ -119,7 +119,7 @@
                     .catch(e => alert('Неправильный идентификатор'))
             },
             linkPerson(personId) {
-                this.$store.dispatch('user/linkPersonToUser', personId).then(response => {
+                this.$store.dispatch('person/linkPersonToUser', personId).then(response => {
                     //TODO не получается сделать реактивное добавление
                     window.location.reload()
 
@@ -130,7 +130,13 @@
             next(vm => {
                 const user = vm.$store.getters["user/getUser"]
                 vm.user = user
-                vm.$store.dispatch('user/loadCompanyByOwner', user.user_id)
+                // if (user.user_id) {
+                //     vm.$store.dispatch('company/loadCompanyByOwner', user.user_id)
+                // }
+
+                if (user.person_id) {
+                    vm.$store.dispatch('person/loadPersonById', user.person_id)
+                }
             })
         }
     }

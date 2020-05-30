@@ -75,7 +75,7 @@
         components: {Loading},
         data: function () {
             return {
-                isManager: false,
+                isСorporate: false,
                 confirmDialog: false,
                 confirmDialogData: {
                     question: '',

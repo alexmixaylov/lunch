@@ -40,7 +40,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Company", mappedBy="owner", cascade={"persist", "remove"})
      */
-    private $company;
+    private $companyOwned;
 
 
     /**
@@ -59,7 +59,7 @@ class User implements UserInterface
     private $phone;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Person", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Person", mappedBy="user", cascade={"persist", "remove"})
      */
     private $person;
 
@@ -142,19 +142,19 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getCompany(): ?Company
+    public function getCompanyOwned(): ?Company
     {
-        return $this->company;
+        return $this->companyOwned;
     }
 
-    public function setCompany(?Company $company): self
+    public function setCompanyOwned(?Company $companyOwned): self
     {
-        $this->company = $company;
+        $this->companyOwned = $companyOwned;
 
         // set (or unset) the owning side of the relation if necessary
-        $newOwner = null === $company ? null : $this;
-        if ($company->getOwner() !== $newOwner) {
-            $company->setOwner($newOwner);
+        $newOwner = null === $companyOwned ? null : $this;
+        if ($companyOwned->getOwner() !== $newOwner) {
+            $companyOwned->setOwner($newOwner);
         }
 
         return $this;

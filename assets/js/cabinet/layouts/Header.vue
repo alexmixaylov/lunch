@@ -22,7 +22,7 @@
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link>
+                <v-list-item link v-if="isCorporate">
                     <v-list-item-action>
                         <v-icon>fa-users</v-icon>
                     </v-list-item-action>
@@ -38,7 +38,7 @@
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <router-link :to="{name: 'profile'}">Профиль компании</router-link>
+                            <router-link :to="{name: 'profile'}">Профиль <span v-if="isCorporate">компании</span></router-link>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex';
     import User from "../components/User";
 
     export default {
@@ -70,7 +71,12 @@
         data: () => ({
             drawer: null,
         }),
-
+        computed: {
+            ...mapGetters('user', {user: 'getUser'}),
+            isCorporate(){
+                return this.user.type === 'corporate'
+            }
+        },
     }
 </script>
 

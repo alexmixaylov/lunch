@@ -25,7 +25,7 @@ class Company
     private $title;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="company", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="companyOwned", cascade={"persist", "remove"})
      */
     private $owner;
 

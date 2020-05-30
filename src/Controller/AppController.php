@@ -22,6 +22,7 @@ class AppController extends AbstractController
             return $this->redirect('/cabinet');
         }
 
+        //TODO похоже что это нужно отсюда удалить. Здесь будет только суперюзер, ему можно оставить только роли, кажется
         return $this->render('app.html.twig', [
             'user_id' => $user->getId(),
             'name'    => $user->getName(),
@@ -29,8 +30,6 @@ class AppController extends AbstractController
             'roles'   => $user->getRoles(),
             'phone'   => $user->getPhone(),
             'type'    => $user->getType(),
-            'person'  => $user->getPerson() ? $user->getPerson()->getName() : null,
-            'company' => $user->getPerson() ? $user->getPerson()->getCompany()->getTitle() : null
         ]);
     }
 }

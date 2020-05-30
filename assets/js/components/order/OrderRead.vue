@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center">
         <v-container>
-            <v-switch v-model="isManager" label="Менеджер (вид)" class="mx-4"></v-switch>
+            <v-switch v-model="isСorporate" label="Менеджер (вид)" class="mx-4"></v-switch>
         </v-container>
         <v-container>
             <v-card>
@@ -39,9 +39,9 @@
                         <router-link tag="span" :to="{name: 'orders'}">< Заказы</router-link>
                     </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn v-if="isManager" @click="confirmDialog = true" color="red">Удалить</v-btn>
+                    <v-btn v-if="isСorporate" @click="confirmDialog = true" color="red">Удалить</v-btn>
                     <template v-if="order.status !== 'canceled'">
-                        <v-btn v-if="!isManager" color="red" @click="cancelOrder()">Отменить заказ</v-btn>
+                        <v-btn v-if="!isСorporate" color="red" @click="cancelOrder()">Отменить заказ</v-btn>
                     </template>
                     <template v-else>
                         <v-btn disabled>Заказ отменен</v-btn>
@@ -49,7 +49,7 @@
                     <v-btn color="orange" @click="editingMode = true">
                         <router-link tag="span" :to="{name: 'orders#edit'}">Изменить заказ</router-link>
                     </v-btn>
-                    <v-btn v-if="isManager" color="teal">Изменить статус</v-btn>
+                    <v-btn v-if="isСorporate" color="teal">Изменить статус</v-btn>
                 </v-card-actions>
             </v-card>
         </v-container>
@@ -80,7 +80,7 @@
         components: {Loading},
         data: function () {
             return {
-                isManager: false,
+                isСorporate: false,
                 confirmDialog: false,
                 confirmDialogData: {
                     question: '',

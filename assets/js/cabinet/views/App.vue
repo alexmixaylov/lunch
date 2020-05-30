@@ -1,9 +1,7 @@
 <template>
     <v-app id="inspire">
-        <header-components :user="user"></header-components>
-        <content-components>
-            <router-view></router-view>
-        </content-components>
+        <header-components></header-components>
+        <content-components></content-components>
         <v-footer app>
             <a class="text--disabled" href="https://cherrygarden.lviv.ua/"><span>&copy; Cherry Garden 2020</span></a>
             <v-spacer></v-spacer>
@@ -38,21 +36,53 @@
             // console.log(this.$vuetify)
         },
         beforeMount() {
+            // получаем всю информацию о пользователе в шаблоне симфони
             const userData = window.document.getElementById('user').dataset
             let user = {}
             Object.entries(userData).map(param => {
                 const key = param[0];
                 user[key] = (key !== 'roles') ? param[1] : JSON.parse(param[1])
             });
-            console.log('USER COMMIT', user)
             this.$store.commit('user/setUser', user)
+
+            // если уже привязана компания, или частник - загружаем данные о компании
+            console.log('GET USER IN APP COMPONET', user)
+
+            switch (user.type) {
+                case 'corporate':
+                    // if (user.related_company_id === "") {
+                    //     alert('Вы зарегистрировались как "Представитель компании". Добавьте вашу компанию для того чтобы продолжить работу')
+                    //     this.$router.push({name: 'profile'})
+                    // }
+                    if(user.related_company_id){
+                        // related_company_id - Relation OneToONe - only for corporate company account
+                        // if user has personal account related with company profile or private type of account it param must be empty
+                        this.$store.dispatch('company/loadCompanyByOwner', user.user_id)
+                    } else {
+                        alert('Вы зарегистрировались как "Представитель компании". Добавьте вашу компанию для того чтобы продолжить работу')
+                        this.$router.push({name: 'profile'})
+                    }
+                    break;
+                case 'employee':
+                    if (user.person_id === "") {
+                        alert('Вы зарегистрировались как "Работник компании". Свяжите свой профиль с компанией для того чтобы продолжить работу')
+                        this.$router.push({name: 'profile'})
+                    }
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
         }
     }
 </script>
 
 <style scoped>
-a {
-    color: white;
+    a {
+        color: white;
 
-}
+    }
 </style>
