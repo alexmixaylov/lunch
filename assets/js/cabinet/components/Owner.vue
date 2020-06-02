@@ -53,6 +53,7 @@
                 this.$store.dispatch('company/createCompany', this.title).then(response => {
                     this.success = true
                     this.newUUID = response
+                    window.location.reload()
                 }).catch(e => {
                     alert('Похоже что компания с таким название уже добавлена')
 

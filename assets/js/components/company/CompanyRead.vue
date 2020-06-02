@@ -95,6 +95,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
         <v-dialog v-model="confirmDialog" persistent max-width="290">
             <v-card>
                 <v-card-title class="headline">Уверены что хотите удалить человека :) ?</v-card-title>

@@ -50,16 +50,12 @@
 
             switch (user.type) {
                 case 'corporate':
-                    // if (user.related_company_id === "") {
-                    //     alert('Вы зарегистрировались как "Представитель компании". Добавьте вашу компанию для того чтобы продолжить работу')
-                    //     this.$router.push({name: 'profile'})
-                    // }
-                    if(user.related_company_id){
+                    if (user.related_company_id) {
                         // related_company_id - Relation OneToONe - only for corporate company account
                         // if user has personal account related with company profile or private type of account it param must be empty
                         this.$store.dispatch('company/loadCompanyByOwner', user.user_id)
                     } else {
-                        alert('Вы зарегистрировались как "Представитель компании". Добавьте вашу компанию для того чтобы продолжить работу')
+                        alert('Вы зарегистрировали аккаунт компании. Теперь добавьте название вашей компани в профиль для того чтобы продолжить работу')
                         this.$router.push({name: 'profile'})
                     }
                     break;

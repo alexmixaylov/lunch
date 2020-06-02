@@ -18,8 +18,18 @@ export default {
         setPerson: (state, payload) => {
             state.person = payload
         },
+        addPerson: (state, payload) => {
+            state.persons.push(payload)
+        },
         setPersons: (state, payload) => {
             state.persons = payload
+        },
+        updatePerson: (state, payload) => {
+            state.persons[payload.index] = payload.person
+        },
+        deletePersonByIndex: (state, payload) => {
+            console.log(payload)
+            state.persons.splice(payload, 1)
         }
     },
     actions: {
@@ -56,5 +66,37 @@ export default {
                     .catch(e => reject(e))
             }));
         },
+        createPerson({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                    axios.post('/persons/create', payload).then(response => {
+                        console.log(response)
+                        commit('addPerson', response.data)
+                        resolve(response.status)
+                    }).catch(error => {
+                        console.log(error)
+                        reject(error)
+                    })
+                })
+            );
+        },
+        updatePerson({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                    const personId = payload.person_id
+                    axios.patch('/persons/' + personId, payload).then(response => {
+                        console.log(response)
+                        // commit('setPerson', response.data)
+                        resolve(response.status)
+                    })
+                        .catch(error => reject(error))
+                })
+            );
+        },
+        deletePerson({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                axios.delete('/persons/' + payload).then(response => {
+                    resolve(response)
+                }).catch(error => reject(error))
+            }));
+        }
     }
 }

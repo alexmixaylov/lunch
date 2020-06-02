@@ -14,6 +14,7 @@
                             label="Тип блюда"
                             solo
                             :rules="typeRule"
+                            autofocus
                     ></v-select>
 
                     <v-text-field

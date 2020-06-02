@@ -1,6 +1,18 @@
 <template>
     <v-container justify="center">
         <v-row>
+            <v-col v-if="isCorporate">
+                <v-btn large color="red" @click="changePerson">{{ person.name }}</v-btn>
+            </v-col>
+            <v-col v-else>
+                <v-btn large color="green">{{ user.name }}</v-btn>
+            </v-col>
+            <v-col>
+                <v-btn large @click="calendar = true" color="teal">{{dateForUser}}</v-btn>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row>
             <v-col cols="12" md="6">
                 <v-card class="mxauto mt-5 mb-5" width="100%">
                     <v-app-bar dark color="teal darken-1">
@@ -9,15 +21,17 @@
                         <span class="title">{{dateForUser}}</span>
                     </v-app-bar>
 
-                    <div class="alex-row" v-for="(dish, index) in menu.dishes" :key="index">
-
-                        <div>{{ dish.title }} {{dish.price}}грн. {{ dish.dish_id }}</div>
-                        <div class="alex-row-end">
-                            <v-icon color="green " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
-                            &nbsp; &nbsp;
-                            <v-icon color="red darken-2" @click="addToOrdered(index)">fa-plus</v-icon>
+                    <template v-if="menu">
+                        <div class="alex-row" v-for="(dish, index) in menu.dishes" :key="index">
+                            <div>{{ dish.title }} {{dish.price}}грн.</div>
+                            <div class="alex-row-end">
+                                <v-icon color="green " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
+                                &nbsp; &nbsp;
+                                <v-icon color="red darken-2" @click="addToOrdered(index)">fa-plus</v-icon>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+
                 </v-card>
             </v-col>
 
@@ -114,9 +128,13 @@
 
         <v-dialog v-model="showChoosePerson" persistent max-width="500">
             <v-card>
-                <div class="alex-row" v-for="(person, index) in persons" :key="person.person_id">
+                <v-card-text class="alex-row" v-for="(person, index) in persons" :key="person.person_id">
                     <v-btn text @click="choosePerson(index)">{{ person.name }}</v-btn>
-                </div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="orange" @click="">Только сейчас</v-btn>
+                    <v-btn color="green">Сохранить</v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </v-container>
@@ -133,13 +151,13 @@
         props: [],
         data() {
             return {
+                person: false,
+                showChoosePerson: false,
                 date: new Date().toISOString().substr(0, 10),
                 calendar: false,
                 orderID: false,
                 orderSuccess: false,
                 orderedDishes: [],
-                showChoosePerson: true,
-                personIndex: false,
                 showMessage: false,
                 message: '',
                 headers: [
@@ -151,9 +169,14 @@
             }
         },
         computed: {
+            ...mapGetters('user', {user: 'getUser'}),
             ...mapGetters('menu', {menu: 'getMenu'}),
-            ...mapGetters('user', {company: 'getCompany'}),
-            ...mapGetters('person', {persons: 'getPersons'}),
+            persons() {
+                return this.isCorporate ? this.$store.getters["person/getPersons"] : []
+            },
+            isCorporate() {
+                return this.user.type === 'corporate'
+            },
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },
@@ -171,28 +194,16 @@
                     return acc + item.summ
                 }, 0);
             },
-            company() {
-                return this.companies[this.companyIndex]
-            },
-            person(){
-                return this.persons[this.personIndex]
-            },
             order() {
-                // const person = this.persons[] ? this.persons[this.personIndex] : false;
                 return {
                     total: this.totalSum,
                     status: 'new',
-                    dishes: this.dishes,
+                    dishes: this.orderedDishes.map(dish => dish.dish_id),
                     menu_id: this.menu.menu_id,
                     person_id: this.person.person_id
                 }
             },
-            dishes() {
-                return this.orderedDishes.map(dish => dish.dish_id)
-            },
-
         },
-
         methods: {
             addToOrdered(index) {
                 this.orderedDishes.push(this.menu.dishes[index])
@@ -211,6 +222,9 @@
                 this.calendar = false
 
             },
+            changePerson() {
+                this.showChoosePerson = true
+            },
             createOrder() {
                 let dishesId = this.orderedDishes.map(dish => dish.dish_id);
                 if (dishesId.length < 1) {
@@ -224,19 +238,21 @@
                     this.orderedDishes = []
                 })
             },
-            chooseCompany(index) {
-                this.companyIndex = index
-                this.showChooseCompany = false
-                this.$store.dispatch('company/loadPersonsByCompany', this.company.company_id).then(this.showChoosePerson = true)
-            },
             choosePerson(index) {
-                // alert(index)
-                this.personIndex = index
                 this.showChoosePerson = false
+                const person = this.persons[index]
+                localStorage.person = JSON.stringify(person)
+                this.person = person
             },
             clearMessage() {
                 this.message = '';
                 this.showMessage = false
+            }
+        },
+        mounted() {
+            if (localStorage.person) {
+                // this.$set()
+                this.person = JSON.parse(localStorage.person);
             }
         },
         watch: {
@@ -246,10 +262,12 @@
             },
         },
         beforeRouteEnter(from, to, next) {
-            // console.log('ORDER CREAYE ROUTING')
+            console.log('ORDER CREAYE ROUTING')
             next(vm => {
                 vm.loadMenu()
-                vm.$store.dispatch('person/loadPersonsByCompany', 1)
+                if (vm.isCorporate) {
+                    vm.$store.dispatch('person/loadPersonsByCompany', vm.user.related_company_id)
+                }
             })
         }
     }

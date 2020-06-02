@@ -1,12 +1,12 @@
 <template>
     <v-container>
         <!--        TODO нужно с этим что то сделать -->
-        <owner v-if="isСorporate" :company_uuid="company.uuid"></owner>
+        <owner v-if="isCorporate" :company_uuid="company.uuid"></owner>
 
         <v-card color="teal">
             <v-simple-table>
                 <tbody>
-                <tr v-if="!isСorporate">
+                <tr v-if="!isCorporate">
                     <td>Имя</td>
                     <td>{{ user.name }}</td>
                     <td></td>
@@ -97,7 +97,7 @@
         computed: {
             ...mapGetters('company', {company: 'getCompany'}),
             ...mapGetters('person', {person: 'getPerson'}),
-            isСorporate() {
+            isCorporate() {
                 return this.user.type === 'corporate'
             },
         },

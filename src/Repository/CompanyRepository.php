@@ -74,4 +74,13 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
+    public function findCompanyByUUIDObjReturn($uuid)
+    {
+        return $this->createQueryBuilder('c')
+                    ->andWhere('c.uuid = :uuid')
+                    ->setParameter('uuid', $uuid)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
 }

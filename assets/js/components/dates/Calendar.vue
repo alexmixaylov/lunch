@@ -1,28 +1,5 @@
 <template>
     <div>
-<!--        <v-sheet width="100%"-->
-<!--                tile-->
-<!--                height="54"-->
-<!--                color="grey lighten-3"-->
-<!--                class="d-flex"-->
-<!--        >-->
-<!--            <v-btn-->
-<!--                    icon-->
-<!--                    class="ma-2"-->
-<!--                    @click="$refs.calendar.prev()"-->
-<!--            >-->
-<!--                <v-icon>fa-left</v-icon>-->
-<!--            </v-btn>-->
-<!--            <v-spacer></v-spacer>-->
-
-<!--            <v-btn-->
-<!--                    icon-->
-<!--                    class="ma-2"-->
-<!--                    @click="$refs.calendar.next()"-->
-<!--            >-->
-<!--                <v-icon>fa-right</v-icon>-->
-<!--            </v-btn>-->
-<!--        </v-sheet>-->
         <v-sheet height="600" width="100%">
             <v-calendar
                     ref="calendar"

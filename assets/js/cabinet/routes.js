@@ -14,8 +14,8 @@ const router = new VueRouter({
     routes: [
         {path: '/', name: 'main', component: Main},
         {path: '/orders', name: 'orders', component: Orders},
-        {path: '/orders/:id', name: 'orders#read', component: OrderRead},
         {path: '/orders/create', name: 'orders#create', component: CreateOrder},
+        {path: '/orders/:id', name: 'orders#read', component: OrderRead},
         {path: '/profile', name: 'profile', component: Profile},
         {path: '/employees', name: 'employees', component: Employees}
     ]

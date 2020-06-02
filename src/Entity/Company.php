@@ -39,10 +39,10 @@ class Company
      */
     private $uuid;
 
-    public function __construct()
+    public function __construct(string $uuid = null)
     {
         $this->persons = new ArrayCollection();
-        $this->uuid = mb_strtoupper(uniqid());
+        $this->uuid = $uuid ?? mb_strtoupper(uniqid());
     }
 
     public function getId(): ?int
@@ -108,5 +108,12 @@ class Company
     public function getUuid(): ?string
     {
         return $this->uuid;
+    }
+
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
+
+        return $this;
     }
 }
