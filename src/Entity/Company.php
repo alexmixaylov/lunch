@@ -20,7 +20,7 @@ class Company
     private $id;
 
     /**
-     * @ORM\Column(type="string", unique=true, length=255)
+     * @ORM\Column(type="string", unique=true, length=150)
      */
     private $title;
 
@@ -35,7 +35,7 @@ class Company
     private $persons;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100)
      */
     private $uuid;
 

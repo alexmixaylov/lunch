@@ -38,7 +38,7 @@ class Order
 
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=150)
      */
     private $status;
 
