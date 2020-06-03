@@ -4,11 +4,11 @@
             <v-list dense>
                 <v-list-item link>
                     <v-list-item-action>
-                        <v-icon>fa-home</v-icon>
+                        <v-icon>fa-utensils</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <router-link :to="{name: 'main'}">Главная</router-link>
+                            <router-link :to="{name: 'main'}">Меню</router-link>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
@@ -22,6 +22,17 @@
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+                <v-list-item link>
+                    <v-list-item-action>
+                        <v-icon>fa-user-tie</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            <router-link :to="{name: 'profile'}">Профиль <span v-if="isCorporate">компании</span>
+                            </router-link>
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item link v-if="isCorporate">
                     <v-list-item-action>
                         <v-icon>fa-users</v-icon>
@@ -32,19 +43,12 @@
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link>
-                    <v-list-item-action>
-                        <v-icon>fa-user-tie</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <router-link :to="{name: 'profile'}">Профиль <span v-if="isCorporate">компании</span></router-link>
-                        </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
             </v-list>
-        </v-navigation-drawer>
 
+            <div class="full-height">
+                <local-storage/>
+            </div>
+        </v-navigation-drawer>
         <v-app-bar
                 app
                 clipped-left
@@ -55,31 +59,32 @@
             <v-spacer></v-spacer>
             <user-component></user-component>
         </v-app-bar>
-
     </header>
 </template>
 
 <script>
     import {mapGetters} from 'vuex';
     import User from "../components/User";
+    import Storage from "../components/Storage";
 
     export default {
         name: "Header",
         components: {
-            'user-component': User
+            'user-component': User,
+            'local-storage': Storage
         },
         data: () => ({
             drawer: null,
         }),
         computed: {
             ...mapGetters('user', {user: 'getUser'}),
-            isCorporate(){
+            isCorporate() {
                 return this.user.type === 'corporate'
             }
         },
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>

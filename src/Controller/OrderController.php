@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Repository\CompanyRepository;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
@@ -155,7 +154,7 @@ class OrderController extends AbstractController
     ) {
         $post = json_decode($request->getContent(), true);
 
-        $menu    = $menu_repository->find($post['menu_id']);
+        $menu   = $menu_repository->find($post['menu_id']);
         $person = $person_repository->find($post['person_id']);
 
         // так как невозможно несколько идентичных связея для manyToMany
@@ -188,6 +187,8 @@ class OrderController extends AbstractController
         $order->setDate($menu->getDate());
         $order->setPerson($person);
         $order->setCounters($dishCounters);
+        $order->setMessage(htmlspecialchars($post['message']));
+
 
         foreach ($dishes as $dish) {
             $order->addDish($dish);

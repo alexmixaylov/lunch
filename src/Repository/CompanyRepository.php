@@ -40,6 +40,7 @@ class CompanyRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
                     ->select('c.id as company_id')
                     ->addSelect('c.title')
+                    ->addSelect('c.uuid')
                     ->addSelect('owner.name as owner_name')
                     ->addSelect('owner.id as owner_id')
                     ->leftJoin('c.owner', 'owner')
@@ -74,7 +75,7 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
-    public function findCompanyByUUIDObjReturn($uuid)
+    public function findCompanyByUUIDLazyObj($uuid)
     {
         return $this->createQueryBuilder('c')
                     ->andWhere('c.uuid = :uuid')

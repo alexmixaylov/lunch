@@ -2,16 +2,16 @@
     <header>
         <v-navigation-drawer v-model="drawer" app clipped>
             <v-list dense>
-                <v-list-item link>
-                    <v-list-item-action>
-                        <v-icon>fa-home</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <router-link :to="{name: 'home'}">Главная</router-link>
-                        </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+<!--                <v-list-item link>-->
+<!--                    <v-list-item-action>-->
+<!--                        <v-icon>fa-home</v-icon>-->
+<!--                    </v-list-item-action>-->
+<!--                    <v-list-item-content>-->
+<!--                        <v-list-item-title>-->
+<!--                            <router-link :to="{name: 'home'}">Главная</router-link>-->
+<!--                        </v-list-item-title>-->
+<!--                    </v-list-item-content>-->
+<!--                </v-list-item>-->
                 <v-list-item link>
                     <v-list-item-action>
                         <v-icon>fa-calendar-alt</v-icon>
@@ -52,16 +52,16 @@
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link>
-                    <v-list-item-action>
-                        <v-icon>fa-coins</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <router-link :to="{name:'money'}">Финансы</router-link>
-                        </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+<!--                <v-list-item link>-->
+<!--                    <v-list-item-action>-->
+<!--                        <v-icon>fa-coins</v-icon>-->
+<!--                    </v-list-item-action>-->
+<!--                    <v-list-item-content>-->
+<!--                        <v-list-item-title>-->
+<!--                            <router-link :to="{name:'money'}">Финансы</router-link>-->
+<!--                        </v-list-item-title>-->
+<!--                    </v-list-item-content>-->
+<!--                </v-list-item>-->
                 <v-list-item link>
                     <v-list-item-action>
                         <v-icon>fa-coins</v-icon>

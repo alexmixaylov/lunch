@@ -293,7 +293,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .alex-row {
         display: flex;
         justify-content: space-between;

@@ -22,13 +22,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class PersonController extends AbstractController
 {
     /**
-     * @Route("/company/{id}", name="persons#by_company")
+     * @Route("/company/{id}", name="persons#by_company", methods={"GET"})
      */
     public function getPersonsByCompany(int $id, PersonRepository $repository)
     {
         $persons = $repository->findByCompanyId($id);
 
         return new JsonResponse($persons);
+    }
+
+    /**
+     * @Route("/user/{id}", name="persons#by_user", methods={"GET"})
+     */
+    public function getPersonsByUserId(int $id, PersonRepository $repository)
+    {
+        $person = $repository->findByUserId($id);
+
+        return new JsonResponse($person);
     }
 
     /**

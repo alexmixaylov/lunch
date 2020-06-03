@@ -98,11 +98,13 @@ class RegistrationController extends AbstractController
     /**
      * @param User $user
      *
+     * @param CompanyRepository $repository
+     *
      * @return Person
      */
-    private function createPersonForPrivate(User $user, $repository): Person
+    private function createPersonForPrivate(User $user, CompanyRepository $repository): Person
     {
-        $privateCompany = $repository->findCompanyByUUIDObjReturn('private');
+        $privateCompany = $repository->findCompanyByUUIDLazyObj('private');
         $person = new Person();
         $person->setName($user->getName());
         $person->setUser($user);

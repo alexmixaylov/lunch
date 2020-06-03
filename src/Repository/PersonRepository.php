@@ -35,6 +35,23 @@ class PersonRepository extends ServiceEntityRepository
                     ->getResult();
     }
 
+    /**
+     * @return Person[] Returns an array of Person objects
+     */
+
+    public function findByUserId($id)
+    {
+        return $this->createQueryBuilder('p')
+                    ->select('p.id as person_id')
+                    ->addSelect('p.name')
+                    ->innerJoin('p.user', 'u')
+                    ->andWhere('u.id = :id')
+                    ->setParameter('id', $id)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
+
     public function findById($id)
     {
         return $this->createQueryBuilder('p')

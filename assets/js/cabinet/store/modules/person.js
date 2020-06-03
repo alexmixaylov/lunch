@@ -7,6 +7,8 @@ export default {
         persons: []
     },
     getters: {
+        getPersonName: state => state.personName,
+        getPersonId: state => state.personId,
         getPerson: state => {
             return state.person
         },
@@ -35,6 +37,12 @@ export default {
     actions: {
         loadPersonById({commit}, payload) {
             axios.get('/persons/' + payload).then(response => {
+                console.log(response)
+                commit('setPerson', response.data)
+            }).catch(e => console.log(e))
+        },
+        loadPersonByUserId({commit}, payload) {
+            axios.get('/persons/user/' + payload).then(response => {
                 console.log(response)
                 commit('setPerson', response.data)
             }).catch(e => console.log(e))

@@ -54,27 +54,29 @@ class DeliveryRepository
         return $orders;
     }
 
+
     public function findOrdersByDateGroupByCompany($date)
     {
         //TODO заказы можно будет считать по людям, пока что нет соответствующего маркера для подсчета
         $result = $this->em->createQueryBuilder()
-                           ->select('c.title')
-                           ->addSelect('c.id as company_id')
-                           ->addSelect('COUNT(o.id) as cnt')
-                           ->from(Company::class, 'c')
-                           ->innerJoin('c.persons', 'p')
-                           ->innerJoin('p.orders', 'o')
-                           ->innerJoin('o.dishes', 'd')
+                           ->select('c.id as company_id')
+                           ->addSelect('c.title')
+                           ->addSelect('COUNT(0) as cnt')
+                           ->from(Order::class, 'o')
+                           ->innerJoin('o.person', 'p')
+                           ->innerJoin('p.company', 'c')
                            ->where('o.date = :date')
                            ->andWhere('o.status != :status')
                            ->setParameters([
                                'date'   => $date,
                                'status' => 'canceled'
                            ])
-                           ->groupBy('c.id')
+                           ->groupBy('company_id')
+                           ->addGroupBy('c.title')
                            ->orderBy('c.title')
                            ->getQuery()
                            ->getResult();
+
         return $result;
     }
 }

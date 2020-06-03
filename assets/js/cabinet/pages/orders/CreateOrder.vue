@@ -2,7 +2,7 @@
     <v-container justify="center">
         <v-row>
             <v-col v-if="isCorporate">
-                <v-btn large color="red" @click="changePerson">{{ person.name }}</v-btn>
+                <local-storage></local-storage>
             </v-col>
             <v-col v-else>
                 <v-btn large color="green">{{ user.name }}</v-btn>
@@ -100,7 +100,6 @@
                     @change="changeDate()"
             ></v-date-picker>
         </v-dialog>
-
         <v-dialog v-model="orderSuccess" max-width="500">
             <v-card>
                 <v-app-bar dark color="teal">
@@ -123,20 +122,8 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-
         </v-dialog>
 
-        <v-dialog v-model="showChoosePerson" persistent max-width="500">
-            <v-card>
-                <v-card-text class="alex-row" v-for="(person, index) in persons" :key="person.person_id">
-                    <v-btn text @click="choosePerson(index)">{{ person.name }}</v-btn>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="orange" @click="">Только сейчас</v-btn>
-                    <v-btn color="green">Сохранить</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
     </v-container>
 </template>
 
@@ -145,13 +132,15 @@
     import {mapGetters} from 'vuex';
     import {dateFormat} from "../../../plugins/dateFormat";
     import {encodeOrders} from "../../../plugins/dishNormalizer";
+    import Storage from "../../components/Storage";
 
     export default {
         name: "OrderCreate",
-        props: [],
+        components:{
+            'local-storage': Storage
+        },
         data() {
             return {
-                person: false,
                 showChoosePerson: false,
                 date: new Date().toISOString().substr(0, 10),
                 calendar: false,
@@ -171,6 +160,7 @@
         computed: {
             ...mapGetters('user', {user: 'getUser'}),
             ...mapGetters('menu', {menu: 'getMenu'}),
+            ...mapGetters('person', {person:'getPerson'}),
             persons() {
                 return this.isCorporate ? this.$store.getters["person/getPersons"] : []
             },
@@ -200,7 +190,8 @@
                     status: 'new',
                     dishes: this.orderedDishes.map(dish => dish.dish_id),
                     menu_id: this.menu.menu_id,
-                    person_id: this.person.person_id
+                    person_id: this.person.person_id,
+                    message: this.message
                 }
             },
         },
@@ -222,9 +213,7 @@
                 this.calendar = false
 
             },
-            changePerson() {
-                this.showChoosePerson = true
-            },
+
             createOrder() {
                 let dishesId = this.orderedDishes.map(dish => dish.dish_id);
                 if (dishesId.length < 1) {
@@ -238,21 +227,9 @@
                     this.orderedDishes = []
                 })
             },
-            choosePerson(index) {
-                this.showChoosePerson = false
-                const person = this.persons[index]
-                localStorage.person = JSON.stringify(person)
-                this.person = person
-            },
             clearMessage() {
                 this.message = '';
                 this.showMessage = false
-            }
-        },
-        mounted() {
-            if (localStorage.person) {
-                // this.$set()
-                this.person = JSON.parse(localStorage.person);
             }
         },
         watch: {
@@ -262,34 +239,10 @@
             },
         },
         beforeRouteEnter(from, to, next) {
-            console.log('ORDER CREAYE ROUTING')
+            console.log('ORDER CREAYE ROUTIN')
             next(vm => {
                 vm.loadMenu()
-                if (vm.isCorporate) {
-                    vm.$store.dispatch('person/loadPersonsByCompany', vm.user.related_company_id)
-                }
             })
         }
     }
 </script>
-
-<style scoped>
-    .alex-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .alex-row:last-of-type {
-        border: none;
-    }
-
-    .alex-row-end {
-        text-align: end;
-    }
-
-    .alex-row:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-</style>

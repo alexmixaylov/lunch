@@ -27,8 +27,7 @@
         beforeMount() {
             if (this.user.type === 'corporate' &&  this.user.person_id !== ""){
                 console.log('CHECK USER', this.user)
-                this.$store.dispatch('person/loadPersonById', this.user.person_id)
-
+                // this.$store.dispatch('person/loadPersonById', this.user.person_id)
             }
         }
     }

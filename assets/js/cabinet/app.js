@@ -12,4 +12,7 @@ const app = new Vue({
     render: h => h(App),
     vuetify,
    });
+
+import '../../css/cabinet.scss';
+
 console.log('Cabinet was loaded');

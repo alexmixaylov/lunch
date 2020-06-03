@@ -43,6 +43,7 @@
                 const key = param[0];
                 user[key] = (key !== 'roles') ? param[1] : JSON.parse(param[1])
             });
+
             this.$store.commit('user/setUser', user)
 
             // если уже привязана компания, или частник - загружаем данные о компании
@@ -54,6 +55,7 @@
                         // related_company_id - Relation OneToONe - only for corporate company account
                         // if user has personal account related with company profile or private type of account it param must be empty
                         this.$store.dispatch('company/loadCompanyByOwner', user.user_id)
+                        this.$store.dispatch('person/loadPersonsByCompany', user.related_company_id)
                     } else {
                         alert('Вы зарегистрировали аккаунт компании. Теперь добавьте название вашей компани в профиль для того чтобы продолжить работу')
                         this.$router.push({name: 'profile'})
@@ -65,6 +67,9 @@
                         this.$router.push({name: 'profile'})
                     }
                     break;
+                case 'private':
+                    this.$store.dispatch('person/loadPersonByUserId', user.user_id)
+                    break;
 
                 default:
                     break;
@@ -75,10 +80,3 @@
         }
     }
 </script>
-
-<style scoped>
-    a {
-        color: white;
-
-    }
-</style>

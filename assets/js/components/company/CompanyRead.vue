@@ -36,18 +36,20 @@
                     </router-link>
                 </v-btn>
             </v-col>
-            <v-col class="text-right">
-                <v-btn color="orange" @click="newPerson = true">
-                    Добавить сотрудника&nbsp;<v-icon small>fa-plus</v-icon>
-                </v-btn>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col class="text-right">
-                <v-btn color="red" @click="confirmDeleteCompany = true">
-                    Удалить компанию &nbsp;<v-icon x-small>fa-minus</v-icon>
-                </v-btn>
-            </v-col>
+
+            <template v-if="company.uuid !== 'private'">
+                <v-col class="text-right">
+                    <v-btn color="orange" @click="newPerson = true">
+                        Добавить сотрудника&nbsp;<v-icon small>fa-plus</v-icon>
+                    </v-btn>
+                </v-col>
+
+                <v-col class="text-right">
+                    <v-btn color="red" @click="confirmDeleteCompany = true">
+                        Удалить компанию &nbsp;<v-icon x-small>fa-minus</v-icon>
+                    </v-btn>
+                </v-col>
+            </template>
         </v-row>
         <v-dialog max-width="500" v-model="newPerson">
             <v-card>
@@ -59,7 +61,7 @@
                         <v-text-field
                                 v-model="name"
                                 :rules="nameRules"
-                                :counter="10"
+                                :counter="20"
                                 label="Имя сотрудника"
                                 required
                         ></v-text-field>
@@ -83,7 +85,7 @@
                     <v-text-field
                             v-model="selectedPerson.name"
                             :rules="nameRules"
-                            :counter="10"
+                            :counter="20"
                             label="Имя сотрудника"
                             required
                     ></v-text-field>
@@ -141,7 +143,7 @@
                 name: '',
                 nameRules: [
                     v => !!v || 'Имя обязательно',
-                    v => v.length <= 10 || 'Должно быть меньше 10 символов',
+                    v => v.length <= 20 || 'Должно быть меньше 20 символов',
                 ],
             }
         },
