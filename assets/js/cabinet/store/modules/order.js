@@ -40,6 +40,17 @@ export default {
         }
     },
     actions: {
+        loadOrdersByPerson({commit}, payload) {
+            console.log(payload)
+            new Promise(((resolve, reject) => {
+                axios
+                    .get('/orders/person/' + payload)
+                    .then(response => {
+                        commit('addOrders', response.data)
+                        resolve(response.data)
+                    })
+            }));
+        },
         loadOrdersByDate({commit}, payload) {
             console.log(payload)
             new Promise(((resolve, reject) => {

@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Repository\CompanyRepository;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
 use App\Repository\PersonRepository;
+use App\Repository\UserRepository;
+use App\Services\CheckPermissions;
 use App\Services\GenerateDates;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,14 +19,52 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/orders")
+ * @IsGranted("ROLE_USER")
  */
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/date/{date}", name="orders#by_date")
-     * @IsGranted("ROLE_ADMIN")
+     * @Route("/person/{person}", name="orders#by_person", methods={"GET"})
+     * @param int $person
+     * @param OrderRepository $order_repository
+     *
+     * @param UserRepository $user_repository
+     *
+     * @return JsonResponse
      */
-    public function getOrdersByDate(string $date, OrderRepository $repository)
+    public function getOrdersByPerson(
+        int $person,
+        OrderRepository $order_repository,
+        CompanyRepository $company_repository
+    ) {
+        $currentUser      = $this->getUser();
+        $realUserCompany  = $company_repository->findCompanyByUser($currentUser->getId());
+        $requestedCompany = $company_repository->findCompanyByPerson($person);
+
+        if ($realUserCompany == $requestedCompany) {
+            $orders = $order_repository->findOrdersByPerson($person);
+
+            return new JsonResponse(array_map(function ($order) {
+                $order['date'] = $order['date']->format('yy-m-d');
+
+                return $order;
+            }, $orders));
+        }
+
+        return new JsonResponse('You try to get order .... another person', 403);
+    }
+
+
+    /**
+     * @Route("/date/{date}", name="orders#by_date", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param string $date
+     * @param OrderRepository $repository
+     * @param CheckPermissions $permissions
+     *
+     * @return JsonResponse
+     */
+    public function getOrdersByDate(string $date, OrderRepository $repository, CheckPermissions $permissions)
     {
         $orders = $repository->findOrdersByDate($date);
 
@@ -31,7 +72,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/week/{date}", name="orders#by_week")
+     * @Route("/week/{date}", name="orders#by_week", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function getOrdersByWeek(string $date, OrderRepository $repository, GenerateDates $generate_dates)
@@ -49,7 +90,8 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/menu/{id}", name="orders#by_menu")
+     * @Route("/menu/{id}", name="orders#by_menu", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function getOrdersByMenu(int $id, OrderRepository $repository)
     {

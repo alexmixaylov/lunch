@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Company;
 use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -70,9 +69,9 @@ class OrderRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
                     ->select('o.id')
                     ->addSelect('o.status')
-                    ->addSelect('d.type')
+                    ->addSelect('o.date')
+                    ->addSelect('o.total')
                     ->innerJoin('o.person', 'p')
-                    ->innerJoin('o.dishes', 'd')
                     ->andWhere('p.id = :person_id')
                     ->setParameter('person_id', $id)
                     ->orderBy('o.id', 'ASC')

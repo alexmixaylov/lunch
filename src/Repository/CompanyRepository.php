@@ -63,6 +63,33 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
+    public function findCompanyByUser($id)
+    {
+        return $this->createQueryBuilder('c')
+                    ->select('c.id as company_id')
+                    ->addSelect('c.title')
+                    ->addSelect('c.uuid')
+                    ->andWhere('c.owner = :owner_id')
+                    ->setParameter('owner_id', $id)
+                    ->orderBy('c.title')
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
+    public function findCompanyByPerson($id)
+    {
+        return $this->createQueryBuilder('c')
+                    ->select('c.id as company_id')
+                    ->addSelect('c.title')
+                    ->addSelect('c.uuid')
+                    ->innerJoin('c.persons', 'p')
+                    ->andWhere('p.id = :person_id')
+                    ->setParameter('person_id', $id)
+                    ->orderBy('c.title')
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
     public function findCompanyByUUID($uuid)
     {
         return $this->createQueryBuilder('c')
