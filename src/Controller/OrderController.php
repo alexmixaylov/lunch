@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/person/{person}", name="orders#by_person", methods={"GET"})
+     * @Route("/gate", name="orders#by_params", methods={"GET"})
      * @param int $person
      * @param OrderRepository $order_repository
      *
@@ -33,25 +33,25 @@ class OrderController extends AbstractController
      * @return JsonResponse
      */
     public function getOrdersByPerson(
-        int $person,
         OrderRepository $order_repository,
-        CompanyRepository $company_repository
+        CompanyRepository $company_repository,
+        Request $request
     ) {
-        $currentUser      = $this->getUser();
-        $realUserCompany  = $company_repository->findCompanyByUser($currentUser->getId());
-        $requestedCompany = $company_repository->findCompanyByPerson($person);
 
-        if ($realUserCompany == $requestedCompany) {
-            $orders = $order_repository->findOrdersByPerson($person);
+        $currentUser     = $this->getUser();
+        $realUserCompany = $company_repository->findCompanyByUser($currentUser->getId())['company_id'];
 
-            return new JsonResponse(array_map(function ($order) {
-                $order['date'] = $order['date']->format('yy-m-d');
+        $date   = $request->query->get('date');
+        $person = $request->query->get('person_id');
 
-                return $order;
-            }, $orders));
-        }
+        $orders = $order_repository->findOrdersByParams($realUserCompany, $person, $date);
 
-        return new JsonResponse('You try to get order .... another person', 403);
+        return new JsonResponse(array_map(function ($order) {
+            $order['date'] = $order['date']->format('yy-m-d');
+
+            return $order;
+        }, $orders));
+
     }
 
 

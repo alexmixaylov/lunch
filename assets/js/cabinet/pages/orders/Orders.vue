@@ -40,7 +40,7 @@
         },
         computed: {
             ...mapGetters('order', {orders: 'getOrders'}),
-            ...mapGetters('person', {person:'getPerson'}),
+            ...mapGetters('person', {person: 'getPerson'}),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },
@@ -60,20 +60,21 @@
                 this.calendar = false
             },
             loadCorporateOrders() {
-                this.$store.dispatch('order/loadOrdersByPerson', this.person.person_id)
+                const params = [
+                    `person_id=${this.person.person_id}`,
+                    `date=${this.dateForAPI}`
+                ]
+                this.$store.dispatch('order/loadOrdersByParams', params.join('&'))
             }
+        },
+        mounted() {
+            this.loadCorporateOrders()
         },
         watch: {
             date() {
                 this.loadCorporateOrders()
             },
         },
-        beforeRouteEnter(from, to, next) {
-            console.log('ORDERS TRY LOAD')
-            next(vm => {
-                vm.loadCorporateOrders()
-            })
-        }
     }
 </script>
 

@@ -10,13 +10,11 @@ class AppController extends AbstractController
 {
     /**
      * @Route("/", name="app", methods={"GET"})
+     * @IsGranted("ROLE_USER")
      */
     public function index()
     {
         $user = $this->getUser();
-        if ( ! $user) {
-            return $this->redirect('/login');
-        }
 
         if ( ! in_array("ROLE_ADMIN", $user->getRoles())) {
             return $this->redirect('/cabinet');

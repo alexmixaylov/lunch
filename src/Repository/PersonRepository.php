@@ -64,17 +64,4 @@ class PersonRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getOneOrNullResult();
     }
-
-
-    /*
-    public function findOneBySomeField($value): ?Person
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

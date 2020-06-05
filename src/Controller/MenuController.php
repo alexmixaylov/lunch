@@ -6,13 +6,15 @@ use App\Entity\Menu;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Services\GenerateDates;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/menus")
+ * @IsGranted("ROLE_USER")
  */
 class MenuController extends AbstractController
 {
@@ -26,8 +28,8 @@ class MenuController extends AbstractController
         DishRepository $dish_repository,
         GenerateDates $generate_dates
     ) {
-        $start        = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
-        $end          = date('Y-m-d', strtotime("friday this week", strtotime($userDate)));
+        $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
+        $end   = date('Y-m-d', strtotime("friday this week", strtotime($userDate)));
 
         $allWeekDates = $generate_dates->allDatesForWeek($start);
 
@@ -51,6 +53,7 @@ class MenuController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($menu);
             $em->flush();
+
             return [
                 'date'    => $menu->getDate()->format('Y-m-d'),
                 'menu_id' => $menu->getId(),
@@ -155,6 +158,7 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/", name="menus#create", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request)
     {
@@ -173,6 +177,7 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/{id}", name="menus#update", methods={"PATCH, PUT"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function update(int $id, MenuRepository $repository)
     {
@@ -187,6 +192,7 @@ class MenuController extends AbstractController
 
     /**
      * @Route("/{id}", name="menus#delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(int $id)
     {

@@ -40,11 +40,11 @@ export default {
         }
     },
     actions: {
-        loadOrdersByPerson({commit}, payload) {
-            console.log(payload)
+        loadOrdersByParams({commit}, params) {
+            console.log(params)
             new Promise(((resolve, reject) => {
                 axios
-                    .get('/orders/person/' + payload)
+                    .get('/orders/gate?' + params)
                     .then(response => {
                         commit('addOrders', response.data)
                         resolve(response.data)

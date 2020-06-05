@@ -64,6 +64,20 @@ class OrderRepository extends ServiceEntityRepository
      * @return Order[] Returns an array of Order objects
      */
 
+    public function findOrdersByDish($id)
+    {
+        return $this->createQueryBuilder('o')
+                    ->select('o.id')
+                    ->innerJoin('o.dishes', 'd')
+                    ->andWhere('d.id = :dish_id')
+                    ->setParameter('dish_id', $id)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
     public function findOrdersByPerson($id)
     {
         return $this->createQueryBuilder('o')
@@ -80,28 +94,55 @@ class OrderRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param int $companyId
+     * @param int | null $personId
+     * @param string| null $date
+     *
      * @return Order[] Returns an array of Order objects
      */
+    public function findOrdersByParams($companyId, $personId, $date)
+    {
+        $qb = $this->createQueryBuilder('o')
+                   ->select('o.id')
+                   ->addSelect('p.name')
+                   ->addSelect('o.status')
+                   ->addSelect('o.date')
+                   ->addSelect('o.total')
+                   ->innerJoin('o.person', 'p')
+                   ->innerJoin('p.company', 'c')
+                   ->andWhere('c.id = :company_id');
 
-    public function findOrdersByDish($id)
-    {
-        return $this->createQueryBuilder('o')
-                    ->select('o.id')
-                    ->innerJoin('o.dishes', 'd')
-                    ->andWhere('d.id = :dish_id')
-                    ->setParameter('dish_id', $id)
-                    ->getQuery()
-                    ->getResult();
+        if ($personId && $date) {
+
+            $qb->setParameters(
+                [
+                    'company_id' => $companyId,
+                    'person_id'  => $personId,
+                    'date'       => $date
+                ]
+            )
+               ->andWhere('p.id = :person_id')
+               ->andWhere('o.date = :date');
+
+        } elseif ($personId) {
+            $qb->setParameters(
+                [
+                    'company_id' => $companyId,
+                    'person_id'  => $personId
+                ]
+            )->andWhere('p.id = :person_id');
+        } else {
+            $qb->setParameters(
+                [
+                    'company_id' => $companyId,
+                    'date'       => $date
+                ]
+            )->andWhere('o.date = :date');
+        }
+
+        $qb->setParameter('company_id', $companyId);
+        $qb->orderBy('o.id', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
-    /*
-    public function findOneBySomeField($value): ?Order
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Company;
 use App\Entity\Dish;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,26 +56,23 @@ class DeliveryRepository
 
     public function findOrdersByDateGroupByCompany($date)
     {
-        //TODO заказы можно будет считать по людям, пока что нет соответствующего маркера для подсчета
-        $result = $this->em->createQueryBuilder()
-                           ->select('c.id as company_id')
-                           ->addSelect('c.title')
-                           ->addSelect('COUNT(0) as cnt')
-                           ->from(Order::class, 'o')
-                           ->innerJoin('o.person', 'p')
-                           ->innerJoin('p.company', 'c')
-                           ->where('o.date = :date')
-                           ->andWhere('o.status != :status')
-                           ->setParameters([
-                               'date'   => $date,
-                               'status' => 'canceled'
-                           ])
-                           ->groupBy('company_id')
-                           ->addGroupBy('c.title')
-                           ->orderBy('c.title')
-                           ->getQuery()
-                           ->getResult();
-
-        return $result;
+        return $this->em->createQueryBuilder()
+                        ->select('c.id as company_id')
+                        ->addSelect('c.title')
+                        ->addSelect('COUNT(0) as cnt')
+                        ->from(Order::class, 'o')
+                        ->innerJoin('o.person', 'p')
+                        ->innerJoin('p.company', 'c')
+                        ->where('o.date = :date')
+                        ->andWhere('o.status != :status')
+                        ->setParameters([
+                            'date'   => $date,
+                            'status' => 'canceled'
+                        ])
+                        ->groupBy('company_id')
+                        ->addGroupBy('c.title')
+                        ->orderBy('c.title')
+                        ->getQuery()
+                        ->getResult();
     }
 }
