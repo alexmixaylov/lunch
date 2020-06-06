@@ -3,7 +3,6 @@
         <v-card-title class="headline" v-if="isOrders">{{dateForUser}}</v-card-title>
         <v-data-table
                 v-if="isOrders"
-                item-key="alexKey"
                 @click:row="routeToOrder"
                 :dense="compactMode"
                 :headers="headers"

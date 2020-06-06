@@ -19,13 +19,13 @@ export default {
         }
     },
     mutations: {
-        addOrders(state, payload) {
+        setOrders(state, payload) {
             state.orders = payload
         },
-        addOrdersWeek(state, payload) {
+        setOrdersWeek(state, payload) {
             state.ordersWeek = payload
         },
-        addOrder(state, payload) {
+        setOrder(state, payload) {
             state.order = payload
         },
         deleteOrder: state => {
@@ -46,7 +46,7 @@ export default {
                 axios
                     .get('/orders/date/' + payload)
                     .then(response => {
-                        commit('addOrders', response.data)
+                        commit('setOrders', response.data)
                         resolve(response.data)
                     })
             }));
@@ -56,7 +56,7 @@ export default {
                 axios
                     .get('/orders/week/' + payload)
                     .then(response => {
-                        commit('addOrdersWeek', response.data)
+                        commit('setOrdersWeek', response.data)
                         resolve(response.data)
                     })
             }));
@@ -68,7 +68,7 @@ export default {
                 resolve(
                     axios.get('/orders/' + payload).then(response => {
                         console.log(response)
-                        commit('addOrder', response.data)
+                        commit('setOrder', response.data)
                         resolve(response.data)
                     }))
                 reject(console.log(response))
@@ -88,7 +88,7 @@ export default {
             // payload must be ORDER ID
             axios.get('/orders/' + payload)
                 .then(response => {
-                    commit('addOrder', response.data)
+                    commit('setOrder', response.data)
                     return response.data
                 })
                 .then(response => {

@@ -3,9 +3,10 @@ import VueRouter from 'vue-router';
 import Main from "./pages/Main";
 import Orders from "./pages/orders/Orders";
 import OrderRead from "./pages/orders/OrderRead";
-import CreateOrder from "./pages/orders/CreateOrder";
+import CreateOrder from "./pages/orders/OrderCreate";
 import Profile from "./pages/Profile";
 import Employees from "./pages/Employees";
+import OrderEdit from "./pages/orders/OrderEdit";
 
 
 Vue.use(VueRouter);
@@ -16,6 +17,7 @@ const router = new VueRouter({
         {path: '/orders', name: 'orders', component: Orders},
         {path: '/orders/create', name: 'orders#create', component: CreateOrder},
         {path: '/orders/:id', name: 'orders#read', component: OrderRead},
+        {path: '/orders/:id/edit', name: 'orders#edit', component: OrderEdit},
         {path: '/profile', name: 'profile', component: Profile},
         {path: '/employees', name: 'employees', component: Employees}
     ]

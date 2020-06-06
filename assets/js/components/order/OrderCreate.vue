@@ -7,19 +7,19 @@
             </v-col>
             <v-col class="shrink">
                 <v-btn large color="red" v-if="!company" @click="showChooseCompany = true">Выбрать компанию</v-btn>
-                <v-btn large color="green darken-4" v-if="company">{{company.title}}
-                    <v-icon @click="companyIndex = false">fa-edit</v-icon>
+                <v-btn large color="green darken-4" v-if="company" @click="companyIndex = false">{{company.title}}&nbsp;
+                    <v-icon small>fa-edit</v-icon>
                 </v-btn>
             </v-col>
             <v-col class="shrink">
                 <v-btn large color="red" v-if="!person" @click="showChoosePerson = true">Выбрать человека</v-btn>
-                <v-btn large color="green darken-4" v-if="person">{{person.name}}
-                    <v-icon @click="personIndex = false">fa-edit</v-icon>
+                <v-btn large color="green darken-4" v-if="person" @click="personIndex = false">{{person.name}}&nbsp;
+                    <v-icon small>fa-edit</v-icon>
                 </v-btn>
             </v-col>
             <v-col class="shrink">
                 <v-btn color="teal" large @click="calendar = true">{{dateForUser}} &nbsp;
-                    <v-icon>fa-edit</v-icon>
+                    <v-icon small>fa-edit</v-icon>
                 </v-btn>
             </v-col>
         </v-row>
@@ -39,9 +39,13 @@
 
                         <div>{{ dish.title }} {{dish.price}}грн. {{ dish.dish_id }}</div>
                         <div class="alex-row-end">
-                            <v-icon color="green " @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
-                            &nbsp; &nbsp;
-                            <v-icon color="red darken-2" @click="addToOrdered(index)">fa-plus</v-icon>
+                            <v-btn text>
+                                <v-icon small color="red" @click="minToOrdered(dish.dish_id)">fa-minus</v-icon>
+                            </v-btn>
+                            <v-btn text>
+                                <v-icon small color="green" @click="addToOrdered(index)">fa-plus</v-icon>
+                            </v-btn>
+
                         </div>
                     </div>
                 </v-card>
@@ -212,7 +216,7 @@
             company() {
                 return this.companies[this.companyIndex]
             },
-            person(){
+            person() {
                 return this.persons[this.personIndex]
             },
             order() {
@@ -222,7 +226,8 @@
                     status: 'new',
                     dishes: this.dishes,
                     menu_id: this.menu.menu_id,
-                    person_id: this.person.person_id
+                    person_id: this.person.person_id,
+                    message: this.message
                 }
             },
             dishes() {
@@ -294,6 +299,11 @@
 </script>
 
 <style>
+    .fa-plus:before, .fa-minus:before {
+        width: 16px;
+        height: 16px;
+    }
+
     .alex-row {
         display: flex;
         justify-content: space-between;

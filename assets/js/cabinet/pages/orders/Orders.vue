@@ -7,12 +7,21 @@
                 </v-btn>
             </v-col>
         </v-row>
+
         <v-divider></v-divider>
-        <ul>
-            <li v-for="order in orders">
-                {{order}}
-            </li>
-        </ul>
+
+        <v-data-table
+                v-if="orders"
+                disable-pagination
+                disable-filtering
+                hide-default-footer
+                :headers="headers"
+                :items="orders"
+                class="elevation-1 orders mb-5"
+                locale="ru"
+                @click:row="routeToOrder"
+        ></v-data-table>
+
         <v-dialog v-model="calendar" max-width="290">
             <v-date-picker
                     locale="ru"
@@ -35,7 +44,13 @@
         data: function () {
             return {
                 date: new Date().toISOString().substr(0, 10),
-                calendar: true,
+                calendar: false,
+                headers:[
+                    {text: 'Номер', value: 'id'},
+                    {text: 'Имя', value: 'name'},
+                    {text: 'Статус', value: 'status'},
+                    {text: 'Сумма', value: 'total'}
+                ]
             }
         },
         computed: {
@@ -53,6 +68,7 @@
                 }
             },
 
+
         },
         methods: {
             changeDate() {
@@ -65,6 +81,11 @@
                     `date=${this.dateForAPI}`
                 ]
                 this.$store.dispatch('order/loadOrdersByParams', params.join('&'))
+            },
+            routeToOrder(row){
+                console.log(row)
+                this.$router.push('/orders/' + row.id)
+                // this.$store.commit('setGlobalDate', this.date)
             }
         },
         mounted() {

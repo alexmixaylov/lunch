@@ -207,22 +207,4 @@
 </script>
 
 <style scoped>
-    .alex-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .alex-row:last-of-type {
-        border: none;
-    }
-
-    .alex-row-end {
-        text-align: end;
-    }
-
-    .alex-row:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
 </style>

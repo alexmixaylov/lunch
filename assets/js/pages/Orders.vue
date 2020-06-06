@@ -13,8 +13,13 @@
         </template>
 
         <v-switch v-model="compactMode" label="Компактный режим" class="mx-4"></v-switch>
-        <v-btn color="orange" large>
-            <router-link tag="span" :to="{name:'orders#create'}">Создать &nbsp;<v-icon>fa-plus</v-icon>
+        <v-btn small color="orange" large>
+            <router-link
+                    tag="span"
+                    :to="{name:'orders#create'}"
+            >
+                Создать
+                &nbsp;<v-icon small>fa-plus</v-icon>
             </router-link>
         </v-btn>
     </v-container>

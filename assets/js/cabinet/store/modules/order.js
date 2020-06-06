@@ -19,13 +19,13 @@ export default {
         }
     },
     mutations: {
-        addOrders(state, payload) {
+        setOrders(state, payload) {
             state.orders = payload
         },
-        addOrdersWeek(state, payload) {
+        setOrdersWeek(state, payload) {
             state.ordersWeek = payload
         },
-        addOrder(state, payload) {
+        setOrder(state, payload) {
             state.order = payload
         },
         deleteOrder: state => {
@@ -46,7 +46,7 @@ export default {
                 axios
                     .get('/orders/gate?' + params)
                     .then(response => {
-                        commit('addOrders', response.data)
+                        commit('setOrders', response.data)
                         resolve(response.data)
                     })
             }));
@@ -57,7 +57,7 @@ export default {
                 axios
                     .get('/orders/date/' + payload)
                     .then(response => {
-                        commit('addOrders', response.data)
+                        commit('setOrders', response.data)
                         resolve(response.data)
                     })
             }));
@@ -67,19 +67,18 @@ export default {
                 axios
                     .get('/orders/week/' + payload)
                     .then(response => {
-                        commit('addOrdersWeek', response.data)
+                        commit('setOrdersWeek', response.data)
                         resolve(response.data)
                     })
             }));
         },
         loadOrderById({commit}, payload) {
             console.log('ORDER ID:', payload)
-
             new Promise(((resolve, reject) => {
                 resolve(
                     axios.get('/orders/' + payload).then(response => {
                         console.log(response)
-                        commit('addOrder', response.data)
+                        commit('setOrder', response.data)
                         resolve(response.data)
                     }))
                 reject(console.log(response))
@@ -94,28 +93,6 @@ export default {
                         reject(response)
                     })
             }));
-        },
-        editOrder({commit}, payload) {
-            // payload must be ORDER ID
-            axios.get('/orders/' + payload)
-                .then(response => {
-                    commit('addOrder', response.data)
-                    return response.data
-                })
-                .then(response => {
-                    axios.get('/menus/date/' + response.date)
-                        .then(response => {
-                            console.log('TEST -----------------------------')
-                            if (response.status === 200) {
-                                commit('menu/addMenu', response.data, {root: true})
-                            }
-                        }).catch(e => {
-                        console.log(e)
-                    })
-                })
-                .catch(e => {
-                    console.log(e)
-                })
         },
         updateOrder({commit}, payload) {
             return new Promise(((resolve, reject) => {
