@@ -1,29 +1,28 @@
 {% extends 'base.html.twig' %}
-
 {% block stylesheets %}
     {{ encore_entry_link_tags('admin') }}
-    {{ encore_entry_link_tags('cabinet') }}
 {% endblock %}
-
-{% block title %}Cherry Garden | {{ name ? name }}{% endblock %}
-
 {% block body %}
-    {#        {{ dump(app.user) }}#}
-    <div id="app"></div>
+    <div id="app" class="accent-1">
+        <h1>
+            <img class="logo" src="{{ asset('build/logo.svg') }}" alt="">
+            <span>Lunch Cherry</span>
+        </h1>
+
+        <div class="loading">
+            <div class="spinner spinner-clock"></div>
+        </div>
+    </div>
     <div id="user"
          data-user_id="{{ user_id }}"
          data-name="{{ name }}"
          data-email="{{ email }}"
          data-phone="{{ phone }}"
          data-type="{{ type }}"
-         data-related_company_id="{{ related_company_id }}"
-         data-person_id="{{ person_id }}"
          data-roles="{{ roles | json_encode }}"
     >
     </div>
 {% endblock %}
-
-
 {% block javascripts %}
-    {{ encore_entry_script_tags('cabinet') }}
+    {{ encore_entry_script_tags('admin') }}
 {% endblock %}

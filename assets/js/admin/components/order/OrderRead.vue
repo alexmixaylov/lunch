@@ -1,53 +1,59 @@
 <template>
-    <v-row justify="center">
-         <v-container>
-            <v-card>
-                <v-card-title class="blue-grey">
-                    <span>Заказ ID: {{ order.order_id }} &nbsp;</span>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <span v-on="on"><v-icon>fa-info-circle</v-icon></span>
-                        </template>
-                        <span>{{tooltip}}</span>
-                    </v-tooltip>
 
-                    <v-spacer></v-spacer>
-                    Дата: {{ order.date }}
-                    &nbsp;
-                    Итого: {{ order.total }}грн.
-                </v-card-title>
-
-                <v-card-text>
-                    <v-data-table
-                            v-if="dishes"
-                            disable-pagination
-                            disable-sort
-                            disable-filtering
-                            hide-default-footer
-                            :headers="headers"
-                            :items="dishes"
-                            class="elevation-1"
-                            locale="ru"
-                    ></v-data-table>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-btn @click="confirmDialog = true" color="blue">
-                        <router-link tag="span" :to="{name: 'orders'}">< Заказы</router-link>
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <template v-if="order.status !== 'canceled'">
-                        <v-btn color="red" @click="cancelOrder()">Отменить заказ</v-btn>
+    <v-container>
+        <v-card>
+            <v-card-title class="blue-grey">
+                <span>Заказ ID: {{ order.order_id }} &nbsp;</span>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <span v-on="on"><v-icon>fa-info-circle</v-icon></span>
                     </template>
-                    <template v-else>
-                        <v-btn disabled>Заказ отменен</v-btn>
-                    </template>
-                    <v-btn color="orange" @click="editingMode = true">
-                        <router-link tag="span" :to="{name: 'orders#edit'}">Изменить заказ</router-link>
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-container>
+                    <span>{{tooltip}}</span>
+                </v-tooltip>
+
+                <v-spacer></v-spacer>
+                Дата: {{ order.date }}
+                &nbsp;
+                Итого: {{ order.total }}грн.
+            </v-card-title>
+
+            <v-card-text>
+                <v-data-table
+                        v-if="dishes"
+                        disable-pagination
+                        disable-sort
+                        disable-filtering
+                        hide-default-footer
+                        :headers="headers"
+                        :items="dishes"
+                        class="elevation-1"
+                        locale="ru"
+                ></v-data-table>
+            </v-card-text>
+
+            <v-card-actions>
+                <v-btn small @click="confirmDialog = true" color="red">Удалить</v-btn>
+                <v-spacer></v-spacer>
+                <template v-if="order.status !== 'canceled'">
+                    <v-btn small color="grey" @click="cancelOrder()">Отменить заказ</v-btn>
+                </template>
+                <template v-else>
+                    <v-btn small disabled>Заказ отменен</v-btn>
+                </template>
+                <v-btn small color="orange" @click="editingMode = true">
+                    <router-link tag="span" :to="{name: 'orders#edit'}">Изменить заказ</router-link>
+                </v-btn>
+            </v-card-actions>
+            <v-divider class="mb-2 mt-2"></v-divider>
+            <v-card-actions class="mb-5">
+                <v-spacer></v-spacer>
+                <v-btn color="blue">
+                    <router-link tag="span" :to="{name: 'orders'}">< Все Заказы</router-link>
+                </v-btn>
+
+            </v-card-actions>
+        </v-card>
+
         <v-dialog v-model="confirmDialog" persistent max-width="290">
 
             <v-card>
@@ -61,21 +67,20 @@
             </v-card>
         </v-dialog>
         <loading :dialog="loading"></loading>
-    </v-row>
+    </v-container>
 </template>
 
 <script>
     import {mapGetters} from 'vuex'
     import {dateFormat} from "../../../plugins/dateFormat";
-    import {encodeOrders} from "../../../plugins/dishNormalizer";
-    import Loading from "../../../admin/components/dialog/Loading";
+    import {encodeOrders} from '../../../plugins/dishNormalizer';
+    import Loading from "../dialog/Loading";
 
     export default {
         name: "OrderRead",
         components: {Loading},
         data: function () {
             return {
-                isСorporate: false,
                 confirmDialog: false,
                 confirmDialogData: {
                     question: '',
