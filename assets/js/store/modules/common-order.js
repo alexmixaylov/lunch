@@ -7,6 +7,7 @@ export default {
         orders: [],
         ordersWeek: []
     },
+
     getters: {
         getOrder: state => {
             return state.order
@@ -40,12 +41,24 @@ export default {
         }
     },
     actions: {
+        loadOrdersByParams({commit}, params) {
+            console.log(params)
+            new Promise(((resolve, reject) => {
+                axios
+                    .get('/orders/gate?' + params)
+                    .then(response => {
+                        commit('setOrders', response.data)
+                        resolve(response.data)
+                    })
+            }));
+        },
         loadOrdersByDate({commit}, payload) {
             console.log(payload)
             new Promise(((resolve, reject) => {
                 axios
                     .get('/orders/date/' + payload)
                     .then(response => {
+                        console.log(response.data)
                         commit('setOrders', response.data)
                         resolve(response.data)
                     })
@@ -63,7 +76,6 @@ export default {
         },
         loadOrderById({commit}, payload) {
             console.log('ORDER ID:', payload)
-
             new Promise(((resolve, reject) => {
                 resolve(
                     axios.get('/orders/' + payload).then(response => {
@@ -73,7 +85,6 @@ export default {
                     }))
                 reject(console.log(response))
             }));
-
         },
         createOrder({commit}, payload) {
             return new Promise(((resolve, reject) => {
@@ -83,28 +94,6 @@ export default {
                         reject(response)
                     })
             }));
-        },
-        editOrder({commit}, payload) {
-            // payload must be ORDER ID
-            axios.get('/orders/' + payload)
-                .then(response => {
-                    commit('setOrder', response.data)
-                    return response.data
-                })
-                .then(response => {
-                    axios.get('/menus/date/' + response.date)
-                        .then(response => {
-                            console.log('TEST -----------------------------')
-                            if (response.status === 200) {
-                                commit('menu/addMenu', response.data, {root: true})
-                            }
-                        }).catch(e => {
-                        console.log(e)
-                    })
-                })
-                .catch(e => {
-                    console.log(e)
-                })
         },
         updateOrder({commit}, payload) {
             return new Promise(((resolve, reject) => {

@@ -36,7 +36,7 @@ class OrderRepository extends ServiceEntityRepository
                     ->innerJoin('p.company', 'c')
                     ->andWhere('m.date = :date')
                     ->setParameter('date', $date)
-                    ->orderBy('o.id', 'ASC')
+                    ->orderBy('o.id', 'DESC')
                     ->getQuery()
                     ->getResult();
     }

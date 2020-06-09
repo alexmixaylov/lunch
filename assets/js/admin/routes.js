@@ -9,9 +9,9 @@ import Delivery from "./pages/Delivery";
 import Money from "./pages/Money";
 import Orders from "./pages/Orders";
 import Dish from "./components/dish/DishTeaser";
-import OrderCreate from "./components/order/OrderCreate";
 import OrderRead from "./components/order/OrderRead";
 import OrderEdit from "./components/order/OrderEdit";
+import AdminOrderCreate from "../admin/pages/orders/AdminOrderCreate"
 import Company from "./pages/Company";
 import CompanyRead from "./components/company/CompanyRead";
 import DeliveryRead from "./components/delivery/DeliveryRead";
@@ -48,7 +48,7 @@ const router = new VueRouter({
         {
             path: '/orders/create',
             name: 'orders#create',
-            component: OrderCreate,
+            component: AdminOrderCreate,
         },
         {
             path: '/orders/:id/edit',

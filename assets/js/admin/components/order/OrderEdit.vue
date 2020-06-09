@@ -47,7 +47,8 @@
         <v-row justify="space-between">
             <v-col class="shrink">
                 <v-btn large color="green darken-2">
-                    <router-link tag="span" :to="{name: 'orders#read', params:{id: this.order.order_id}}">< Назад</router-link>
+                    <router-link tag="span" :to="{name: 'orders#read', params:{id: this.order.order_id}}">< Назад
+                    </router-link>
                 </v-btn>
             </v-col>
 
@@ -127,7 +128,7 @@
         },
         computed: {
             ...mapGetters('menu', {menu: 'getMenu'}),
-            ...mapGetters('order', {order: 'getOrder'}),
+            ...mapGetters('common/commonOrder', {order: 'getOrder'}),
             orderedDishes() {
                 if (this.order) {
                     return this.order.dishes
@@ -185,7 +186,7 @@
                     dishes: this.dishes,
                 }
 
-                this.$store.dispatch('order/updateOrder', order).then(response => {
+                this.$store.dispatch('common/commonOrder/updateOrder', order).then(response => {
                     console.log(response)
                     this.orderID = response
                     this.orderSuccess = true
@@ -197,11 +198,14 @@
             }
         },
         beforeRouteEnter(from, to, next) {
-            console.log('ORDER EDITING ROUTING')
-            console.log('ORDER TO', from)
-            next(vm => {
-                vm.$store.dispatch('order/editOrder', from.params.id)
-            })
+            const params = from.params;
+            if (params.date) {
+                next(vm => {
+                    vm.$store.dispatch('common/commonOrder/loadOrderById', params.id)
+                    vm.$store.dispatch('menu/loadMenuByDate', params.date)
+                })
+            }
+            
         }
     }
 </script>

@@ -1,12 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Main from "./pages/Main";
-import Orders from "./pages/orders/Orders";
-import OrderRead from "./pages/orders/OrderRead";
-import CreateOrder from "./pages/orders/OrderCreate";
+import Orders from "../common/pages/orders/Orders";
+import OrderRead from "../common/pages/orders/OrderRead";
+// import CreateOrder from "../common/pages/orders/OrderCreate";
+import CreateOrder from "../cabinet/pages/orders/UserOrderCreate";
+
 import Profile from "./pages/Profile";
 import Employees from "./pages/Employees";
-import OrderEdit from "./pages/orders/OrderEdit";
+import OrderEdit from "../common/pages/orders/OrderEdit";
 
 
 Vue.use(VueRouter);

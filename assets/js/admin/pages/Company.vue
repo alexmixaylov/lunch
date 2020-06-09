@@ -64,7 +64,7 @@
             }
         },
         computed: {
-            ...mapGetters('company', {companies: 'getCompanies'})
+            ...mapGetters('common/company', {companies: 'getCompanies'})
         },
         methods: {
             createCompany() {
@@ -72,7 +72,7 @@
                     title: this.title,
                     owner: null
                 }
-                this.$store.dispatch('company/createCompany', params).then(response => {
+                this.$store.dispatch('common/company/createCompany', params).then(response => {
                     this.isNewCompany = false
                     this.title = ''
                 })
@@ -84,7 +84,7 @@
         beforeRouteEnter(from, to, next) {
             // console.log('ORDER CREAYE ROUTING')
             next(vm => {
-                vm.$store.dispatch('company/loadCompanies')
+                vm.$store.dispatch('common/company/loadCompanies')
             })
         }
     }

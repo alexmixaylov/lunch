@@ -28,13 +28,12 @@
 <script>
     import {mapGetters} from 'vuex';
     import {dateFormat} from "../../plugins/dateFormat";
-    import OrderCreate from "../components/order/OrderCreate";
     import DatesBar from '../components/dates/DatesBar';
     import OrdersTable from "../components/order/OrdersTable";
 
     export default {
         name: "Orders",
-        components: {OrderCreate, DatesBar, OrdersTable},
+        components: { DatesBar, OrdersTable},
         data() {
             return {
                 localDate: new Date().toISOString().substr(0, 10),
@@ -43,10 +42,16 @@
             }
         },
         computed: {
-            ...mapGetters('order', {
+            ...mapGetters('common/commonOrder', {
                 orders: 'getOrders',
                 ordersWeek: 'getOrdersWeek'
             }),
+            // orders() {
+            //     return this.$store.getters["common/commonOrder/getOrders"]
+            // },
+            // ordersWeek() {
+            //     return this.$store.getters["common/commonOrder/getOrdersWeek"]
+            // },
             date: {
                 get() {
                     return this.globalDate ? this.globalDate : this.localDate
@@ -74,24 +79,22 @@
                 this.orders
             },
             dateChanged(dateAndModeObj) {
-                console.log('EMIT CATHED', dateAndModeObj)
                 const date = dateAndModeObj.date;
                 const mode = dateAndModeObj.mode;
                 this.calendarMode = mode;
                 this.date = date;
 
                 if (mode === 'week') {
-                    this.$store.dispatch('order/loadOrdersByWeek', this.dateForAPI);
+                    this.$store.dispatch('common/commonOrder/loadOrdersByWeek', this.dateForAPI);
                 } else {
-                    console.log('EMIT CATHED  DAY MODE NOW MUST BE ACTTION')
-                    this.$store.dispatch('order/loadOrdersByDate', date)
+                    this.$store.dispatch('common/commonOrder/loadOrdersByDate', date)
                 }
 
             }
         },
         beforeRouteEnter(from, to, next) {
             next(vm => {
-                vm.$store.dispatch('order/loadOrdersByDate', vm.dateForAPI)
+                vm.$store.dispatch('common/commonOrder/loadOrdersByDate', vm.dateForAPI)
             });
         }
     }

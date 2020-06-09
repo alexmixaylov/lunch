@@ -50,7 +50,7 @@
         },
         methods: {
             createCompany() {
-                this.$store.dispatch('company/createCompany', this.title).then(response => {
+                this.$store.dispatch('common/company/createCompany', this.title).then(response => {
                     this.success = true
                     this.newUUID = response
                     window.location.reload()

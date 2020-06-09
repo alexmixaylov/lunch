@@ -41,7 +41,7 @@
                     <v-btn small disabled>Заказ отменен</v-btn>
                 </template>
                 <v-btn small color="orange" @click="editingMode = true">
-                    <router-link tag="span" :to="{name: 'orders#edit'}">Изменить заказ</router-link>
+                    <router-link tag="span" :to="{name: 'orders#edit', params:{date: orderDate}}">Изменить заказ</router-link>
                 </v-btn>
             </v-card-actions>
             <v-divider class="mb-2 mt-2"></v-divider>
@@ -54,7 +54,7 @@
             </v-card-actions>
         </v-card>
 
-        <v-dialog v-model="confirmDialog" persistent max-width="290">
+        <v-dialog v-model="confirmDialog" persistent max-width="300">
 
             <v-card>
                 <v-card-title class="headline">Уверены что хотите удалить заказ?</v-card-title>
@@ -96,7 +96,10 @@
             }
         },
         computed: {
-            ...mapGetters('order', {order: 'getOrder'}),
+            ...mapGetters('common/commonOrder', {order: 'getOrder'}),
+            orderDate(){
+                return this.order.date
+            },
             created() {
                 return dateFormat(this.order.created, 'dddd, dd mmm HH:MM')
             },
@@ -113,7 +116,7 @@
         },
         methods: {
             loadOrder() {
-                this.$store.dispatch('order/loadOrderById', this.$route.params.id)
+                this.$store.dispatch('common/commonOrder/loadOrderById', this.$route.params.id)
             },
             confirmDelete(answer) {
                 this.confirmDialog = true
@@ -127,14 +130,14 @@
 
             },
             deleteOrder() {
-                this.$store.dispatch('order/deleteOrder', this.order.order_id).then(this.loading = false).then(this.$router.push({name: 'orders'}))
+                this.$store.dispatch('common/commonOrder/deleteOrder', this.order.order_id).then(this.loading = false).then(this.$router.push({name: 'orders'}))
             },
             cancelOrder() {
                 const params = {
                     order_id: this.order.order_id,
                     status: 'canceled'
                 }
-                this.$store.dispatch('order/changeOrderStatus', params)
+                this.$store.dispatch('common/commonOrder/changeOrderStatus', params)
             }
         },
         beforeRouteEnter(from, to, next) {

@@ -133,6 +133,16 @@ class MenuController extends AbstractController
     }
 
     /**
+     * @Route("/order/{id}", name="menus#by_order", methods={"GET"})
+     */
+    public function getMenuByOrder(int $id, MenuRepository $menu_repository)
+    {
+        $menu = $menu_repository->findMenuById($id);
+
+        return new JsonResponse($menu);
+    }
+
+    /**
      * @Route("/", name="menus#list", methods={"GET"})
      */
     public function list(MenuRepository $repository)

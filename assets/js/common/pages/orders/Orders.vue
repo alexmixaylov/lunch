@@ -22,7 +22,7 @@
                 @click:row="routeToOrder"
         ></v-data-table>
 
-        <v-dialog v-model="calendar" max-width="290">
+        <v-dialog v-model="calendar" max-width="300">
             <v-date-picker
                     locale="ru"
                     first-day-of-week="1"
@@ -54,7 +54,7 @@
             }
         },
         computed: {
-            ...mapGetters('order', {orders: 'getOrders'}),
+            ...mapGetters('common/commonOrder', {orders: 'getOrders'}),
             ...mapGetters('person', {person: 'getPerson'}),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
@@ -80,7 +80,7 @@
                     `person_id=${this.person.person_id}`,
                     `date=${this.dateForAPI}`
                 ]
-                this.$store.dispatch('order/loadOrdersByParams', params.join('&'))
+                this.$store.dispatch('common/commonOrder/loadOrdersByParams', params.join('&'))
             },
             routeToOrder(row){
                 console.log(row)

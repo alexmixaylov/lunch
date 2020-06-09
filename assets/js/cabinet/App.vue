@@ -11,8 +11,8 @@
 </template>
 
 <script>
-    import Header from "../layouts/Header";
-    import Content from "../layouts/Content";
+    import Header from "./layouts/Header";
+    import Content from "../common/layouts/Content";
 
     export default {
         name: "App",
@@ -54,7 +54,7 @@
                     if (user.related_company_id) {
                         // related_company_id - Relation OneToONe - only for corporate company account
                         // if user has personal account related with company profile or private type of account it param must be empty
-                        this.$store.dispatch('company/loadCompanyByOwner', user.user_id)
+                        this.$store.dispatch('common/company/loadCompanyByOwner', user.user_id)
                         this.$store.dispatch('person/loadPersonsByCompany', user.related_company_id)
                     } else {
                         alert('Вы зарегистрировали аккаунт компании. Теперь добавьте название вашей компани в профиль для того чтобы продолжить работу')

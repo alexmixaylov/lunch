@@ -25,7 +25,7 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <v-dialog v-model="calendar" max-width="290">
+        <v-dialog v-model="calendar" max-width="300">
             <v-date-picker
                     locale="ru"
                     first-day-of-week="1"

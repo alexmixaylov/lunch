@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Routes from './cabinet/routes.js';
-import App from './cabinet/views/App.vue';
+import App from './cabinet/App.vue';
 
 import vuetify from './plugins/vuetify';
 import {store} from "./cabinet/store";

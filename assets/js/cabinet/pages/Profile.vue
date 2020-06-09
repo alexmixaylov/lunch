@@ -95,7 +95,7 @@
             }
         },
         computed: {
-            ...mapGetters('company', {company: 'getCompany'}),
+            ...mapGetters('common/company', {company: 'getCompany'}),
             ...mapGetters('person', {person: 'getPerson'}),
             isCorporate() {
                 return this.user.type === 'corporate'
@@ -103,7 +103,7 @@
         },
         methods: {
             searchCompany() {
-                this.$store.dispatch('company/searchCompanyByUUID', this.uuid)
+                this.$store.dispatch('common/company/searchCompanyByUUID', this.uuid)
                     .then(response => {
                         console.log(response)
                         if (response.persons.length < 1) {
@@ -131,7 +131,7 @@
                 const user = vm.$store.getters["user/getUser"]
                 vm.user = user
                 // if (user.user_id) {
-                //     vm.$store.dispatch('company/loadCompanyByOwner', user.user_id)
+                //     vm.$store.dispatch('common/company/loadCompanyByOwner', user.user_id)
                 // }
 
                 if (user.person_id) {

@@ -58,7 +58,7 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog v-model="confirmDialog" persistent max-width="290">
+        <v-dialog v-model="confirmDialog" persistent max-width="300">
             <v-card>
                 <v-card-title class="headline">Уверены что хотите удалить <b class="userName">{{person.name}}</b> ?
                 </v-card-title>
@@ -93,7 +93,7 @@
         },
         computed: {
             ...mapGetters('user', {user: 'getUser'}),
-            ...mapGetters('company', {company: 'getCompany'}),
+            ...mapGetters('common/company', {company: 'getCompany'}),
             ...mapGetters('person', {persons: 'getPersons'}),
             person() {
                 return this.personIndex !== false ? this.persons[this.personIndex] : false

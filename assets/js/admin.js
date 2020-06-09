@@ -1,11 +1,10 @@
 import Vue from 'vue';
 import Routes from './admin/routes.js';
-import App from './admin/views/App.vue';
+import App from './admin/App.vue';
 
 import vuetify from './plugins/vuetify';
 import {store} from './admin/store'
-
-
+import '../css/app.scss';
 
 const admin = new Vue({
     el: '#app',
@@ -14,8 +13,6 @@ const admin = new Vue({
     render: h => h(App),
     vuetify
 });
-
-import '../css/app.scss';
 
 export default admin;
 

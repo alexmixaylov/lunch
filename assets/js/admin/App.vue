@@ -11,8 +11,8 @@
 </template>
 
 <script>
-    import Header from "../layouts/Header";
-    import Content from "../layouts/Content";
+    import Header from "./layouts/Header";
+    import Content from "../common/layouts/Content";
 
     export default {
         name: "App",

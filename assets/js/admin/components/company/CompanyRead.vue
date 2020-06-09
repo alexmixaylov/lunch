@@ -98,7 +98,7 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog v-model="confirmDialog" persistent max-width="290">
+        <v-dialog v-model="confirmDialog" persistent max-width="300">
             <v-card>
                 <v-card-title class="headline">Уверены что хотите удалить человека :) ?</v-card-title>
                 <v-card-text>Это действие нельзя отменить</v-card-text>
@@ -148,7 +148,7 @@
             }
         },
         computed: {
-            ...mapGetters('company',
+            ...mapGetters('common/company',
                 {
                     persons: 'getPersons',
                     company: 'getCompany'
@@ -167,7 +167,7 @@
             createPerson() {
                 const params = {company_id: this.company.company_id, name: this.name}
                 if (this.valid) {
-                    this.$store.dispatch('company/createPerson', params).then(response => {
+                    this.$store.dispatch('common/company/createPerson', params).then(response => {
                         if (response === 200) {
                             this.name = ''
                             this.newPerson = false
@@ -181,7 +181,7 @@
                 this.showPerson = true
             },
             updatePerson() {
-                this.$store.dispatch('company/updatePerson', this.selectedPerson)
+                this.$store.dispatch('common/company/updatePerson', this.selectedPerson)
                     .then(response => {
                         this.showPerson = false
                     })
@@ -191,8 +191,8 @@
                 this.confirmDialog = true
             },
             deletePerson() {
-                this.$store.dispatch('company/deletePerson', this.selectedPerson.person_id).then(response => {
-                    this.$store.commit('company/deletePersonByIndex', this.personIndex)
+                this.$store.dispatch('common/company/deletePerson', this.selectedPerson.person_id).then(response => {
+                    this.$store.commit('common/company/deletePersonByIndex', this.personIndex)
                     this.confirmDialog = false
                 }).catch(e => {
                     console.log(e)
@@ -200,7 +200,7 @@
                 })
             },
             deleteCompany() {
-                this.$store.dispatch('company/deleteCompany', this.company.company_id).then(status => {
+                this.$store.dispatch('common/company/deleteCompany', this.company.company_id).then(status => {
                     status === 200 ? this.$router.push({name: 'companies'}) : false
                 }).catch(e => alert('Вы не можете пока удалить эту компанию'))
             }
@@ -208,8 +208,8 @@
         beforeRouteEnter(from, to, next) {
             console.log()
             next(vm => {
-                vm.$store.dispatch('company/loadCompanyById', from.params.id)
-                vm.$store.dispatch('company/loadPersonsByCompany', from.params.id)
+                vm.$store.dispatch('common/company/loadCompanyById', from.params.id)
+                vm.$store.dispatch('common/company/loadPersonsByCompany', from.params.id)
             })
         }
     }

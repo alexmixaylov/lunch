@@ -3,14 +3,16 @@ import Vuex from 'vuex';
 import user from './modules/user'
 import menu from "./modules/menu";
 import dish from "./modules/dish";
-import order from "./modules/order";
 import reducer from "./modules/reducer";
-import company from "./modules/company";
+import company from "../../store/modules/company";
 import delivery from "./modules/delivery";
+import common from "../../store/common-store"
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
+    namespaced: true,
+
     state: {
         globalDate: false,
     },
@@ -29,9 +31,9 @@ export const store = new Vuex.Store({
         user,
         dish,
         menu,
-        order,
         reducer,
         company,
-        delivery
+        delivery,
+        common
     }
 });

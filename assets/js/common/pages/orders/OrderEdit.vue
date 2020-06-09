@@ -11,11 +11,11 @@
     export default {
         name: "OrderEdit",
         computed:{
-            ...mapGetters('order', {order: "getOrder"}),
+            ...mapGetters('common/commonOrder', {order: "getOrder"}),
         },
         beforeRouteEnter(from, to, next) {
             next(vm => {
-                vm.$store.dispatch('order/loadOrderById', from.params.id)
+                vm.$store.dispatch('common/commonOrder/loadOrderById', from.params.id)
             })
         }
     }

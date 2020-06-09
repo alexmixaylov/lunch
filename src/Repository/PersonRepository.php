@@ -55,7 +55,7 @@ class PersonRepository extends ServiceEntityRepository
     public function findById($id)
     {
         return $this->createQueryBuilder('p')
-                    ->select('p.id')
+                    ->select('p.id as person_id')
                     ->addSelect('p.name')
                     ->addSelect('c.title')
                     ->innerJoin('p.company', 'c')

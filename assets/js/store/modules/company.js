@@ -3,13 +3,16 @@ import axios from 'axios';
 export default {
     namespaced: true,
     state: {
-        company: false,
+        company: {},
         companies: [],
         persons: []
     },
     getters: {
         getCompany: state => {
             return state.company
+        },
+        setCompany: (state, payload) => {
+            state.company = payload
         },
         getCompanies: state => {
             return state.companies
@@ -40,6 +43,25 @@ export default {
         }
     },
     actions: {
+        searchCompanyByUUID({commit}, payload) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .get('/companies/uuid/' + payload)
+                    .then(response => {
+                        console.log(response.data)
+                        const data = response.data.company ? response.data : null
+                        resolve(data)
+                    })
+                    .catch(e => reject(e))
+            });
+        },
+        loadCompanyByOwner({commit}, payload) {
+            console.log(payload)
+            axios.get('/cabinet/company/' + payload).then(response => {
+                commit('setCompany', response.data)
+                console.log('GET COMPANY',response.data)
+            }).catch(e => console.log(e))
+        },
         loadCompanies({commit}) {
             // console.log(payload)
             axios
@@ -71,6 +93,21 @@ export default {
                         console.log(response.data)
                         commit('addCompany', response.data)
                         resolve(response.data)
+                    })
+                    .catch(e => reject(e))
+            }));
+        },
+        createCompanyCabinet({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                axios
+                    .patch('/cabinet/company', payload)
+                    .then(response => {
+                        if (response.status === 200) {
+                            console.log(response.data)
+                            // commit('setUserPerson', response.data)
+                        }
+                        resolve(response.data)
+
                     })
                     .catch(e => reject(e))
             }));
