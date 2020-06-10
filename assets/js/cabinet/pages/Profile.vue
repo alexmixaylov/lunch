@@ -128,7 +128,7 @@
         },
         beforeRouteEnter(from, to, next) {
             next(vm => {
-                const user = vm.$store.getters["user/getUser"]
+                const user = vm.$store.getters["common/user/getUser"]
                 vm.user = user
                 // if (user.user_id) {
                 //     vm.$store.dispatch('common/company/loadCompanyByOwner', user.user_id)

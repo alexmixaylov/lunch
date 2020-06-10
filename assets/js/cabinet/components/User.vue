@@ -22,7 +22,7 @@
         data: () => ({
         }),
         computed: {
-            ...mapGetters('user', {user: 'getUser'}),
+            ...mapGetters('common/user', {user: 'getUser'}),
         },
         beforeMount() {
             if (this.user.type === 'corporate' &&  this.user.person_id !== ""){

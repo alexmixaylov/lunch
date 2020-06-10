@@ -44,7 +44,7 @@
                 user[key] = (key !== 'roles') ? param[1] : JSON.parse(param[1])
             });
 
-            this.$store.commit('user/setUser', user)
+            this.$store.commit('common/user/setUser', user)
 
             // если уже привязана компания, или частник - загружаем данные о компании
             console.log('GET USER IN APP COMPONET', user)

@@ -43,7 +43,7 @@
                 user[key] = (key !== 'roles') ? param[1] : JSON.parse(param[1])
             });
             console.log('USER COMMIT', user)
-            this.$store.commit('user/setUser', user)
+            this.$store.commit('common/user/setUser', user)
         }
     }
 </script>

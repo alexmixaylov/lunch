@@ -92,7 +92,7 @@
             }
         },
         computed: {
-            ...mapGetters('user', {user: 'getUser'}),
+            ...mapGetters('common/user', {user: 'getUser'}),
             ...mapGetters('common/company', {company: 'getCompany'}),
             ...mapGetters('person', {persons: 'getPersons'}),
             person() {

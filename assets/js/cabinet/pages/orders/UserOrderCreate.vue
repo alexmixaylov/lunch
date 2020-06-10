@@ -59,7 +59,7 @@
                     persons: 'getPersons'
                 }
             ),
-            ...mapGetters('user', {user: 'getUser'}),
+            ...mapGetters('common/user', {user: 'getUser'}),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },

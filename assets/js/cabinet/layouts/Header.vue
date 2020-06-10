@@ -77,7 +77,7 @@
             drawer: null,
         }),
         computed: {
-            ...mapGetters('user', {user: 'getUser'}),
+            ...mapGetters('common/user', {user: 'getUser'}),
             isCorporate() {
                 return this.user.type === 'corporate'
             }

@@ -130,7 +130,7 @@
             }
         },
         computed: {
-            ...mapGetters('user', {user: 'getUser'}),
+            ...mapGetters('common/user', {user: 'getUser'}),
             ...mapGetters('common/menu', {menu: 'getMenu'}),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');

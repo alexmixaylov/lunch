@@ -1,6 +1,7 @@
-import commonOrder from './modules/order'
+import commonOrder from './modules/order';
 import company from "./modules/company";
-import menu from './modules/menu'
+import menu from './modules/menu';
+import user from "./modules/user";
 
 export default {
     namespaced: true,
@@ -8,7 +9,8 @@ export default {
     modules:{
         commonOrder,
         company,
-        menu
+        menu,
+        user
     }
 
 }
