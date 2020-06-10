@@ -120,7 +120,7 @@
         }
     }
 </script>
-<style scoped>
+<style>
     .min-width-buttons .col button{
         min-width: 250px;
     }

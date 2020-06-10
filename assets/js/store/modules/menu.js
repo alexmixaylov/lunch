@@ -9,11 +9,11 @@ export default {
         isClosed: false
     },
     getters: {
-        getMenus: state => {
-            return state.menus;
-        },
         getMenu: state => {
             return state.menu;
+        },
+        getMenus: state => {
+            return state.menus;
         },
         getStatus: state => {
             return state.isClosed
@@ -24,10 +24,10 @@ export default {
 
     },
     mutations: {
-        addMenus(state, payload) {
+        setMenus(state, payload) {
             state.menus = payload
         },
-        addMenu(state, payload) {
+        setMenu(state, payload) {
             state.menu = payload
         },
         addIdToMenu: (state, payload) => {
@@ -45,16 +45,15 @@ export default {
     },
     actions: {
         loadMenuByDate({commit}, payload) {
-            console.log(payload)
-            axios.get('/menus/date/' + payload)
-                .then(response => {
-                    if (response.status === 200) {
-                        console.log(response.data)
-                        commit('addMenu', response.data)
-                    }
+            return new Promise(((resolve, reject) => {
+                    axios.get('/menus/date/' + payload).then(response => {
+                        console.log(response)
+                        if (response.status === 200) {
+                            commit('setMenu', response.data)
+                        }
+                    }).catch(e => console.log(e))
                 })
-                .catch(error => console.log(error))
-
+            );
         },
         async loadMenuById({commit}, payload) {
             try {
@@ -62,7 +61,7 @@ export default {
                     .then(response => {
                         if (response.status === 200) {
                             console.log(response.data)
-                            commit('addMenu', response.data)
+                            commit('setMenu', response.data)
                         }
                     })
                     .catch(error => console.log(error))
@@ -95,7 +94,7 @@ export default {
                         console.log('payload DATE ', payload.date)
                         let data = response.data;
                         console.log('response DATE ', response.data)
-                        commit('addMenu', response.data)
+                        commit('setMenu', response.data)
                     })
             } catch (error) {
                 console.log(error)
@@ -112,7 +111,7 @@ export default {
                             const normalizedMenus = Object.keys(decodedData).map(key => {
                                 return decodedData[key][key];
                             });
-                            commit('addMenus', normalizedMenus)
+                            commit('setMenus', normalizedMenus)
                         }
                     })
                     .catch(errors => {

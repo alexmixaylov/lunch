@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row>
+        <v-row class="min-width-buttons">
             <v-col v-if="isCorporate">
                 <local-storage></local-storage>
             </v-col>

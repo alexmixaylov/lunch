@@ -131,7 +131,7 @@
         },
         computed: {
             ...mapGetters('user', {user: 'getUser'}),
-            ...mapGetters('menu', {menu: 'getMenu'}),
+            ...mapGetters('common/menu', {menu: 'getMenu'}),
             dateForAPI() {
                 return dateFormat(this.date, 'yyyy-mm-dd');
             },
@@ -171,7 +171,7 @@
                 }
             },
             loadMenu() {
-                this.$store.dispatch('menu/loadMenuByDate', this.dateForAPI)
+                this.$store.dispatch('common/menu/loadMenuByDate', this.dateForAPI)
             },
             createOrder() {
                 let dishesId = this.orderedDishes.map(dish => dish.dish_id);

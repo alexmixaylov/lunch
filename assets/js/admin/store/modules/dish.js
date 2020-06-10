@@ -1,5 +1,5 @@
 import axios from 'axios';
-import menu from "./menu";
+import menu from "../../../store/modules/menu";
 
 export default {
     namespaced: true,

@@ -127,7 +127,7 @@
             }
         },
         computed: {
-            ...mapGetters('menu', {menu: 'getMenu'}),
+            ...mapGetters('common/menu', {menu: 'getMenu'}),
             ...mapGetters('common/commonOrder', {order: 'getOrder'}),
             orderedDishes() {
                 if (this.order) {
@@ -165,7 +165,7 @@
                 }
             },
             loadMenu() {
-                this.$store.dispatch('menu/loadMenuByDate', this.order.date)
+                this.$store.dispatch('common/menu/loadMenuByDate', this.order.date)
             },
             changeDate() {
                 console.log('changeDate  WORKING')
@@ -202,10 +202,10 @@
             if (params.date) {
                 next(vm => {
                     vm.$store.dispatch('common/commonOrder/loadOrderById', params.id)
-                    vm.$store.dispatch('menu/loadMenuByDate', params.date)
+                    vm.$store.dispatch('common/menu/loadMenuByDate', params.date)
                 })
             }
-            
+
         }
     }
 </script>

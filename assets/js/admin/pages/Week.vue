@@ -48,7 +48,7 @@
             }
         },
         computed: {
-            ...mapGetters('menu', {
+            ...mapGetters('common/menu', {
                 menusFromAPI: 'getMenus',
                 selectedDate: 'getSelectedDate'
             }),
@@ -76,13 +76,13 @@
 
                 const newDate = addDaysToDate(this.shift * 7);
 
-                this.$store.commit('menu/setSelectedDate', newDate)
+                this.$store.commit('common/menu/setSelectedDate', newDate)
 
                 // update store with new dates
                 this.loadMenuTable();
             },
             loadMenuTable() {
-                this.$store.dispatch("menu/loadMenuTable", this.dateForAPI)
+                this.$store.dispatch("common/menu/loadMenuTable", this.dateForAPI)
             },
         },
         created() {

@@ -68,7 +68,7 @@
             }
         },
         computed: {
-            ...mapGetters('menu', {menu: 'getMenu'}),
+            ...mapGetters('common/menu', {menu: 'getMenu'}),
             dishes() {
                 return this.menu.dishes ?? [];
             },

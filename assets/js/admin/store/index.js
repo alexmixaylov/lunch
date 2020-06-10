@@ -1,12 +1,11 @@
 import Vue from "vue";
 import Vuex from 'vuex';
-import user from './modules/user'
-import menu from "./modules/menu";
+import user from '../../store/modules/user'
 import dish from "./modules/dish";
 import reducer from "./modules/reducer";
 import company from "../../store/modules/company";
 import delivery from "./modules/delivery";
-import common from "../../store/common-store"
+import common from "../../store/common"
 
 Vue.use(Vuex);
 
@@ -30,7 +29,6 @@ export const store = new Vuex.Store({
     modules: {
         user,
         dish,
-        menu,
         reducer,
         company,
         delivery,

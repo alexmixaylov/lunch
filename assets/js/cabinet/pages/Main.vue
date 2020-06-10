@@ -23,7 +23,7 @@
             }
         },
         computed: {
-            ...mapGetters('menu', {menu: 'getMenu'}),
+            ...mapGetters('common/menu', {menu: 'getMenu'}),
             dateForUser() {
                 return dateFormat(this.menu.date, 'dddd, dd mmmm')
             },
@@ -41,7 +41,7 @@
         },
         beforeRouteEnter(from, to, next) {
             next(vm => {
-                vm.$store.dispatch('menu/loadMenuByDate', vm.dateForAPI).then(response => {
+                vm.$store.dispatch('common/menu/loadMenuByDate', vm.dateForAPI).then(response => {
                     console.log(response)
                 })
             })
