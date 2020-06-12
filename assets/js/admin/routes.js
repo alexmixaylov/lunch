@@ -9,8 +9,9 @@ import Delivery from "./pages/Delivery";
 import Money from "./pages/Money";
 import Orders from "./pages/Orders";
 import Dish from "./components/dish/DishTeaser";
-import OrderRead from "./components/order/OrderRead";
-import OrderEdit from "./components/order/OrderEdit";
+import OrderRead from '../common/pages/orders/OrderRead';
+
+import OrderEdit from "../common/pages/orders/OrderEdit";
 import AdminOrderCreate from "../admin/pages/orders/AdminOrderCreate"
 import Company from "./pages/Company";
 import CompanyRead from "./components/company/CompanyRead";

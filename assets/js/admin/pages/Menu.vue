@@ -85,7 +85,7 @@
         methods: {
             addDish() {
                 console.log('ADD DISHE')
-                this.$store.dispatch('menu/addEmptyDishToMenu')
+                this.$store.dispatch('common/menu/addEmptyDishToMenu')
                     .then(response => {
                         this.dishIndex = response
                     })
@@ -138,7 +138,7 @@
                     // router.push('/week/');
                 }
 
-                vm.$store.dispatch('menu/loadDishesIntoMenuByDate', {date: params.date, menu_id: params.id});
+                vm.$store.dispatch('common/menu/loadDishesIntoMenuByDate', {date: params.date, menu_id: params.id});
                 vm.menu_id = params.id
             })
         }

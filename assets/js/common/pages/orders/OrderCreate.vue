@@ -184,6 +184,7 @@
                     this.orderID = response
                     this.orderSuccess = true
                     this.orderedDishes = []
+                    this.message = '';
                 })
             },
             clearMessage() {

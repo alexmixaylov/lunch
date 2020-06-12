@@ -76,6 +76,7 @@
                 this.calendar = false
             },
             loadCorporateOrders() {
+                // if person is private person Id will count in order controller
                 const params = [
                     `person_id=${this.person.person_id}`,
                     `date=${this.dateForAPI}`

@@ -102,6 +102,8 @@ class OrderRepository extends ServiceEntityRepository
      */
     public function findOrdersByParams($companyId, $personId, $date)
     {
+//        dump($companyId, $personId, $date);
+//        die();
         $qb = $this->createQueryBuilder('o')
                    ->select('o.id')
                    ->addSelect('p.name')

@@ -1,12 +1,24 @@
 <template>
     <div>
-        <v-card-title class="headline" v-if="isOrders">{{dateForUser}}</v-card-title>
+        <v-card-title class="headline" v-if="isOrders">
+            {{dateForUser}}
+            <v-spacer></v-spacer>
+            <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Поиск по: ID, Компании и Человеку"
+                    single-line
+                    hide-details
+            ></v-text-field>
+        </v-card-title>
+
         <v-data-table
                 v-if="isOrders"
                 @click:row="routeToOrder"
                 :dense="compactMode"
                 :headers="headers"
                 :items="orders"
+                :search="search"
                 class="elevation-1 orders mb-5"
                 locale="ru"
                 disable-pagination
@@ -27,12 +39,13 @@
         data: function () {
             return {
                 headers: [
-                    {text: 'ID', value: 'id'},
+                    {text: 'ID', value: 'id', filterable: true,},
                     {text: 'Компания', value: 'title'},
                     {text: 'Человек', value: 'name'},
-                    {text: 'Статус', value: 'status'},
-                    {text: 'Сумма', value: 'total'}
+                    {text: 'Статус', value: 'status', filterable: false,},
+                    {text: 'Сумма', value: 'total', filterable: false,}
                 ],
+                search: '',
             }
         },
         computed: {

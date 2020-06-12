@@ -50,6 +50,7 @@ export default {
                         commit('setOrders', response.data)
                         resolve(response.data)
                     })
+                    .catch(e => reject(e))
             }));
         },
         loadOrdersByDate({commit}, payload) {

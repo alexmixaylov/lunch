@@ -20,7 +20,7 @@
         <v-row justify="center">
             <menu-list
                     v-if="menu"
-                    v-for="menu in menusFromAPI"
+                    v-for="menu in menus"
                     v-bind:key="menu.menu_id"
                     :date="menu.date"
                     :menu-id="menu.menu_id"
@@ -49,7 +49,7 @@
         },
         computed: {
             ...mapGetters('common/menu', {
-                menusFromAPI: 'getMenus',
+                menus: 'getMenus',
                 selectedDate: 'getSelectedDate'
             }),
             dateForAPI() {
@@ -82,24 +82,18 @@
                 this.loadMenuTable();
             },
             loadMenuTable() {
-                this.$store.dispatch("common/menu/loadMenuTable", this.dateForAPI)
+                this.$store.dispatch("common/menu/loadMenuTable", this.dateForAPI).then(response => {console.log(response)})
             },
         },
-        created() {
-        },
         mounted() {
+            this.loadMenuTable()
         },
-        beforeRouteEnter(to, from, next) {
-            // вызывается до подтверждения пути, соответствующего этому компоненту.
-            // НЕ ИМЕЕТ доступа к контексту экземпляра компонента `this`,
-            // так как к моменту вызова экземпляр ещё не создан!
-            // console.log(to)
-            // console.log(from)
-            next(vm => {
-                vm.loadMenuTable();
-            })
-
-        },
+        // beforeRouteEnter(to, from, next) {
+        //     next(vm => {
+        //         vm.loadMenuTable();
+        //     })
+        //
+        // },
     }
 </script>
 <style scoped>

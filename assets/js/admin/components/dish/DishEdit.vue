@@ -18,6 +18,7 @@
                     ></v-select>
 
                     <v-text-field
+                            @keyup.enter="submit"
                             label="Название блюда"
                             v-model="dish.title"
                             :rules="titleRule"
@@ -25,6 +26,7 @@
                     ></v-text-field>
 
                     <v-text-field
+                            @keyup.enter="submit"
                             type="number"
                             class="inputNumber"
                             label="Вес (грамм)"
@@ -33,6 +35,7 @@
                     ></v-text-field>
 
                     <v-text-field
+                            @keyup.enter="submit"
                             type="number"
                             class="inputNumber"
                             label="Соимость"

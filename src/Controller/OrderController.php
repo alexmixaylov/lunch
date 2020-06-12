@@ -33,16 +33,30 @@ class OrderController extends AbstractController
      * @return JsonResponse
      */
     public function getOrdersByPerson(
+        Request $request,
         OrderRepository $order_repository,
         CompanyRepository $company_repository,
-        Request $request
+        PersonRepository $person_repository
     ) {
 
-        $currentUser     = $this->getUser();
-        $realUserCompany = $company_repository->findCompanyByUser($currentUser->getId())['company_id'];
+        $date = $request->query->get('date');
 
-        $date   = $request->query->get('date');
-        $person = $request->query->get('person_id');
+
+        $currentUser = $this->getUser();
+        $userType    = $currentUser->getType();
+
+        if ($userType === 'private') {
+            $realUserCompany = 1;
+            $person          = $person_repository->findByUserId($currentUser->getId())['person_id'];
+        } else {
+            $realUserCompany = $company_repository->findCompanyByUser($currentUser->getId())['company_id'];
+            $person          = $request->query->get('person_id');
+        }
+
+//
+//        dump($currentUser);
+//        die();
+
 
         $orders = $order_repository->findOrdersByParams($realUserCompany, $person, $date);
 

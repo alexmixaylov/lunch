@@ -1,53 +1,56 @@
 <template>
-    <v-row justify="center">
-         <v-container>
-            <v-card>
-                <v-card-title class="blue-grey">
-                    <span>Заказ ID: {{ order.order_id }} &nbsp;</span>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <span v-on="on"><v-icon>fa-info-circle</v-icon></span>
-                        </template>
-                        <span>{{tooltip}}</span>
-                    </v-tooltip>
+    <v-container>
+        <v-card>
+            <v-card-title class="blue-grey">
+                <span>Заказ ID: {{ order.order_id }} &nbsp;</span>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <span v-on="on"><v-icon>fa-info-circle</v-icon></span>
+                    </template>
+                    <span>{{tooltip}}</span>
+                </v-tooltip>
 
-                    <v-spacer></v-spacer>
-                    Дата: {{ order.date }}
-                    &nbsp;
-                    Итого: {{ order.total }}грн.
-                </v-card-title>
+                <v-spacer></v-spacer>
+                Дата: {{ order.date }}
+                &nbsp;
+                Итого: {{ order.total }}грн.
+            </v-card-title>
 
-                <v-card-text>
-                    <v-data-table
-                            v-if="dishes"
-                            disable-pagination
-                            disable-sort
-                            disable-filtering
-                            hide-default-footer
-                            :headers="headers"
-                            :items="dishes"
-                            class="elevation-1"
-                            locale="ru"
-                    ></v-data-table>
-                </v-card-text>
+            <v-card-text>
+                <v-data-table
+                        v-if="dishes"
+                        disable-pagination
+                        disable-sort
+                        disable-filtering
+                        hide-default-footer
+                        :headers="headers"
+                        :items="dishes"
+                        class="elevation-1"
+                        locale="ru"
+                ></v-data-table>
+            </v-card-text>
 
-                <v-card-actions>
-                    <v-btn @click="confirmDialog = true" color="blue">
-                        <router-link tag="span" :to="{name: 'orders'}">< Заказы</router-link>
-                    </v-btn>
-                    <v-spacer></v-spacer>
+            <v-card-actions>
+                <v-btn color="blue">
+                    <router-link tag="span" :to="{name: 'orders'}">< Заказы</router-link>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <template v-if="order.status === 'packed'">
+                    <v-btn color="green" @click="orderPacked">заказ упакован</v-btn>
+                </template>
+                <template v-else>
                     <template v-if="order.status !== 'canceled'">
                         <v-btn color="red" @click="cancelOrder()">Отменить заказ</v-btn>
                     </template>
                     <template v-else>
                         <v-btn disabled>Заказ отменен</v-btn>
                     </template>
-                    <v-btn color="orange" @click="editingMode = true">
-                        <router-link tag="span" :to="{name: 'orders#edit'}">Изменить заказ</router-link>
+                    <v-btn color="orange">
+                        <router-link tag="span" :to="{name: 'orders#edit', params: order}">Изменить заказ</router-link>
                     </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-container>
+                </template>
+            </v-card-actions>
+        </v-card>
         <v-dialog v-model="confirmDialog" persistent max-width="300">
 
             <v-card>
@@ -61,7 +64,7 @@
             </v-card>
         </v-dialog>
         <loading :dialog="loading"></loading>
-    </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -128,7 +131,13 @@
                     order_id: this.order.order_id,
                     status: 'canceled'
                 }
-                this.$store.dispatch('common/commonOrder/changeOrderStatus', params)
+                this.$store.dispatch('common/commonOrder/changeOrderStatus', params).then(response => {
+                    this.$store.commit('common/commonOrder/setOrderStatus', response)
+                    console.log(response)
+                })
+            },
+            orderPacked(){
+                alert('Сейчас вы уже не можете изменить или отменить ваш заказ, потому что он уже в дороге.')
             }
         },
         beforeRouteEnter(from, to, next) {

@@ -21,10 +21,10 @@
             <v-btn color="orange" @click="closeModal()">Закрыть</v-btn>
             <v-spacer></v-spacer>
             <v-btn v-if="!isPacked" color="green" @click="packed()">
-                Спаковать
+                Упаковано
             </v-btn>
             <v-btn v-else color="red" @click="packedCanceled">
-                Отменить упаковку
+                Отменить отправку
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -52,7 +52,7 @@
                     order_id: this.orderId,
                     status: 'packed'
                 }
-                this.$store.dispatch('order/changeOrderStatus', params)
+                this.$store.dispatch('common/commonOrder/changeOrderStatus', params)
                     .then(response => {
                         this.order.status = response
                         this.closeModal()
@@ -63,7 +63,7 @@
                     order_id: this.order.order_id,
                     status: 'packed_canceled'
                 }
-                this.$store.dispatch('order/changeOrderStatus', params)
+                this.$store.dispatch('common/commonOrder/changeOrderStatus', params)
                     .then(response => {
                         this.order.status = response
                         this.closeModal()

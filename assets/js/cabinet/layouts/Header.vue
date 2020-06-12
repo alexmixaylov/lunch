@@ -45,7 +45,7 @@
                 </v-list-item>
             </v-list>
 
-            <div class="full-height">
+            <div v-if="isCorporate" class="full-height">
                 <local-storage/>
             </div>
         </v-navigation-drawer>

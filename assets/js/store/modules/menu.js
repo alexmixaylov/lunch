@@ -55,19 +55,15 @@ export default {
                 })
             );
         },
-        async loadMenuById({commit}, payload) {
-            try {
-                await axios.get('/dishes/menu/' + payload)
-                    .then(response => {
-                        if (response.status === 200) {
-                            console.log(response.data)
-                            commit('setMenu', response.data)
-                        }
-                    })
-                    .catch(error => console.log(error))
-            } catch (e) {
-                console.log(e)
-            }
+        loadMenuById({commit}, payload) {
+            axios.get('/dishes/menu/' + payload)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log(response.data)
+                        commit('setMenu', response.data)
+                    }
+                })
+                .catch(error => console.log(error))
         },
         getMenuIdByDate({}, payload) {
             console.log(payload)
@@ -100,29 +96,29 @@ export default {
                 console.log(error)
             }
         },
-        async loadMenuTable({commit}, payload) {
-            console.log(payload)
-            try {
-                await axios.get('/menus/table/' + payload)
+        loadMenuTable({commit}, payload) {
+            return new Promise(((resolve, reject) => {
+                axios.get('/menus/table/' + payload)
                     .then(response => {
-                        // console.log((response))
+                        console.log(response.data)
+
                         if (response.status === 200) {
                             const decodedData = JSON.parse(response.data);
                             const normalizedMenus = Object.keys(decodedData).map(key => {
                                 return decodedData[key][key];
                             });
+                            console.log(normalizedMenus)
+                            console.log(response.data)
                             commit('setMenus', normalizedMenus)
+                            resolve(response.data)
                         }
                     })
-                    .catch(errors => {
-                        console.log(errors)
+                    .catch(e => {
+                        reject(e)
                     })
-            } catch (e) {
-                console.log(e)
-            }
-
+            }));
         },
-        async addEmptyDishToMenu({commit, getters}) {
+        addEmptyDishToMenu({commit, getters}) {
             const newDish = {price: null, title: null, weight: null, type: null};
             return new Promise(((resolve, reject) => {
                 commit('addEmptyDish', newDish)

@@ -2,7 +2,7 @@
     <div>
         <v-alert v-if="uuid" type="warning">Company ID: {{ uuid }}</v-alert>
         <v-card class="mb-5" v-else>
-        <v-card-title class="orange">
+            <v-card-title class="orange">
                 Добавьте вашу компанию
             </v-card-title>
 
@@ -43,14 +43,14 @@
                 newUUID: false
             }
         },
-        computed:{
-            uuid(){
+        computed: {
+            uuid() {
                 return this.company_uuid ? this.company_uuid : this.newUUID
             }
         },
         methods: {
             createCompany() {
-                this.$store.dispatch('common/company/createCompany', this.title).then(response => {
+                this.$store.dispatch('common/company/createCompanyCabinet', this.title).then(response => {
                     this.success = true
                     this.newUUID = response
                     window.location.reload()

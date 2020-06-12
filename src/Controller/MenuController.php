@@ -77,8 +77,8 @@ class MenuController extends AbstractController
 
         //return $this->render('app.html.twig', ['data' => $menus]);
         //without this Key JSON_FORCE_OBJECT getting bug when the first element is Array but others are Objects
-        return new JsonResponse(json_encode($menus, JSON_FORCE_OBJECT));
-//        return new JsonResponse($menus);
+//        return new JsonResponse(json_encode($menus, JSON_FORCE_OBJECT));
+        return $this->json(json_encode($menus, JSON_FORCE_OBJECT));
 
     }
 

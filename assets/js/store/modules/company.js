@@ -11,9 +11,6 @@ export default {
         getCompany: state => {
             return state.company
         },
-        setCompany: (state, payload) => {
-            state.company = payload
-        },
         getCompanies: state => {
             return state.companies
         },
