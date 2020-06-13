@@ -99,7 +99,6 @@ export default {
         updateOrder({commit}, payload) {
             return new Promise(((resolve, reject) => {
                 console.log(payload)
-
                 axios.patch(' /orders/' + payload.order_id, payload)
                     .then(response => {
                         resolve(response.data)

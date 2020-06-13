@@ -33,10 +33,11 @@
                             locale="ru"
                     ></v-data-table>
                     <v-alert
+
                             v-if="message"
                             light
                             class="mt-3"
-                    >{{ message }}
+                    ><span @click="showMessage = true">{{ message }}</span>
                     </v-alert>
                 </div>
                 <v-row justify="space-between">
@@ -74,7 +75,7 @@
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn color="orange" @click="clearMessage()">Отменить</v-btn>
+                    <v-btn color="orange" @click="cancelEditingMessage()">Отменить</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn color="teal" @click="showMessage = false">Добавить сообщение</v-btn>
                 </v-card-actions>
@@ -120,6 +121,7 @@
                 orderSuccess: false,
                 showMessage: false,
                 calendar: false,
+                message: '',
                 headers: [
                     {text: 'Название', value: 'title'},
                     {text: 'Цена', value: 'price'},
@@ -131,14 +133,6 @@
         computed: {
             ...mapGetters('common/menu', {menu: 'getMenu'}),
             ...mapGetters('common/commonOrder', {order: 'getOrder'}),
-            message: {
-                get() {
-                    return this.order.message;
-                },
-                set(){
-
-                }
-            },
             orderedDishes() {
                 if (this.order) {
                     return this.order.dishes
@@ -163,7 +157,6 @@
             },
 
         },
-
         methods: {
             addToOrdered(index) {
                 this.orderedDishes.push(this.menu.dishes[index])
@@ -194,6 +187,7 @@
                     total: this.totalSum,
                     status: 'changed',
                     dishes: this.dishes,
+                    message: this.message
                 }
 
                 this.$store.dispatch('common/commonOrder/updateOrder', order).then(response => {
@@ -202,10 +196,13 @@
                     this.orderSuccess = true
                 })
             },
-            clearMessage() {
-                this.message = '';
+            cancelEditingMessage() {
+                this.message = this.order.message;
                 this.showMessage = false
             }
+        },
+        mounted() {
+            this.message = this.order.message
         },
         beforeRouteEnter(from, to, next) {
             const params = from.params;

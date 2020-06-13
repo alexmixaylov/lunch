@@ -190,6 +190,7 @@ class OrderController extends AbstractController
             'order_id' => $order->getId(),
             'status'   => $order->getStatus(),
             'total'    => $order->getTotal(),
+            'message'   => $order->getMessage(),
             'date'     => $order->getDate()->format('Y-m-d'),
             'dishes'   => $normalizeDishes,
             'created'  => $order->getCreatedAt()->format('Y-m-d\TH:i:sP'),
@@ -294,6 +295,7 @@ class OrderController extends AbstractController
 
         $order->setStatus($post['status']);
         $order->setTotal($post['total']);
+        $order->setMessage($post['message']);
         $order->setCounters($dishCounters);
         $order->setUpdatedAt(new \DateTime('now'));
 
