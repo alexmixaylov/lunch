@@ -48,6 +48,18 @@
         </v-row>
 
         <v-divider></v-divider>
+
+        <v-row>
+            <v-col>
+                <div class="subtitle-1">Получи скидку при заказе комплексного обеда</div>
+            </v-col>
+            <v-col>
+                sdsd
+            </v-col>
+        </v-row>
+
+        <v-divider></v-divider>
+
         <v-row justify="space-between">
             <v-col class="shrink">
                 <v-btn large color="green darken-2">
