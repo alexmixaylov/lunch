@@ -101,6 +101,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <matrix :dishes="orderedDishes"></matrix>
     </div>
 </template>
 
@@ -109,11 +110,12 @@
     import {mapGetters} from 'vuex';
     import {dateFormat} from "../../../plugins/dateFormat";
     import {encodeOrders} from "../../../plugins/dishNormalizer";
+    import Matrix from "../../components/Matrix";
 
     export default {
         name: "OrderCreate",
         props: ['date', 'person'],
-        components: {},
+        components: {Matrix},
         data() {
             return {
                 orderID: false,
