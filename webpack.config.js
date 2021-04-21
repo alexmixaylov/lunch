@@ -68,7 +68,7 @@ Encore
     })
 
     //enable VueJs
-    .enableVueLoader()
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
 
 
 // enables Sass/SCSS support
