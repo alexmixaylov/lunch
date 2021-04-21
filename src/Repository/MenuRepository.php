@@ -52,8 +52,6 @@ class MenuRepository extends ServiceEntityRepository
     public function findMenusByDates($start, $end)
     {
         $qb = $this->createQueryBuilder('m')
-//                   ->select('m.id as menu_id')
-//                   ->addSelect('m.date')
                    ->where('m.date >= :start')
                    ->andWhere('m.date <= :end')
                    ->setParameters(['start' => $start, 'end' => $end])

@@ -19,7 +19,7 @@ class DishController extends AbstractController
     /**
      * @Route("/menu/{menuId}", name="dishes#by_menu", methods={"GET"})
      */
-    public function getDishesByMenuId($menuId, DishRepository $repository)
+    public function getDishesByMenuId($menuId, DishRepository $repository): JsonResponse
     {
         $dishes = $repository->findDishesByMenuId($menuId);
 
@@ -33,7 +33,7 @@ class DishController extends AbstractController
     /**
      * @Route("/date/{date}", name="dishes#by_date", methods={"GET"})
      */
-    public function getDishesByDate($date, DishRepository $repository)
+    public function getDishesByDate(string $date, DishRepository $repository): JsonResponse
     {
         $dishes = $repository->findDishesByDate($date);
 

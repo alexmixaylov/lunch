@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,12 +20,13 @@ class PersonRepository extends ServiceEntityRepository
         parent::__construct($registry, Person::class);
     }
 
+
     /**
-     * @return Person[] Returns an array of Person objects
+     * @param int $id
+     *
+     * @return Person[]
      */
-// тут пробела быть не должно, оно скорее всего не сработает так для рефлексии
-// пишешь все руками, +1 повод не любить доктрину
-    public function findByCompanyId($id)
+    public function findByCompanyId(int $id): array
     {
         return $this->createQueryBuilder('p')
                     ->select('p.id as person_id')
@@ -36,11 +38,14 @@ class PersonRepository extends ServiceEntityRepository
                     ->getResult();
     }
 
-    /**
-     * @return Person[] Returns an array of Person objects
-     */
 
-    public function findByUserId($id)
+    /**
+     * @param int $id
+     *
+     * @return Person|null
+     * @throws NonUniqueResultException
+     */
+    public function findByUserId(int $id): ?Person
     {
         return $this->createQueryBuilder('p')
                     ->select('p.id as person_id')
@@ -52,8 +57,14 @@ class PersonRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
-// значит в методах выше пхпдоки есть а здесь нет. почему?
-    public function findById($id)
+
+    /**
+     * @param int $id
+     *
+     * @return Person|null
+     * @throws NonUniqueResultException
+     */
+    public function findById(int $id): ?Person
     {
         return $this->createQueryBuilder('p')
                     ->select('p.id as person_id')

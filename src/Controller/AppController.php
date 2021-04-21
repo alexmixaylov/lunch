@@ -11,8 +11,6 @@ class AppController extends AbstractController
     // ты не дробишь код на модули, у тебя куча контроллеров и все вперемешку
     // нужно бить код на модули иначе он разрастается и его становится невозможно поддерживать
 
-
-    // я бы в ямле роуты писал н дело твое
     /**
      * @Route("/", name="app", methods={"GET"})
      * @IsGranted("ROLE_USER")
@@ -21,8 +19,7 @@ class AppController extends AbstractController
     {
         $user = $this->getUser();
 
-        // где то кавычки " где то '. почитай разницу, юзай " только когда это нужно
-        if ( ! in_array("ROLE_ADMIN", $user->getRoles())) {
+        if ( ! in_array('ROLE_ADMIN', $user->getRoles())) {
             return $this->redirect('/cabinet');
         }
 

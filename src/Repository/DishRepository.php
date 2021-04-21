@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Dish;
-use App\Entity\Menu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,16 +37,15 @@ class DishRepository extends ServiceEntityRepository
 
     }
 
-    public function findDishesByDate($date)
+    public function findDishesByDate(string $date)
     {
 
-        return $this->createQueryBuilder('d') // мб тут звездочкой выбрать?
+        return $this->createQueryBuilder('d')
                     ->select('d.id as dish_id')
                     ->addSelect('d.title')
                     ->addSelect('d.price')
                     ->addSelect('d.weight')
                     ->addSelect('d.type')
-//                    ->addSelect('m.id as menu_id')
                     ->leftJoin('d.menu', 'm')
                     ->where('m.date = :date')
                     ->setParameter('date', $date)
@@ -56,16 +54,4 @@ class DishRepository extends ServiceEntityRepository
                     ->getResult();
 
     }
-
-    /* // слово Some тут точно лишнее
-    public function findOneBySomeField($value): ?Dish
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

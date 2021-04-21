@@ -16,7 +16,7 @@ class StatsRepository
         $this->em = $entityManager;
     }
 
-    public function countDishesByDate($date)
+    public function countDishesByDate($date): array
     {
 
         $ordersCounters = $this->em->createQueryBuilder()
@@ -68,5 +68,4 @@ class StatsRepository
 
         return $result;
     }
-
 }

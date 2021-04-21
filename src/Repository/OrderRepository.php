@@ -23,7 +23,7 @@ class OrderRepository extends ServiceEntityRepository
      * @return Order[] Returns an array of Order objects
      */
 
-    public function findOrdersByDate($date)
+    public function findOrdersByDate(string $date)
     {
         return $this->createQueryBuilder('o')
                     ->select('o.id')
@@ -45,7 +45,7 @@ class OrderRepository extends ServiceEntityRepository
      * @return Order[] Returns an array of Order objects
      */
 
-    public function findOrdersByMenu($id)
+    public function findOrdersByMenu(int $id)
     {
         return $this->createQueryBuilder('o')
                     ->select('o.id')
@@ -64,7 +64,7 @@ class OrderRepository extends ServiceEntityRepository
      * @return Order[] Returns an array of Order objects
      */
 
-    public function findOrdersByDish($id)
+    public function findOrdersByDish(int $id)
     {
         return $this->createQueryBuilder('o')
                     ->select('o.id')
@@ -78,7 +78,7 @@ class OrderRepository extends ServiceEntityRepository
     /**
      * @return Order[] Returns an array of Order objects
      */
-    public function findOrdersByPerson($id)
+    public function findOrdersByPerson(int $id)
     {
         return $this->createQueryBuilder('o')
                     ->select('o.id')
@@ -94,16 +94,11 @@ class OrderRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $companyId
-     * @param int | null $personId
-     * @param string| null $date
      *
      * @return Order[] Returns an array of Order objects
      */
-    public function findOrdersByParams($companyId, $personId, $date)
+    public function findOrdersByParams(int $companyId, int $personId, string $date)
     {
-//        dump($companyId, $personId, $date);
-//        die();
         $qb = $this->createQueryBuilder('o')
                    ->select('o.id')
                    ->addSelect('p.name')

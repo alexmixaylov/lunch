@@ -28,14 +28,9 @@ class CabinetController extends AbstractController
             return $this->redirect('/login');
         }
 
-        if (in_array("ROLE_ADMIN", $user->getRoles())) {
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
             return $this->redirect('/');
         }
-// ничего закоментированного быть в репе не должно за редкими исключениями
-
-//        dump($user->getCompanyOwned()->getId());
-//
-//        die();
 
         return $this->render('cabinet/index.html.twig', [
             'user_id'       => $user->getId(),
@@ -52,7 +47,7 @@ class CabinetController extends AbstractController
     /**
      * @Route("/company/{owner}")
      */
-    public function getCompanyByOwner(int $owner, CompanyRepository $repository)
+    public function getCompanyByOwner(int $owner, CompanyRepository $repository): JsonResponse
     {
         $company = $repository->findCompanyByOwner($owner);
 
@@ -62,7 +57,7 @@ class CabinetController extends AbstractController
     /**
      * @Route("/person", name="cabinet#link_person", methods={"PATCH"})
      */
-    public function linkPersonToUser(Request $request, PersonRepository $person_repository)
+    public function linkPersonToUser(Request $request, PersonRepository $person_repository): JsonResponse
     {
         $user     = $this->getUser();
         $personId = $request->getContent();
@@ -79,14 +74,14 @@ class CabinetController extends AbstractController
     /**
      * @Route("/company", name="cabinet#link_company", methods={"PATCH"})
      */
-    public function linkCompanyOwnerToUser(Request $request, CompanyRepository $company_repository)
+    public function linkCompanyOwnerToUser(Request $request, CompanyRepository $company_repository): JsonResponse
     {
         $user      = $this->getUser();
         $title     = $request->getContent();
         $isCompany = $company_repository->find($title);
 
         if ($isCompany) {
-            return new JsonResponse(['message' => "${$title}Уже есть компания с таким названием"]);
+            return new JsonResponse(['message' => "$title Уже есть компания с таким названием"]);
         }
 
         $company = new Company();

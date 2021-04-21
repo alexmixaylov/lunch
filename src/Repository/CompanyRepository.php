@@ -76,7 +76,7 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
-    public function findCompanyByPerson($id)
+    public function findCompanyByPerson(int $id)
     {
         return $this->createQueryBuilder('c')
                     ->select('c.id as company_id')
@@ -90,7 +90,7 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
-    public function findCompanyByUUID($uuid)
+    public function findCompanyByUUID(string $uuid)
     {
         return $this->createQueryBuilder('c')
                     ->select('c.id as company_id')
@@ -102,7 +102,7 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
-    public function findCompanyByUUIDLazyObj($uuid)
+    public function findCompanyByUUIDLazyObj(string $uuid)
     {
         return $this->createQueryBuilder('c')
                     ->andWhere('c.uuid = :uuid')
@@ -110,5 +110,4 @@ class CompanyRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getOneOrNullResult();
     }
-
 }
