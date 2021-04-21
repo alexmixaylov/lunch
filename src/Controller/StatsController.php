@@ -29,6 +29,7 @@ class StatsController extends AbstractController
      */
     public function countDishesByWeek($date, StatsRepository $repository, GenerateDates $generate_dates)
     {
+        // отступы
 
         $dates = $generate_dates->allDatesForWeek($date);
 

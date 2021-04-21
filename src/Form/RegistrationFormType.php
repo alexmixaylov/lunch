@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    {// кошмар. потом посмотришь как оно в ларавеле
         $builder
 //            ->add('company', CollectionType::class, [
 //                'entry_type'    => CompanyType::class,

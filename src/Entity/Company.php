@@ -84,7 +84,8 @@ class Company
 
     public function addPerson(Person $person): self
     {
-        if ( ! $this->persons->contains($person)) {
+        if ( ! $this->persons->contains($person)) { // не, вызываешь метод у обьекта Компани
+            // а сам втихаря еще и персона меняешь. ну это явно к багам приведет, неявное поведение
             $this->persons[] = $person;
             $person->setCompany($this);
         }

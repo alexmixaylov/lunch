@@ -37,6 +37,7 @@ class DishController extends AbstractController
     {
         $dishes = $repository->findDishesByDate($date);
 
+        // красава)
         //TODO если на такую дату нет элементов, нужно показать сообщение и редиректить на страницу с неделями WEEK
         //TODO можно сделать дополнительный запрос в базу.... Короче я сам забыл в чем проблема
 
@@ -49,7 +50,7 @@ class DishController extends AbstractController
 
     /**
      * @Route("/", name="dishes#list", methods={"GET"})
-     */
+     */ // потом расскажешь мне как этот репозиторий тут оказывается
     public function list(DishRepository $repository)
     {
         $dishes = $repository->findAll();

@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/delivery")
+ * // магия сумашедшая
  * @IsGranted("ROLE_ADMIN")
  */
 class DeliveryController extends AbstractController

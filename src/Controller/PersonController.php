@@ -56,7 +56,7 @@ class PersonController extends AbstractController
      */
     public function create(Request $request, CompanyRepository $company_repository)
     {
-        $post = json_decode($request->getContent(), true);
+        $post = json_decode($request->getContent(), true); // ты уверен что тут флаг нужен?
 
         $company = $company_repository->find($post['company_id']);
 
@@ -71,7 +71,7 @@ class PersonController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($person);
         $em->flush();
-
+// где то ты выносить респонс в отдельный массив $response, тут сразу пробрасываешь. почему?
         return new JsonResponse([
             'person_id' => $person->getId(),
             'name'      => $person->getName()

@@ -53,6 +53,9 @@ class OrderController extends AbstractController
             $person          = $request->query->get('person_id');
         }
 
+        // нельзя такое оставлять
+        // настрой дебагер, забудь про вар дамп как про страшный сон
+
 //
 //        dump($currentUser);
 //        die();
@@ -67,6 +70,7 @@ class OrderController extends AbstractController
         }, $orders));
 
     }
+    // отступы
 
 
     /**
@@ -92,7 +96,7 @@ class OrderController extends AbstractController
     public function getOrdersByWeek(string $date, OrderRepository $repository, GenerateDates $generate_dates)
     {
         $dates = $generate_dates->allDatesForWeek($date);
-
+// уже писал, не понял смысла array_map. но я не вчитываюсь, просто глазами пробегаю
         $ordersByWeek = array_map(function ($date) use ($repository) {
             return [
                 'orders' => $repository->findOrdersByDate($date),
@@ -121,7 +125,7 @@ class OrderController extends AbstractController
     {
         $order = $repository->find($id);
 
-        if ( ! $order) {
+        if ( ! $order) {// кавычки
             throw $this->createNotFoundException(`Order with ID:${$id} not found`);
         }
 
@@ -153,7 +157,7 @@ class OrderController extends AbstractController
 
         $order = $repository->find($id);
 
-        if ( ! $order) {
+        if ( ! $order) {// кавычки
             throw $this->createNotFoundException(`Order with ID:${$id} not found`);
         }
 
@@ -213,6 +217,8 @@ class OrderController extends AbstractController
 
         $menu   = $menu_repository->find($post['menu_id']);
         $person = $person_repository->find($post['person_id']);
+        // чем писать здоровенные комментарии на русском разбей код на методы так чтобы было понятно что там происходит и без комментов
+        // комменты - в крайних случаях
 
         // так как невозможно несколько идентичных связея для manyToMany
         // мы прогоняем массив с дублями и записываем счетчик каждой повторяющейся позиции dish
@@ -236,7 +242,7 @@ class OrderController extends AbstractController
 
 
         $order = new Order();
-        $order->setCreatedAt(new \DateTime('now'));
+        $order->setCreatedAt(new \DateTime('now'));// куча сеттеров это +1 к не любить доктрину
         $order->setUpdatedAt(new \DateTime('now'));
         $order->setMenu($menu);
         $order->setTotal($post['total']);

@@ -4,6 +4,7 @@ namespace App\Services;
 
 class GenerateDates
 {
+// тут отступы не нужны
 
 
     public function allDatesForWeek(string $date): ?array

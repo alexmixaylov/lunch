@@ -26,7 +26,7 @@ class OrderNormalizer implements NormalizerInterface, CacheableSupportsMethodInt
 
     public function supportsNormalization($data, $format = null): bool
     {
-        return $data instanceof \App\Entity\BlogPost;
+        return $data instanceof \App\Entity\BlogPost; // а такого класса походу нет...
     }
 
     public function hasCacheableSupportsMethod(): bool
