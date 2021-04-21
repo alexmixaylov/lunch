@@ -9,3 +9,6 @@ serve:
 	bin/console server:start
 	npm run dev-server
 
+stop:
+	bin/console server:stop
+
