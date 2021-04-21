@@ -128,7 +128,7 @@ class Dish
         return $this->orders;
     }
 
-    public function addOrder(Order $order): self
+    public function addOrder(Order $order): self // что то явно не так с этим методом
     {
         if (!$this->orders->contains($order)) {
             $this->orders[] = $order;

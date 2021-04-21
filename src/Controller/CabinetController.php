@@ -31,6 +31,7 @@ class CabinetController extends AbstractController
         if (in_array("ROLE_ADMIN", $user->getRoles())) {
             return $this->redirect('/');
         }
+// ничего закоментированного быть в репе не должно за редкими исключениями
 
 //        dump($user->getCompanyOwned()->getId());
 //

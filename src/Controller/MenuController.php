@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MenuController extends AbstractController
 {
-
+// какой то большой метод, читать сложно. нужно разбить на несколько приватныйх (вот тебе и ответ зачем нужны приватные методы)
     /**
      * @Route("/table/{userDate}", name="menus#table", methods={"GET"})
      */
@@ -90,12 +90,17 @@ class MenuController extends AbstractController
 
         $menu = $repository->findOneByDate($date);
 
+        // почему тут два пробела у восклицательного знака? ты знаешь что пхпшторм умеет выравнивать код, trl + alt + L
+        // попробуй, понравится
         if ( ! $menu) {
+
             return new JsonResponse([
+                // ну что это за кавычки такие?
                 'error' => `Меню на эту дату еще не создано`
             ]);
         }
 
+        // а в чем посыл этого array_map?
         $dishes = array_map(function ($dish) {
             return [
                 'dish_id' => $dish->getId(),
@@ -180,7 +185,7 @@ class MenuController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($menu);
-        $em->flush();
+        $em->flush();// +1 не любить доктрину
 
         return new JsonResponse($menu->getId());
     }

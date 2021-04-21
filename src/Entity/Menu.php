@@ -37,7 +37,7 @@ class Menu
 
     public function __construct()
     {
-        $this->dishes = new ArrayCollection();
+        $this->dishes = new ArrayCollection();// смотрится странно. это или +1 к не любить доктрину или ты что то не так понял
         $this->orders = new ArrayCollection();
     }
 

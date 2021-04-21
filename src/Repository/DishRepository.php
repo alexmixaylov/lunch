@@ -41,7 +41,7 @@ class DishRepository extends ServiceEntityRepository
     public function findDishesByDate($date)
     {
 
-        return $this->createQueryBuilder('d')
+        return $this->createQueryBuilder('d') // мб тут звездочкой выбрать?
                     ->select('d.id as dish_id')
                     ->addSelect('d.title')
                     ->addSelect('d.price')
@@ -57,7 +57,7 @@ class DishRepository extends ServiceEntityRepository
 
     }
 
-    /*
+    /* // слово Some тут точно лишнее
     public function findOneBySomeField($value): ?Dish
     {
         return $this->createQueryBuilder('d')

@@ -72,7 +72,7 @@ class RegistrationController extends AbstractController
      * If database is empty we must setup beginning params like SuperUser
      *
      * @param User $user
-     */
+     */ // название мне не нравится
     private function assignSuperUserRoleIsEmptyDB(User $user): User
     {
         $user->setRoles(["ROLE_ADMIN"]);

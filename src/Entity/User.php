@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+// и ты мне еще про магию говорил. а как работает вот это ты не узнавал?
+// магия еще пожесче. да еще и писать код в пхпдоках неудобно, пхпшторм не подсвечивает ошибки
+// и не форматирует нормально
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
@@ -19,6 +22,7 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
+    //тут лишний пробел. прийми один стиль и пиши в нем
 
 
     /**
@@ -31,6 +35,7 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    // пароль кроме как захешированный никаким не может быть. бесполезный коммент, удаляем
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
@@ -63,12 +68,12 @@ class User implements UserInterface
      */
     private $person;
 
-
+// а как айди юзера может быть нуллабл?
     public function getId(): ?int
     {
         return $this->id;
     }
-
+// гктткры и сеттеры. раздувают модель нереально. +1 повод не любить доктрину
     public function getEmail(): ?string
     {
         return $this->email;
@@ -87,7 +92,8 @@ class User implements UserInterface
      * @see UserInterface
      */
     public function getUsername(): string
-    {
+    {// по моему тут не нужно приводить тип, тайпхинт на возвращаемое значение сделает это за тебя
+        // ну есть не писать declare strict types. можешь уточнить этот момент
         return (string)$this->email;
     }
 
@@ -95,7 +101,8 @@ class User implements UserInterface
      * @see UserInterface
      */
     public function getRoles(): array
-    {
+    {// а если я несколько раз позову этот метод? оно ж мне несколько раз напишет в массив ролей вот эту роль
+        // методы гет не должны что то менять, для этого есть сет
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';

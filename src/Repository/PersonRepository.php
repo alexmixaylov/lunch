@@ -22,7 +22,8 @@ class PersonRepository extends ServiceEntityRepository
     /**
      * @return Person[] Returns an array of Person objects
      */
-
+// тут пробела быть не должно, оно скорее всего не сработает так для рефлексии
+// пишешь все руками, +1 повод не любить доктрину
     public function findByCompanyId($id)
     {
         return $this->createQueryBuilder('p')
@@ -51,7 +52,7 @@ class PersonRepository extends ServiceEntityRepository
                     ->getOneOrNullResult();
     }
 
-
+// значит в методах выше пхпдоки есть а здесь нет. почему?
     public function findById($id)
     {
         return $this->createQueryBuilder('p')
