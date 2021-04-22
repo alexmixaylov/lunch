@@ -23,7 +23,6 @@ class DishController extends AbstractController
     {
         $dishes = $repository->findDishesByMenuId($menuId);
 
-
         return new JsonResponse([
             'menu_id' => $menuId,
             'dishes'  => $dishes
@@ -51,7 +50,7 @@ class DishController extends AbstractController
     /**
      * @Route("/", name="dishes#list", methods={"GET"})
      */ // потом расскажешь мне как этот репозиторий тут оказывается
-    public function list(DishRepository $repository)
+    public function list(DishRepository $repository): JsonResponse
     {
         $dishes = $repository->findAll();
 
@@ -61,12 +60,12 @@ class DishController extends AbstractController
     /**
      * @Route("/{id}", name="dishes#read", methods={"GET"})
      */
-    public function read(int $id, DishRepository $repository)
+    public function read(int $id, DishRepository $repository): JsonResponse
     {
         $dish = $repository->find($id);
 
         if ( ! $dish) {
-            throw $this->createNotFoundException("Dish with ID:{$id} not Found");
+            throw $this->createNotFoundException("Dish with ID: $id not Found");
         }
 
         return new JsonResponse($dish);
@@ -75,7 +74,7 @@ class DishController extends AbstractController
     /**
      * @Route("/", name="dishes#create", methods={"POST"})
      */
-    public function create(Request $request, MenuRepository $menu_repository)
+    public function create(Request $request, MenuRepository $menu_repository): JsonResponse
     {
         $post = json_decode($request->getContent(), true);
 
@@ -98,14 +97,14 @@ class DishController extends AbstractController
     /**
      * @Route("/{id}", name="dishes#update", methods={"PATCH"})
      */
-    public function update(int $id, Request $request, DishRepository $repository)
+    public function update(int $id, Request $request, DishRepository $repository): JsonResponse
     {
         $post = json_decode($request->getContent(), true);
 
         $dish = $repository->find($post['dish_id']);
 
         if ( ! $dish) {
-            throw $this->createNotFoundException("Dish with ID:{$id} not Found");
+            throw $this->createNotFoundException("Dish with ID: $id not Found");
         }
 
         $dish->setPrice($post['price']);
@@ -123,7 +122,7 @@ class DishController extends AbstractController
     /**
      * @Route("/{id}", name="dishes#delete", methods={"DELETE"})
      */
-    public function delete(int $id, DishRepository $repository, OrderRepository $order_repository)
+    public function delete(int $id, DishRepository $repository, OrderRepository $order_repository): JsonResponse
     {
         $dish = $repository->find($id);
 

@@ -6,6 +6,7 @@ use App\Entity\Menu;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Services\GenerateDates;
+use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,7 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/menus")
- * @IsGranted("ROLE_USER")
  */
 class MenuController extends AbstractController
 {
@@ -27,7 +27,7 @@ class MenuController extends AbstractController
         MenuRepository $repository,
         DishRepository $dish_repository,
         GenerateDates $generate_dates
-    ) {
+    ): JsonResponse {
         $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
         $end   = date('Y-m-d', strtotime("friday this week", strtotime($userDate)));
 
@@ -48,7 +48,7 @@ class MenuController extends AbstractController
 
         $initEmptyMenuWithDate = function ($date) {
             $menu = new Menu();
-            $menu->setDate(new \DateTime($date));
+            $menu->setDate(new DateTimeImmutable($date));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($menu);
@@ -85,23 +85,21 @@ class MenuController extends AbstractController
     /**
      * @Route("/date/{date}", name="menus#by_date", methods={"GET"})
      */
-    public function getMenuByDate(string $date, MenuRepository $repository)
+    public function getMenuByDate(string $date, MenuRepository $repository): JsonResponse
     {
 
         $menu = $repository->findOneByDate($date);
 
         // почему тут два пробела у восклицательного знака? ты знаешь что пхпшторм умеет выравнивать код, trl + alt + L
-        // попробуй, понравится
+        // попробуй, понравится. Постоянно пользуюсь, нравится :) Похоже, что это Шторм как раз и поставил
         if ( ! $menu) {
-
-            return new JsonResponse([
-                // ну что это за кавычки такие?
-                'error' => `Меню на эту дату еще не создано`
-            ]);
+            return new JsonResponse(['error' => 'Меню на эту дату еще не создано']);
         }
 
         // а в чем посыл этого array_map?
-        $dishes = array_map(function ($dish) {
+        // пришлось делать сериализацию dishes, согласен, выглядит не очень
+        // можно было бы не полениться и дернуть из базы массив dishes по menu_id
+        $serializedDishes = array_map(function ($dish) {
             return [
                 'dish_id' => $dish->getId(),
                 'title'   => $dish->getTitle(),
@@ -116,7 +114,7 @@ class MenuController extends AbstractController
         return new JsonResponse([
             'menu_id' => $menu->getId(),
             'date'    => $menu->getDate()->format('Y-m-d'),
-            'dishes'  => $dishes
+            'dishes'  => $serializedDishes
         ]);
     }
 
@@ -127,11 +125,11 @@ class MenuController extends AbstractController
      * @return JsonResponse
      * @Route("/id/{date}", name="menus#get_id_by_date", methods={"GET"})
      */
-    public function getIdMenuByDate(string $date, MenuRepository $repository)
+    public function getIdMenuByDate(string $date, MenuRepository $repository): JsonResponse
     {
         $menu = $repository->findOneByDate($date);
         if ( ! $menu) {
-            throw $this->createNotFoundException("Меню на эту дату ${$date} не найдено");
+            throw $this->createNotFoundException("Меню на эту дату $date не найдено");
         }
 
         return new JsonResponse($menu->getId());
@@ -140,7 +138,7 @@ class MenuController extends AbstractController
     /**
      * @Route("/order/{id}", name="menus#by_order", methods={"GET"})
      */
-    public function getMenuByOrder(int $id, MenuRepository $menu_repository)
+    public function getMenuByOrder(int $id, MenuRepository $menu_repository): JsonResponse
     {
         $menu = $menu_repository->findMenuById($id);
 
@@ -150,7 +148,7 @@ class MenuController extends AbstractController
     /**
      * @Route("/", name="menus#list", methods={"GET"})
      */
-    public function list(MenuRepository $repository)
+    public function list(MenuRepository $repository): JsonResponse
     {
         $menus = $repository->findAll();
 
@@ -160,12 +158,12 @@ class MenuController extends AbstractController
     /**
      * @Route("/{id}", name="menus#read", methods={"GET"}, requirements={"id"="\d+"})
      */
-    public function read(int $id, MenuRepository $repository)
+    public function read(int $id, MenuRepository $repository): JsonResponse
     {
         $menu = $repository->findMenuById($id);
 
         if ( ! $menu) {
-            throw $this->createNotFoundException("Menu with ID:{$id} not Found");
+            throw $this->createNotFoundException("Menu with ID: $id not Found");
         }
 
         return new JsonResponse($menu);
@@ -174,19 +172,24 @@ class MenuController extends AbstractController
     /**
      * @Route("/", name="menus#create", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
+     * для методов ниже требуются привилегии, здесь преимущество разделения на модули
+     * можно было бы сделать модуль Admin и там создать MenuController
+     *
      */
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $post = json_decode($request->getContent(), true);
-        $date = new \DateTime($post['date']);
+        $date = new DateTimeImmutable($post['date']);
 
         $menu = new Menu();
         $menu->setDate($date);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($menu);
-        $em->flush();// +1 не любить доктрину
-
+        $em->flush();
+        // +1 не любить доктрину. Не понимаю почему.
+        // Мне кажется удобно очень. Сделал persist кучи разных сущностей, потом разочек  flush
+        // и все записалось в базу за один раз
         return new JsonResponse($menu->getId());
     }
 
@@ -194,12 +197,12 @@ class MenuController extends AbstractController
      * @Route("/{id}", name="menus#update", methods={"PATCH, PUT"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(int $id, MenuRepository $repository)
+    public function update(int $id, MenuRepository $repository): JsonResponse
     {
         $menu = $repository->find($id);
 
         if ( ! $menu) {
-            throw $this->createNotFoundException("Menu with ID:{$id} not Found");
+            throw $this->createNotFoundException("Menu with ID: $id not Found");
         }
 
         return new JsonResponse();
@@ -209,8 +212,12 @@ class MenuController extends AbstractController
      * @Route("/{id}", name="menus#delete", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(int $id)
+    public function delete(Menu $menu): JsonResponse
     {
-        return new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($menu);
+        $em->flush();
+
+        return new JsonResponse('Deleted');
     }
 }

@@ -51,7 +51,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=150)
      */
-    private $type;
+    private $userType;
 
     /**
      * @ORM\Column(type="string", length=150)
@@ -167,15 +167,15 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getType(): ?string
+    public function getUserType(): ?string
     {
-        return $this->type;
+        return $this->userType;
     }
 
-    public function setType(string $type): self
+    public function setUserType(string $userType): self
     {
 
-        $this->type = $type;
+        $this->userType = $userType;
 
         return $this;
     }

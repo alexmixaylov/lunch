@@ -24,22 +24,18 @@ class CabinetController extends AbstractController
     {
         $user = $this->getUser();
 
-        if ( ! $user) {
-            return $this->redirect('/login');
-        }
-
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             return $this->redirect('/');
         }
 
         return $this->render('cabinet/index.html.twig', [
-            'user_id'       => $user->getId(),
-            'name'          => $user->getName(),
-            'email'         => $user->getEmail(),
-            'roles'         => $user->getRoles(),
-            'phone'         => $user->getPhone(),
-            'type'          => $user->getType(),
-            'person_id'     => $user->getPerson() ? $user->getPerson()->getId() : null,
+            'user_id'            => $user->getId(),
+            'name'               => $user->getName(),
+            'email'              => $user->getEmail(),
+            'roles'              => $user->getRoles(),
+            'phone'              => $user->getPhone(),
+            'type'               => $user->getUserType(),
+            'person_id'          => $user->getPerson() ? $user->getPerson()->getId() : null,
             'related_company_id' => $user->getCompanyOwned() ? $user->getCompanyOwned()->getId() : null
         ]);
     }
@@ -81,7 +77,7 @@ class CabinetController extends AbstractController
         $isCompany = $company_repository->find($title);
 
         if ($isCompany) {
-            return new JsonResponse(['message' => "$title Уже есть компания с таким названием"]);
+            return new JsonResponse(['message' => "${$title}Уже есть компания с таким названием"]);
         }
 
         $company = new Company();

@@ -1,9 +1,7 @@
 <?php
 
-
 namespace App\Services;
 
-//отступы
 use App\Entity\User;
 
 /**
@@ -14,6 +12,7 @@ class CheckPermissions
 {
     /**
      * Check is User has ROLES_ADMIN
+     *
      * @param User $user
      *
      * @return bool
@@ -21,6 +20,7 @@ class CheckPermissions
     public function isAdmin(User $user): bool
     {
         $roles = $user->getRoles();
-        return in_array ( "ROLE_ADMIN" , $roles);
+
+        return in_array('ROLE_ADMIN', $roles);
     }
 }

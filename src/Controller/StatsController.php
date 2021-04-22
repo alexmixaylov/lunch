@@ -17,7 +17,7 @@ class StatsController extends AbstractController
     /**
      * @Route("/dishes/{date}", name="stats#dishes_by_date" , methods={"GET"})
      */
-    public function countDishesByDate($date, StatsRepository $repository)
+    public function countDishesByDate($date, StatsRepository $repository): JsonResponse
     {
         $dishes = $repository->countDishesByDate($date);
 
@@ -27,12 +27,9 @@ class StatsController extends AbstractController
     /**
      * @Route("/dishes/week/{date}", name="stats#dishes_week" , methods={"GET"})
      */
-    public function countDishesByWeek($date, StatsRepository $repository, GenerateDates $generate_dates)
+    public function countDishesByWeek($date, StatsRepository $repository, GenerateDates $generate_dates): JsonResponse
     {
-        // отступы
-
         $dates = $generate_dates->allDatesForWeek($date);
-
 
         $dishesWeek = array_map(function ($date) use ($repository) {
             return [

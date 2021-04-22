@@ -13,15 +13,7 @@
             <div class="spinner spinner-clock"></div>
         </div>
     </div>
-    <div id="user"
-         data-user_id="{{ user_id }}"
-         data-name="{{ name }}"
-         data-email="{{ email }}"
-         data-phone="{{ phone }}"
-         data-type="{{ type }}"
-         data-roles="{{ roles | json_encode }}"
-    >
-    </div>
+    {# TODO assets/js/admin/App.vue needs element #user with dataset user_id, name ... But, better to do refactoring #}
 {% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('admin') }}

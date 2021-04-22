@@ -8,9 +8,8 @@ use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
 use App\Repository\PersonRepository;
-use App\Repository\UserRepository;
-use App\Services\CheckPermissions;
 use App\Services\GenerateDates;
+use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,31 +18,24 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/orders")
- * @IsGranted("ROLE_USER")
  */
 class OrderController extends AbstractController
 {
     /**
      * @Route("/gate", name="orders#by_params", methods={"GET"})
-     * @param int $person
-     * @param OrderRepository $order_repository
-     *
-     * @param UserRepository $user_repository
-     *
-     * @return JsonResponse
      */
     public function getOrdersByPerson(
         Request $request,
         OrderRepository $order_repository,
         CompanyRepository $company_repository,
         PersonRepository $person_repository
-    ) {
+    ): JsonResponse {
 
         $date = $request->query->get('date');
 
 
         $currentUser = $this->getUser();
-        $userType    = $currentUser->getType();
+        $userType    = $currentUser->getUserType();
 
         if ($userType === 'private') {
             $realUserCompany = 1;
@@ -53,14 +45,6 @@ class OrderController extends AbstractController
             $person          = $request->query->get('person_id');
         }
 
-        // нельзя такое оставлять
-        // настрой дебагер, забудь про вар дамп как про страшный сон
-
-//
-//        dump($currentUser);
-//        die();
-
-
         $orders = $order_repository->findOrdersByParams($realUserCompany, $person, $date);
 
         return new JsonResponse(array_map(function ($order) {
@@ -68,21 +52,20 @@ class OrderController extends AbstractController
 
             return $order;
         }, $orders));
-
     }
-    // отступы
 
 
     /**
-     * @Route("/date/{date}", name="orders#by_date", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @Route("/date/{date}", name="orders#by_date", methods={"GET"})
+     *
      * @param string $date
      * @param OrderRepository $repository
-     * @param CheckPermissions $permissions
      *
      * @return JsonResponse
      */
-    public function getOrdersByDate(string $date, OrderRepository $repository, CheckPermissions $permissions)
+    public function getOrdersByDate(string $date, OrderRepository $repository): JsonResponse
     {
         $orders = $repository->findOrdersByDate($date);
 
@@ -93,8 +76,11 @@ class OrderController extends AbstractController
      * @Route("/week/{date}", name="orders#by_week", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getOrdersByWeek(string $date, OrderRepository $repository, GenerateDates $generate_dates)
-    {
+    public function getOrdersByWeek(
+        string $date,
+        OrderRepository $repository,
+        GenerateDates $generate_dates
+    ): JsonResponse {
         $dates = $generate_dates->allDatesForWeek($date);
 // уже писал, не понял смысла array_map. но я не вчитываюсь, просто глазами пробегаю
         $ordersByWeek = array_map(function ($date) use ($repository) {
@@ -111,7 +97,7 @@ class OrderController extends AbstractController
      * @Route("/menu/{id}", name="orders#by_menu", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getOrdersByMenu(int $id, OrderRepository $repository)
+    public function getOrdersByMenu(int $id, OrderRepository $repository): JsonResponse
     {
         $orders = $repository->findOrdersByMenu($id);
 
@@ -121,12 +107,12 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/status", name="orders#update_status", methods={"PATCH"})
      */
-    public function changeOrderStatus(int $id, Request $request, OrderRepository $repository)
+    public function changeOrderStatus(int $id, Request $request, OrderRepository $repository): JsonResponse
     {
         $order = $repository->find($id);
 
-        if ( ! $order) {// кавычки
-            throw $this->createNotFoundException(`Order with ID:${$id} not found`);
+        if ( ! $order) {
+            throw $this->createNotFoundException("Order with ID: $id not found");
         }
 
         $order->setStatus($request->getContent());
@@ -142,7 +128,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/", name="orders#list", methods={"GET"})
      */
-    public function list(OrderRepository $repository)
+    public function list(OrderRepository $repository): JsonResponse
     {
         $orders = $repository->findAll();
 
@@ -152,13 +138,13 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}", name="orders#read", methods={"GET"}, requirements={"id"="\d+"})
      */
-    public function read(int $id, OrderRepository $repository)
+    public function read(int $id, OrderRepository $repository): JsonResponse
     {
 
         $order = $repository->find($id);
 
-        if ( ! $order) {// кавычки
-            throw $this->createNotFoundException(`Order with ID:${$id} not found`);
+        if ( ! $order) {
+            throw $this->createNotFoundException("Order with ID: $id not found");
         }
 
         // клонируем dish в согласии со счетчиками 118 - 121 строки
@@ -194,7 +180,7 @@ class OrderController extends AbstractController
             'order_id' => $order->getId(),
             'status'   => $order->getStatus(),
             'total'    => $order->getTotal(),
-            'message'   => $order->getMessage(),
+            'message'  => $order->getMessage(),
             'date'     => $order->getDate()->format('Y-m-d'),
             'dishes'   => $normalizeDishes,
             'created'  => $order->getCreatedAt()->format('Y-m-d\TH:i:sP'),
@@ -212,7 +198,7 @@ class OrderController extends AbstractController
         MenuRepository $menu_repository,
         DishRepository $dish_repository,
         PersonRepository $person_repository
-    ) {
+    ): JsonResponse {
         $post = json_decode($request->getContent(), true);
 
         $menu   = $menu_repository->find($post['menu_id']);
@@ -242,8 +228,8 @@ class OrderController extends AbstractController
 
 
         $order = new Order();
-        $order->setCreatedAt(new \DateTime('now'));// куча сеттеров это +1 к не любить доктрину
-        $order->setUpdatedAt(new \DateTime('now'));
+        $order->setCreatedAt(new DateTimeImmutable('now'));// куча сеттеров это +1 к не любить доктрину
+        $order->setUpdatedAt(new DateTimeImmutable('now'));
         $order->setMenu($menu);
         $order->setTotal($post['total']);
         $order->setStatus($post['status']);
@@ -267,8 +253,12 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}", name="orders#update", methods={"PATCH"})
      */
-    public function update(int $id, Request $request, OrderRepository $repository, DishRepository $dish_repository)
-    {
+    public function update(
+        int $id,
+        Request $request,
+        OrderRepository $repository,
+        DishRepository $dish_repository
+    ): JsonResponse {
         $post = json_decode($request->getContent(), true);
 
         $order = $repository->find($post['order_id']);
@@ -303,7 +293,7 @@ class OrderController extends AbstractController
         $order->setTotal($post['total']);
         $order->setMessage($post['message']);
         $order->setCounters($dishCounters);
-        $order->setUpdatedAt(new \DateTime('now'));
+        $order->setUpdatedAt(new DateTimeImmutable('now'));
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($order);
@@ -313,13 +303,10 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @param int $id
      * @Route("/{id}", name="orders#delete", methods={"DELETE"})
      */
-    public function delete(int $id, OrderRepository $repository)
+    public function delete(Order $order): JsonResponse
     {
-        $order = $repository->find($id);
-
         if ( ! $order) {
             return new JsonResponse('Нет такого заказа');
         }
