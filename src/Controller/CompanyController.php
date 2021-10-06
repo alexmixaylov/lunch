@@ -51,7 +51,7 @@ class CompanyController extends AbstractController
     /**
      * @Route("/{id}", name="companies#read", methods={"GET"})
      */
-    public function read(int $id, CompanyRepository $repository)
+    public function read(int $id, CompanyRepository $repository): JsonResponse
     {
         $company = $repository->findCompanyById($id);
 

@@ -77,7 +77,7 @@ class CabinetController extends AbstractController
         $isCompany = $company_repository->find($title);
 
         if ($isCompany) {
-            return new JsonResponse(['message' => "${$title}Уже есть компания с таким названием"]);
+            return new JsonResponse(['message' => "$title - уже есть компания с таким названием"]);
         }
 
         $company = new Company();

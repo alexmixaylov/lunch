@@ -6,7 +6,7 @@ use App\Repository\StatsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Services\GenerateDates;
+use App\Services\DateGenerator;
 
 /**
  * @Route("/stats")
@@ -27,9 +27,9 @@ class StatsController extends AbstractController
     /**
      * @Route("/dishes/week/{date}", name="stats#dishes_week" , methods={"GET"})
      */
-    public function countDishesByWeek($date, StatsRepository $repository, GenerateDates $generate_dates): JsonResponse
+    public function countDishesByWeek($date, StatsRepository $repository, DateGenerator $generate_dates): JsonResponse
     {
-        $dates = $generate_dates->allDatesForWeek($date);
+        $dates = $generate_dates->rangeOfDates($date);
 
         $dishesWeek = array_map(function ($date) use ($repository) {
             return [

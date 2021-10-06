@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Menu;
 use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
-use App\Services\GenerateDates;
+use App\Services\DateGenerator;
 use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,14 +26,12 @@ class MenuController extends AbstractController
         string $userDate,
         MenuRepository $repository,
         DishRepository $dish_repository,
-        GenerateDates $generate_dates
+        DateGenerator $dateGenerator
     ): JsonResponse {
-        $start = date('Y-m-d', strtotime("monday this week", strtotime($userDate)));
-        $end   = date('Y-m-d', strtotime("friday this week", strtotime($userDate)));
+        $allWeekDates = $dateGenerator->rangeOfDates($dateGenerator->getMonday($userDate));
 
-        $allWeekDates = $generate_dates->allDatesForWeek($start);
-
-        $existingMenuItems = $repository->findMenusByDates($start, $end);
+        $existingMenuItems = $repository->findMenusByDates($dateGenerator->getMonday($userDate),
+            $dateGenerator->getFriday($userDate));
 
         $menusWithAttachedDishes = array_map(function ($menu) use ($dish_repository) {
             $menuId = $menu->getId();

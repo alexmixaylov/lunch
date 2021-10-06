@@ -8,7 +8,7 @@ use App\Repository\DishRepository;
 use App\Repository\MenuRepository;
 use App\Repository\OrderRepository;
 use App\Repository\PersonRepository;
-use App\Services\GenerateDates;
+use App\Services\DateGenerator;
 use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -79,9 +79,9 @@ class OrderController extends AbstractController
     public function getOrdersByWeek(
         string $date,
         OrderRepository $repository,
-        GenerateDates $generate_dates
+        DateGenerator $generate_dates
     ): JsonResponse {
-        $dates = $generate_dates->allDatesForWeek($date);
+        $dates = $generate_dates->rangeOfDates($date);
 // уже писал, не понял смысла array_map. но я не вчитываюсь, просто глазами пробегаю
         $ordersByWeek = array_map(function ($date) use ($repository) {
             return [
